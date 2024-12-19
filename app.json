@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "KicksFolio-Frontend",
+    "name": "KicksFolio",
     "slug": "KicksFolio-Frontend",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,7 +10,7 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.remyshift.KicksFolioFrontend"
+      "bundleIdentifier": "com.remyshift.KicksFolio"
     },
     "android": {
       "adaptiveIcon": {
