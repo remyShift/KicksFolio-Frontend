@@ -13,6 +13,9 @@ module.exports = {
         'spacemono': ['Spacemono', 'monospace'],
         'syne-extrabold': ['Syne-ExtraBold', 'sans-serif']
       },
+      backgroundImage: {
+        'condition-gradient': 'linear-gradient(to right, #FF8E4C, #F27329)',
+      },
     },
   },
   plugins: [],
