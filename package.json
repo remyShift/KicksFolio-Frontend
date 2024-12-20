@@ -1,6 +1,7 @@
 {
   "name": "kicksfolio",
   "main": "expo-router/entry",
+  "scheme": "kicksfolio",
   "version": "1.0.0",
   "scripts": {
     "start": "expo start",
