@@ -11,7 +11,7 @@ module.exports = {
       fontFamily: {
         'actonia': ['Actonia', 'sans-serif'],
         'spacemono': ['Spacemono', 'monospace'],
-        'syne': ['Syne', 'sans-serif'],
+        'syne-extrabold': ['Syne-ExtraBold', 'sans-serif']
       },
     },
   },

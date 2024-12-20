@@ -7,6 +7,7 @@ export default function Layout() {
   const [fontsLoaded] = useFonts({
     'Actonia': require('../assets/fonts/Actonia.ttf'),
     'Spacemono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+    'Syne-ExtraBold': require('../assets/fonts/Syne-ExtraBold.ttf'),
   });
 
   if (!fontsLoaded) {
