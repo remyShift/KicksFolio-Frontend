@@ -1,9 +1,10 @@
 import { View, Text, StyleSheet } from 'react-native';
+import MainTitle from '@/components/text/MainTitle';
 
 export default function Tab() {
   return (
-    <View style={styles.container}>
-      <Text className="font-spacemono text-2xl">Tab [index]</Text>
+    <View className="flex-1 items-center pt-20">
+      <MainTitle>KicksFolio</MainTitle>
     </View>
   );
 }
