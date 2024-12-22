@@ -4,6 +4,7 @@ import Title from '@/components/text/Title';
 import BrandTitle from '@/components/text/BrandTitle';
 import FriendTitle from '@/components/text/FriendTitle';
 import SneakerTitle from '@/components/text/SneakerTitle';
+import BrowseButton from '@/components/buttons/BrowseButton';
 
 export default function Tab() {
     return (
@@ -14,6 +15,7 @@ export default function Tab() {
             <BrandTitle content="New Balance" />
             <FriendTitle content="remyShift" />
             <SneakerTitle content="New Balance 990v5" />
+            <BrowseButton />
         </View>
     );
 }
