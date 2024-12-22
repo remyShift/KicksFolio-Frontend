@@ -15,7 +15,7 @@ export default function BrandTitle({ content, isTextCenter = false }: { content:
                         76 followers
                     </Text>
                 </View>
-                <Image source={require('@/assets/images/adaptive-icon.png')} className="w-10 h-10" />
+                <Image source={require('@/assets/images/adaptive-icon.png')} className="w-10 h-10 rounded-sm" />
             </View>
         </View>
     );
