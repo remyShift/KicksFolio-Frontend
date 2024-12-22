@@ -28,7 +28,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>myapp</string>
-          <string>com.remyshift.KicksFolioFrontend</string>
+          <string>com.remyshift.KicksFolio</string>
         </array>
       </dict>
       <dict>
