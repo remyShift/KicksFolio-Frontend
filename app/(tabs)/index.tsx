@@ -11,6 +11,7 @@ import ShareButton from '@/components/buttons/ShareButton';
 import EditButton from '@/components/buttons/EditButton';
 import NextBackButton from '@/components/buttons/NextBackButton';
 import SneakerCard from '@/components/cards/SneakerCard';
+import CollectionCard from '@/components/cards/CollectionCard';
 
 export default function Tab() {
     return (
@@ -32,7 +33,7 @@ export default function Tab() {
                         <NextBackButton />
                     </View>
                     <SneakerCard />
-                    <SneakerCard />
+                    <CollectionCard />
                 </View>
             </View>
         </ScrollView>
