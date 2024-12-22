@@ -13,6 +13,7 @@ module.exports = {
         'spacemono': ['Spacemono', 'monospace'],
         'syne-extrabold': ['Syne-ExtraBold', 'sans-serif'],
         'syne-semibold': ['Syne-SemiBold', 'sans-serif'],
+        'spacemono-bold': ['SpaceMono-Bold', 'monospace'],
       },
       backgroundImage: {
         'condition-gradient': 'linear-gradient(to right, #FF8E4C, #F27329)',
