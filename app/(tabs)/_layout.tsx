@@ -1,4 +1,3 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import AntDesign from '@expo/vector-icons/AntDesign';
@@ -16,6 +15,9 @@ export default function TabLayout() {
                 borderBottomWidth: 0,
                 height: 85,
                 paddingTop: 10,
+            },
+            sceneStyle: {
+                backgroundColor: '#ECECEC',
             }
         }}>
             <Tabs.Screen

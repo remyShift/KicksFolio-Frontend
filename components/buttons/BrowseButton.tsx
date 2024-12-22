@@ -2,7 +2,7 @@ import { View, Pressable, Text } from 'react-native';
 
 export default function BrowseButton() {
     return (
-        <View className="flex flex-row justify-center">
+        <View className="flex flex-row">
             <Pressable 
                 className="bg-primary p-3 px-6 rounded-md"
                 onPress={() => {

@@ -5,6 +5,8 @@ import BrandTitle from '@/components/text/BrandTitle';
 import FriendTitle from '@/components/text/FriendTitle';
 import SneakerTitle from '@/components/text/SneakerTitle';
 import BrowseButton from '@/components/buttons/BrowseButton';
+import AddButton from '@/components/buttons/AddButton';
+import LoveButton from '@/components/buttons/LoveButton';
 
 export default function Tab() {
     return (
@@ -14,8 +16,12 @@ export default function Tab() {
             <Title content="Add some friends" isTextCenter={true} />
             <BrandTitle content="New Balance" />
             <FriendTitle content="remyShift" />
-            <SneakerTitle content="New Balance 990v5" />
-            <BrowseButton />
+            <View className="px-5 gap-8">
+                <SneakerTitle content="New Balance 990v5" />
+                <BrowseButton />
+                <AddButton />
+                <LoveButton />
+            </View>
         </View>
     );
 }

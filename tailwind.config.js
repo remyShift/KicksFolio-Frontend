@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       colors: {
         primary: '#F27329',
+        background: '#ECECEC',
       },
       fontFamily: {
         'actonia': ['Actonia', 'sans-serif'],
