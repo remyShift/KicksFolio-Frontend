@@ -1,5 +1,5 @@
 import { Pressable } from 'react-native';
-import AntDesign from '@expo/vector-icons/AntDesign';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useDownScaleAnimation } from '@/hooks';
 
@@ -22,7 +22,7 @@ export default function ShareButton() {
             onPress={handlePress}
         >
             <Animated.View style={animatedStyle}>
-                <AntDesign name="back" size={24} color="black" />
+                <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />
             </Animated.View>
         </Pressable>
     );
