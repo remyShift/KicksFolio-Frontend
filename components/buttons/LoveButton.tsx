@@ -2,12 +2,12 @@ import { Pressable } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useState } from 'react';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useScaleAnimation } from '@/hooks';
+import { useUpScaleAnimation } from '@/hooks';
 
 export default function LoveButton() {
     const primary = '#F27329';
     const [color, setColor] = useState('black');
-    const { scale, triggerAnimation } = useScaleAnimation();
+    const { scale, triggerAnimation } = useUpScaleAnimation();
 
     const animatedStyle = useAnimatedStyle(() => {
         return {

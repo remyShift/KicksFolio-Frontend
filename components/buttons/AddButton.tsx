@@ -1,10 +1,10 @@
 import { Pressable } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useScaleAnimation } from '@/hooks/useScaleAnimation';
+import { useUpScaleAnimation } from '@/hooks';
 
 export default function AddButton() {
-    const { scale, triggerAnimation } = useScaleAnimation();
+    const { scale, triggerAnimation } = useUpScaleAnimation();
 
     const animatedStyle = useAnimatedStyle(() => {
         return {

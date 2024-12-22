@@ -1,10 +1,10 @@
 import { Pressable } from 'react-native';
 import Feather from '@expo/vector-icons/Feather';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { useScaleAnimation } from '@/hooks';
+import { useDownScaleAnimation } from '@/hooks';
 
 export default function ShareButton() {
-    const { scale, triggerAnimation } = useScaleAnimation();
+    const { scale, triggerAnimation } = useDownScaleAnimation();
 
     const animatedStyle = useAnimatedStyle(() => {
         return {

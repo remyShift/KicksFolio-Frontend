@@ -9,6 +9,7 @@ import AddButton from '@/components/buttons/AddButton';
 import LoveButton from '@/components/buttons/LoveButton';
 import ShareButton from '@/components/buttons/ShareButton';
 import EditButton from '@/components/buttons/EditButton';
+import BackButton from '@/components/buttons/BackButton';
 
 export default function Tab() {
     return (
@@ -26,6 +27,7 @@ export default function Tab() {
                     <LoveButton />
                     <ShareButton />
                     <EditButton />
+                    <BackButton />
                 </View>
             </View>
         </View>
