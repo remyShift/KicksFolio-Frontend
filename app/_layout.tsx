@@ -8,6 +8,7 @@ export default function Layout() {
     'Actonia': require('../assets/fonts/Actonia.ttf'),
     'Spacemono': require('../assets/fonts/SpaceMono-Regular.ttf'),
     'Syne-ExtraBold': require('../assets/fonts/Syne-ExtraBold.ttf'),
+    'Syne-SemiBold': require('../assets/fonts/Syne-SemiBold.ttf'),
   });
 
   if (!fontsLoaded) {
