@@ -7,6 +7,7 @@ import SneakerTitle from '@/components/text/SneakerTitle';
 import BrowseButton from '@/components/buttons/BrowseButton';
 import AddButton from '@/components/buttons/AddButton';
 import LoveButton from '@/components/buttons/LoveButton';
+import ShareButton from '@/components/buttons/ShareButton';
 
 export default function Tab() {
     return (
@@ -20,7 +21,10 @@ export default function Tab() {
                 <SneakerTitle content="New Balance 990v5" />
                 <BrowseButton />
                 <AddButton />
-                <LoveButton />
+                <View className="flex flex-row items-center gap-2">
+                    <LoveButton />
+                    <ShareButton />
+                </View>
             </View>
         </View>
     );
