@@ -17,12 +17,12 @@ export default function ShareButton() {
     };
 
     return (
-        <Pressable
+        <Pressable 
             className="bg-white w-16 h-16 rounded-md flex items-center justify-center"
             onPress={handlePress}
         >
             <Animated.View style={animatedStyle}>
-                <Feather name="share" size={20} color="black" />
+                <Feather name="edit" size={20} color="black" />
             </Animated.View>
         </Pressable>
     );
