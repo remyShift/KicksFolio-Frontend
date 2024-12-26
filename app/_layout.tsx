@@ -3,7 +3,7 @@ import { SessionProvider } from '@/context/authContext';
 import { useFonts } from 'expo-font';
 import "../global.css";
 
-export default function Layout() {
+export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     'Actonia': require('../assets/fonts/Actonia.ttf'),
     'Spacemono': require('../assets/fonts/SpaceMono-Regular.ttf'),
