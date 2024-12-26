@@ -1,14 +1,20 @@
 import React, { useContext } from 'react';
-import { Text } from 'react-native';
-import { AuthContext } from '../context/authContext';
+import { Text, View, Button } from 'react-native';
+import { useRouter } from 'expo-router';
+import { useSession } from '@/context/authContext';
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-    const { isAuth } = useContext(AuthContext);
+    const { session } = useSession();
+    const router = useRouter();
 
-    console.log(isAuth);
-
-    if (!isAuth) {
-        return <Text>You are not authenticated, please login</Text>;
+    if (!session) {
+        return (
+            <View>
+                <Text>You are not authenticated, please login or sign up.</Text>
+                <Button title="Login" onPress={() => router.push('/sign-in')} />
+                <Button title="Sign Up" onPress={() => router.push('/sign-up')} />
+            </View>
+        );
     }
 
     return children;

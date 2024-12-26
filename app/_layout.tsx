@@ -1,6 +1,6 @@
-import { AuthProvider } from '@/context/authContext';
+import { Slot } from 'expo-router';
+import { SessionProvider } from '@/context/authContext';
 import { useFonts } from 'expo-font';
-import { Stack } from "expo-router";
 import "../global.css";
 
 export default function Layout() {
@@ -17,11 +17,9 @@ export default function Layout() {
   }
 
   return (
-    <AuthProvider>
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(tabs)"/>
-      </Stack>
-    </AuthProvider>
+    <SessionProvider>
+      <Slot />
+    </SessionProvider>
   );
 }
 
