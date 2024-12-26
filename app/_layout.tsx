@@ -1,7 +1,7 @@
+import { AuthProvider } from '@/context/authContext';
+import { useFonts } from 'expo-font';
 import { Stack } from "expo-router";
 import "../global.css";
-import { useFonts } from 'expo-font';
-
 
 export default function Layout() {
   const [fontsLoaded] = useFonts({
@@ -17,9 +17,11 @@ export default function Layout() {
   }
 
   return (
-    <Stack screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="(tabs)"/>
-    </Stack>
+    <AuthProvider>
+      <Stack screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="(tabs)"/>
+      </Stack>
+    </AuthProvider>
   );
 }
 

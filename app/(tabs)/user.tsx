@@ -1,10 +1,13 @@
-import { View, Text, StyleSheet } from 'react-native';
+import ProtectedRoute from '@/components/ProctectedRoute';
+import { StyleSheet, Text, View } from 'react-native';
 
 export default function Tab() {
   return (
-    <View style={styles.container}>
-      <Text className="font-syne-extrabold text-2xl">Tab [User]</Text>
-    </View>
+    <ProtectedRoute>
+        <View style={styles.container}>
+            <Text className="font-syne-extrabold text-2xl">Tab [User]</Text>
+        </View>
+    </ProtectedRoute>
   );
 }
 
