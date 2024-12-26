@@ -46,13 +46,13 @@ export default function Login() {
                 <MainButton content='Login' backgroundColor='bg-primary' onPress={() => {
                     if (email && password) {
                         login(email, password).then(() => {
-                            router.replace('/');
+                            router.replace('/(app)/(tabs)');
                             setErrorMsg('');
                         }).catch((error) => {
-                            setErrorMsg('Invalid email or password');
+                            setErrorMsg('Invalid email or password.');
                         });
                     } else {
-                        setErrorMsg('Please put your email and password');
+                        setErrorMsg('Please put your email and password.');
                     }
                 }} />
                 <MainButton content='Sign Up' backgroundColor='bg-gray-400' onPress={() => {

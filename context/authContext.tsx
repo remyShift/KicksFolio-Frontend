@@ -41,7 +41,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erreur de connexion');
+                throw new Error('Error when logging in');
             }
             return response.json();
         })
@@ -60,15 +60,25 @@ export function SessionProvider({ children }: PropsWithChildren) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ email, password, username, first_name, last_name, sneaker_size, gender })
+            body: JSON.stringify({
+                user: {
+                    email,
+                    password,
+                    username,
+                    first_name,
+                    last_name,
+                    sneaker_size,
+                    gender
+                }
+            })
         })
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erreur lors de la création de compte');
+                throw new Error('Error when creating account');
             }
         })
         .catch(error => {
-            console.error('Erreur lors de la création de compte:', error);
+            console.error(`Error when creating account: ${error}`);
         });
     };
 
