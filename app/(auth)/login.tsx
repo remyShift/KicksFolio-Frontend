@@ -11,27 +11,33 @@ export default function Login() {
     const { login } = useSession();
 
     return (
-        <View className="flex-1 items-center bg-background pt-20 gap-6 p-4">
-            <PageTitle content='KicksFolio' />
-            <Text className='font-syne-semibold text-lg mt-52'>Enter your email and password to login</Text>
-            <View className='flex justify-center items-center gap-4 w-full'>
-                <TextInput
-                    placeholder="Email"
-                    inputMode='email'
-                    autoComplete='email'
-                    autoCorrect={false}
-                    placeholderTextColor='gray'
-                    onChangeText={setEmail} 
-                    className='bg-white rounded-md p-3 w-2/3 font-spacemono-bold'/>
-                <TextInput 
-                    placeholder="Password" 
-                    inputMode='text'
-                    autoComplete='password'
-                    autoCorrect={false}
-                    secureTextEntry={true}
-                    placeholderTextColor='gray'
-                    onChangeText={setPassword} 
-                    className='bg-white rounded-md p-3 w-2/3 font-spacemono-bold'/>
+        <View className="flex-1 items-center bg-background pt-20 gap-12 p-4">
+            <PageTitle content='Login' />
+            <View className='flex justify-center items-center gap-8 w-full mt-48'>
+                <View className='flex flex-col gap-2 w-full justify-center items-center'>
+                    <Text className='font-spacemono-bold text-lg'>Email</Text>
+                    <TextInput
+                        placeholder="john@doe.com"
+                        inputMode='email'
+                        autoComplete='email'
+                        autoCorrect={false}
+                        placeholderTextColor='gray'
+                        onChangeText={setEmail} 
+                        className='bg-white rounded-md p-3 w-2/3 font-spacemono-bold'/>
+                </View>
+
+                <View className='flex flex-col gap-2 w-full justify-center items-center'>
+                    <Text className='font-spacemono-bold text-lg'>Password</Text>
+                    <TextInput 
+                        placeholder="********" 
+                        inputMode='text'
+                        autoComplete='password'
+                        autoCorrect={false}
+                        secureTextEntry={true}
+                        placeholderTextColor='gray'
+                        onChangeText={setPassword} 
+                        className='bg-white rounded-md p-3 w-2/3 font-spacemono-bold'/>
+                </View>
             </View>
             <View className='flex gap-2 w-full justify-center items-center'>
                 <MainButton content='Login' backgroundColor='bg-primary' onPress={() => {
