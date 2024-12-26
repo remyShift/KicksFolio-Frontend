@@ -1,5 +1,5 @@
 import AddButton from '@/components/buttons/AddButton';
-import BrowseButton from '@/components/buttons/BrowseButton';
+import MainButton from '@/components/buttons/MainButton';
 import EditButton from '@/components/buttons/EditButton';
 import LoveButton from '@/components/buttons/LoveButton';
 import NextBackButton from '@/components/buttons/NextBackButton';
@@ -25,7 +25,7 @@ export default function Tab() {
                 <FriendTitle content="remyShift" />
                 <View className="px-5 gap-8">
                     <SneakerTitle content="New Balance 990v5" />
-                    <BrowseButton />
+                    <MainButton content="Browse" onPress={() => {}} backgroundColor="bg-primary" />
                     <AddButton />
                     <View className="flex flex-row items-center gap-2">
                         <LoveButton />
