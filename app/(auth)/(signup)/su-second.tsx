@@ -3,9 +3,11 @@ import { View, TextInput, Text } from 'react-native';
 import { useSignUpProps } from '@/context/signUpPropsContext';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
+import { useSession } from '@/context/authContext';
 
 export default function SUSecond() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
+    const { signUp } = useSession();
 
     return (
         <View className="flex-1 items-center bg-background pt-20 gap-12 p-4">
@@ -62,8 +64,17 @@ export default function SUSecond() {
             </View>
 
             <View className='flex gap-2 w-full justify-center items-center'>
-                <MainButton content='Next' backgroundColor='bg-primary' onPress={() => {
-                    router.replace('/su-second');
+                <MainButton content='Sign Up' backgroundColor='bg-primary' onPress={() => {
+                    signUp(
+                        signUpProps.email,
+                        signUpProps.password,
+                        signUpProps.username,
+                        signUpProps.first_name,
+                        signUpProps.last_name,
+                        signUpProps.sneaker_size,
+                        signUpProps.gender
+                    );
+                    router.replace('/');
                 }} />
 
                 <MainButton content='Back' backgroundColor='bg-gray-400' onPress={() => {

@@ -50,11 +50,11 @@ export function SessionProvider({ children }: PropsWithChildren) {
             setSession(token);
         })
         .catch(error => {
-            console.error('Erreur lors de la connexion:', error);
+            throw new Error('Invalid email or password');
         });
     };
 
-    const signUp = (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string): Promise<void> => {
+    const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string): Promise<void> => {
         return fetch(`${API_URL}/users`, {
             method: 'POST',
             headers: {
