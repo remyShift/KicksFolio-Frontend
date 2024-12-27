@@ -31,7 +31,7 @@ export default function SignUp() {
             setIsUsernameFocused(true);
         } else if (inputType === 'email') {
             setIsEmailFocused(true);
-        } else {
+        } else if (inputType === 'password') {
             setIsPasswordFocused(true);
         }
         setIsUsernameError(false);
@@ -48,19 +48,22 @@ export default function SignUp() {
         } else if (inputType === 'email') {
             setIsEmailFocused(false);
             checkEmail(value, setErrorMsg, setIsEmailError);
-        } else {
+        } else if (inputType === 'password') {
             setIsPasswordFocused(false);
             checkPassword(value, setErrorMsg, setIsPasswordError);
         }
     };
 
-    const handleNextSignUpPage = () => {
-        const isUsernameValid = checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
+    const handleNextSignUpPage = async () => {
+        const isUsernameValid = await checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
         const isEmailValid = checkEmail(signUpProps.email, setErrorMsg, setIsEmailError);
         const isPasswordValid = checkPassword(signUpProps.password, setErrorMsg, setIsPasswordError);
 
         if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
-            setErrorMsg('Please correct all fields before continuing');
+            setErrorMsg('Please correct your inputs before continuing');
+            setIsUsernameError(true);
+            setIsEmailError(true);
+            setIsPasswordError(true);
             return;
         }
 

@@ -1,4 +1,5 @@
 import { TextInput } from "react-native";
+import { RefObject } from "react";
 
 export const handleInputChange = (
     text: string, 
@@ -9,66 +10,31 @@ export const handleInputChange = (
     setErrorMsg('');
 };
 
-export const checkBeforeNext = (
-    inputValue: string,
-    inputType: string,
+export const checkBeforeNext = async (
+    value: string, 
+    inputType: 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size' | 'gender',
     setErrorMsg: (msg: string) => void,
-    setIsInputError: (isError: boolean) => void,
-    inputRef: React.RefObject<TextInput>,
-    nextInputRef?: React.RefObject<TextInput>
+    setIsError: (isError: boolean) => void,
+    currentRef: RefObject<TextInput>,
+    nextRef: RefObject<TextInput> | null
 ) => {
-    if (!inputValue) {
-        setErrorMsg('Please put a valid input.');
-        setIsInputError(true);
+    let isValid = false;
+    
+    if (inputType === 'username') {
+        isValid = await checkUsername(value, setErrorMsg, setIsError);
+    } else if (inputType === 'email') {
+        isValid = checkEmail(value, setErrorMsg, setIsError);
+    } else if (inputType === 'password') {
+        isValid = checkPassword(value, setErrorMsg, setIsError);
+    }
+
+    if (!isValid) {
+        currentRef.current?.focus();
         return;
     }
 
-    switch (inputType) {
-        case 'email':
-            if (!checkEmail(inputValue, setErrorMsg, setIsInputError)) {
-                inputRef.current?.focus();
-            } else {
-                nextInputRef?.current?.focus();
-            }
-            break;
-        case 'password':
-            if (!checkPassword(inputValue, setErrorMsg, setIsInputError)) {
-                inputRef.current?.focus();
-            } else {
-                nextInputRef?.current?.focus();
-            }
-            break;
-        case 'username':
-            if (!checkUsername(inputValue, setErrorMsg, setIsInputError)) {
-                inputRef.current?.focus();
-            } else {
-                nextInputRef?.current?.focus();
-            }
-            break;
-        case 'size':
-            if (!checkSize(Number(inputValue), setErrorMsg, setIsInputError)) {
-                inputRef.current?.focus();
-            } else {
-                nextInputRef?.current?.focus();
-            }
-            break;
-        case 'gender':
-            if (!checkGender(inputValue, setErrorMsg, setIsInputError)) {
-                inputRef.current?.focus();
-            } else {
-                nextInputRef?.current?.focus();
-            }
-            break;
-        case 'firstName':
-        case 'lastName':
-            if (!checkName(inputValue, setErrorMsg, setIsInputError)) {
-                inputRef.current?.focus();
-            } else {
-                nextInputRef?.current?.focus();
-            }
-            break;
-        default:
-            break;
+    if (nextRef) {
+        nextRef.current?.focus();
     }
 };
 
@@ -97,19 +63,19 @@ export const checkUsername = async (
     setIsUsernameError: (isError: boolean) => void
 ): Promise<boolean> => {
     if (!username) {
-        setErrorMsg('Veuillez entrer un nom d\'utilisateur.');
+        setErrorMsg('Please put your username.');
         setIsUsernameError(true);
         return Promise.resolve(false);
     } else if (username.length < 4) {
-        setErrorMsg('Le nom d\'utilisateur doit contenir au moins 4 caractères.');
+        setErrorMsg('Username must be at least 4 characters long.');
         setIsUsernameError(true);
         return Promise.resolve(false);
     } else if (username.length > 16) {
-        setErrorMsg('Le nom d\'utilisateur doit contenir moins de 16 caractères.');
+        setErrorMsg('Username must be less than 16 characters.');
         setIsUsernameError(true);
         return Promise.resolve(false);
     } else if (username.match(/[^\w\s]/)) {
-        setErrorMsg('Le nom d\'utilisateur ne doit pas contenir de caractères spéciaux.');
+        setErrorMsg('Username must not contain special characters.');
         setIsUsernameError(true);
         return Promise.resolve(false);
     }
@@ -117,7 +83,7 @@ export const checkUsername = async (
     return checkUsernameExists(username)
         .then(isUsernameTaken => {
             if (isUsernameTaken) {
-                setErrorMsg('Ce nom d\'utilisateur est déjà pris.');
+                setErrorMsg('This username is already taken.');
                 setIsUsernameError(true);
                 return false;
             }
@@ -126,7 +92,7 @@ export const checkUsername = async (
             return true;
         })
         .catch(() => {
-            setErrorMsg('Erreur lors de la vérification du nom d\'utilisateur.');
+            setErrorMsg('Error checking username.');
             setIsUsernameError(true);
             return false;
         });
@@ -211,6 +177,3 @@ export const checkUsernameExists = async (username: string): Promise<boolean> =>
     }
     return false;
 };
-
-console.log(process.env.BASE_API_URL);
-console.log(checkUsernameExists('test'));

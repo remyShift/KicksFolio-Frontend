@@ -51,13 +51,13 @@ export default function Login() {
         } else if (isEmail && !emailRegex.test(value)) {
             setErrorMsg('Please put a valid email.');
             setError(true);
-        } else {
+        } else if (isEmail && emailRegex.test(value)) {
             setErrorMsg('');
             setError(false);
         }
     };
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (!email || !password) {
             setErrorMsg('Please put your email and password.');
             if (!email) setIsEmailError(true);
@@ -66,7 +66,7 @@ export default function Login() {
         }
 
         if (email && password) {
-            login(email, password).then(() => {
+            await login(email, password).then(() => {
                 router.replace('/(app)/(tabs)');
                 setErrorMsg('');
             }).catch((error) => {
