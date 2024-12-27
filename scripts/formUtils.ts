@@ -29,7 +29,6 @@ export const checkBeforeNext = async (
     }
 
     if (!isValid) {
-        currentRef.current?.focus();
         return;
     }
 
@@ -80,22 +79,14 @@ export const checkUsername = async (
         return Promise.resolve(false);
     }
 
-    return checkUsernameExists(username)
-        .then(isUsernameTaken => {
-            if (isUsernameTaken) {
-                setErrorMsg('This username is already taken.');
-                setIsUsernameError(true);
-                return false;
-            }
-            setErrorMsg('');
-            setIsUsernameError(false);
-            return true;
-        })
-        .catch(() => {
-            setErrorMsg('Error checking username.');
-            setIsUsernameError(true);
-            return false;
-        });
+    if (await checkUsernameExists(username)) {
+        setErrorMsg('This username is already taken.');
+        setIsUsernameError(true);
+        return Promise.resolve(false);
+    }
+    setErrorMsg('');
+    setIsUsernameError(false);
+    return Promise.resolve(true);
 };
 
 export const checkEmail = (email: string, setErrorMsg: (msg: string) => void, setIsEmailError: (isError: boolean) => void): boolean => {
@@ -165,15 +156,15 @@ export const checkName = (name: string, setErrorMsg: (msg: string) => void, setI
 };
 
 export const checkUsernameExists = async (username: string): Promise<boolean> => {
-    const response = await fetch(`${process.env.BASE_API_URL}/users`, {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
         },
     });
+    
+    if (!response.ok) return false;
+
     const data = await response.json();
-    if (data.includes(username)) {
-        return true;
-    }
-    return false;
+    return data.users.some((user: { username: string }) => user.username === username);
 };
