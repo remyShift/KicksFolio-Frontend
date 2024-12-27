@@ -21,6 +21,7 @@ export default function Login() {
     const scrollViewRef = useRef<ScrollView>(null);
     const passwordInputRef = useRef<TextInput>(null);
     const emailInputRef = useRef<TextInput>(null);
+
     const scrollToBottom = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
     };
@@ -104,7 +105,7 @@ export default function Login() {
                                 onBlur={() => handleInputBlur('email', email)}
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(email, 'email', setErrorMsg, setIsEmailError, emailInputRef, passwordInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(email, 'email', setErrorMsg, setIsEmailError, passwordInputRef)}
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
                                 onChangeText={(text) => handleInputChange(text, setEmail, setErrorMsg)}

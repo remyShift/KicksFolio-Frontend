@@ -30,7 +30,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const [[isLoading, session], setSession] = useStorageState('session');
 
     const login = async (email: string, password: string) => {
-        return fetch(`${process.env.BASE_API_URL}/login`, {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string): Promise<void> => {
-        return fetch(`${process.env.BASE_API_URL}/users`, {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

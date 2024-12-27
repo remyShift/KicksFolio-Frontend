@@ -100,7 +100,7 @@ export default function SignUp() {
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', setErrorMsg, setIsUsernameError, usernameInputRef, emailInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', setErrorMsg, setIsUsernameError, emailInputRef)}
                                 onFocus={() => handleInputFocus('username')}
                                 onBlur={() => handleInputBlur('username', signUpProps.username)}
                                 onChangeText={(text) => {
@@ -127,7 +127,7 @@ export default function SignUp() {
                                 clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', setErrorMsg, setIsEmailError, emailInputRef, passwordInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', setErrorMsg, setIsEmailError, passwordInputRef)}
                                 onFocus={() => handleInputFocus('email')}
                                 onBlur={() => handleInputBlur('email', signUpProps.email)}
                                 onChangeText={(text) => {

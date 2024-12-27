@@ -15,25 +15,34 @@ export const checkBeforeNext = async (
     inputType: 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size' | 'gender',
     setErrorMsg: (msg: string) => void,
     setIsError: (isError: boolean) => void,
-    currentRef: RefObject<TextInput>,
     nextRef: RefObject<TextInput> | null
 ) => {
     let isValid = false;
     
-    if (inputType === 'username') {
-        isValid = await checkUsername(value, setErrorMsg, setIsError);
-    } else if (inputType === 'email') {
-        isValid = checkEmail(value, setErrorMsg, setIsError);
-    } else if (inputType === 'password') {
-        isValid = checkPassword(value, setErrorMsg, setIsError);
+    switch (inputType) {
+        case 'username':
+            isValid = await checkUsername(value, setErrorMsg, setIsError);
+            break;
+        case 'email':
+            isValid = checkEmail(value, setErrorMsg, setIsError);
+            break;
+        case 'password':
+            isValid = checkPassword(value, setErrorMsg, setIsError);
+            break;
+        case 'firstName':
+        case 'lastName':
+            isValid = checkName(value, setErrorMsg, setIsError);
+            break;
+        case 'size':
+            isValid = checkSize(Number(value), setErrorMsg, setIsError);
+            break;
+        case 'gender':
+            isValid = checkGender(value, setErrorMsg, setIsError);
+            break;
     }
 
-    if (!isValid) {
-        return;
-    }
-
-    if (nextRef) {
-        nextRef.current?.focus();
+    if (isValid && nextRef?.current) {
+        nextRef.current.focus();
     }
 };
 
