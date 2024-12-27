@@ -94,6 +94,8 @@ export default function SignUp() {
                                 ref={usernameInputRef}
                                 value={signUpProps.username}
                                 autoComplete='username'
+                                textContentType='username'
+                                clearButtonMode='while-editing'
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
@@ -119,8 +121,10 @@ export default function SignUp() {
                                 inputMode='email'
                                 value={signUpProps.email}
                                 autoComplete='email'
+                                textContentType='emailAddress'
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
+                                clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', setErrorMsg, setIsEmailError, emailInputRef, passwordInputRef)}
@@ -146,7 +150,9 @@ export default function SignUp() {
                                 value={signUpProps.password}
                                 placeholder="********"
                                 inputMode='text'
-                                autoComplete='password'
+                                textContentType='newPassword'
+                                passwordRules='{ "minLength": 8, "requiresUppercase": true, "requiresLowercase": true, "requiresNumeric": true }'
+                                clearButtonMode='while-editing'
                                 autoCorrect={false}
                                 secureTextEntry={true}
                                 placeholderTextColor='gray'

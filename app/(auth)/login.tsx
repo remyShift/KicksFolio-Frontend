@@ -98,6 +98,8 @@ export default function Login() {
                                 ref={emailInputRef}
                                 inputMode='email'
                                 autoComplete='email'
+                                textContentType='emailAddress'
+                                clearButtonMode='while-editing'
                                 onFocus={() => handleInputFocus('email')}
                                 onBlur={() => handleInputBlur('email', email)}
                                 returnKeyType='next'
@@ -118,7 +120,9 @@ export default function Login() {
                                 placeholder="********" 
                                 ref={passwordInputRef}
                                 inputMode='text'
-                                autoComplete='password'
+                                textContentType='password'
+                                autoComplete='current-password'
+                                clearButtonMode='while-editing'
                                 autoCorrect={false}
                                 secureTextEntry={true}
                                 onFocus={() => handleInputFocus('password')}

@@ -147,9 +147,11 @@ export default function SUSecond() {
                             <TextInput
                                 placeholder="John"
                                 inputMode='text'
+                                textContentType='givenName'
+                                clearButtonMode='while-editing'
                                 ref={firstNameInputRef}
                                 value={signUpProps.first_name}
-                                autoComplete='given-name'
+                                autoComplete={Platform.OS === 'ios' ? 'cc-name' : 'name-given'}
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
@@ -172,11 +174,13 @@ export default function SUSecond() {
                             <TextInput
                                 placeholder="Doe"
                                 inputMode='text'
+                                textContentType='familyName'
                                 ref={lastNameInputRef}
                                 value={signUpProps.last_name}
-                                autoComplete='family-name'
+                                autoComplete={Platform.OS === 'ios' ? 'cc-family-name' : 'name-family'}
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
+                                clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.last_name, 'lastName', setErrorMsg, setIsLastNameError, lastNameInputRef, sizeInputRef)}
@@ -203,6 +207,7 @@ export default function SUSecond() {
                                 autoCorrect={false}
                                 keyboardType='numeric'
                                 placeholderTextColor='gray'
+                                clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
                                 onSubmitEditing={() => checkBeforeNext(String(signUpProps.sneaker_size), 'size', setErrorMsg, setIsSizeError, sizeInputRef, genderInputRef)}
@@ -228,6 +233,7 @@ export default function SUSecond() {
                                 autoComplete='off'
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
+                                clearButtonMode='while-editing'
                                 returnKeyType='done'
                                 enablesReturnKeyAutomatically={true}
                                 onSubmitEditing={handleSignUp}

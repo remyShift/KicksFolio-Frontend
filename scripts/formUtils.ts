@@ -166,5 +166,8 @@ export const checkUsernameExists = async (username: string): Promise<boolean> =>
     if (!response.ok) return false;
 
     const data = await response.json();
+    console.log(JSON.stringify(data.users, null, 2));
     return data.users.some((user: { username: string }) => user.username === username);
 };
+
+console.log(checkUsernameExists('test')); 
