@@ -1,5 +1,4 @@
 import { TextInput } from "react-native";
-import { BASE_API_URL } from "@env";
 
 export const handleInputChange = (
     text: string, 
@@ -200,7 +199,7 @@ export const checkName = (name: string, setErrorMsg: (msg: string) => void, setI
 };
 
 export const checkUsernameExists = async (username: string): Promise<boolean> => {
-    const response = await fetch(`${BASE_API_URL}/users`, {
+    const response = await fetch(`${process.env.BASE_API_URL}/users`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
@@ -213,5 +212,5 @@ export const checkUsernameExists = async (username: string): Promise<boolean> =>
     return false;
 };
 
-console.log(BASE_API_URL);
+console.log(process.env.BASE_API_URL);
 console.log(checkUsernameExists('test'));
