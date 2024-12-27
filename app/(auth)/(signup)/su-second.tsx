@@ -9,7 +9,7 @@ import { useState } from 'react';
 
 export default function SUSecond() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
-    const { signUp } = useSession();
+    const { signUp, login } = useSession();
     const [errorMsg, setErrorMsg] = useState('');
 
     return (
@@ -80,7 +80,11 @@ export default function SUSecond() {
                             signUpProps.sneaker_size,
                             signUpProps.gender
                         ).then(() => {
-                            router.replace('/');
+                            login(signUpProps.email, signUpProps.password).then(() => {
+                                router.replace('/(app)/(tabs)');
+                            }).catch((error) => {
+                                setErrorMsg(`Something went wrong. Please try again. ${error}`);
+                            });
                         }).catch((error) => {
                             setErrorMsg(`Something went wrong. Please try again. ${error}`);
                         });

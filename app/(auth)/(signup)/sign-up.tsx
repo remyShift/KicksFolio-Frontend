@@ -65,7 +65,7 @@ export default function Login() {
                             router.replace('/su-second');
                         }
                     } else {
-                        setErrorMsg('Please put your email, password and username.');
+                        setErrorMsg('Please put your information.');
                     }
                 }} />
 
