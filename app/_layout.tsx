@@ -4,6 +4,8 @@ import { useFonts } from 'expo-font';
 import "../global.css";
 
 export default function RootLayout() {
+  console.log("Root Layout Mounted");
+
   const [fontsLoaded] = useFonts({
     'Actonia': require('../assets/fonts/Actonia.ttf'),
     'Spacemono': require('../assets/fonts/SpaceMono-Regular.ttf'),
