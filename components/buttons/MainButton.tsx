@@ -1,8 +1,8 @@
-import { View, Pressable } from 'react-native';
+import { Pressable, Text } from 'react-native';
 import { useDownScaleAnimation } from '@/hooks';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
-export default function MainButton({content, onPress, backgroundColor}: {content: string, onPress: () => void, backgroundColor: string}) {
+export default function MainButton({content, onPressAction, backgroundColor}: {content: string, onPressAction: () => void, backgroundColor: string}) {
     const { scale, triggerAnimation } = useDownScaleAnimation();
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -12,21 +12,18 @@ export default function MainButton({content, onPress, backgroundColor}: {content
     });
 
     return (
-        <View className="flex flex-row">
+        <Animated.View className="flex flex-row" style={ animatedStyle }>
                 <Pressable 
                     className={`${backgroundColor} py-3 px-6 rounded-md w-2/3`}
                     onPress={() => {
                         triggerAnimation();
-                        onPress();
+                        onPressAction();
                     }}
                 >
-                <Animated.Text 
-                    className="font-spacemono-bold text-lg text-center text-white"
-                    style={animatedStyle}
-                >
+                <Text className="font-spacemono-bold text-lg text-center text-white">
                     {content}
-                </Animated.Text>
+                </Text>
             </Pressable>
-        </View>
+        </Animated.View>
     );
 }

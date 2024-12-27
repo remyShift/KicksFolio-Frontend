@@ -6,7 +6,7 @@ export const useUpScaleAnimation = (initialScale = 1) => {
 
     const triggerAnimation = () => {
         scale.value = withSequence(
-            withSpring(1.1),
+            withSpring(1.05),
             withSpring(1)
         );
     };
@@ -22,7 +22,7 @@ export const useDownScaleAnimation = (initialScale = 1) => {
 
     const triggerAnimation = () => {
         scale.value = withSequence(
-            withSpring(0.95),
+            withSpring(0.97),
             withSpring(1)
         );
     };

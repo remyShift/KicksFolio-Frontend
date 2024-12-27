@@ -256,12 +256,20 @@ export default function SUSecond() {
                         <MainButton 
                             content='Sign Up' 
                             backgroundColor='bg-primary' 
-                            onPress={handleSignUp}
+                            onPressAction={() => {
+                                setTimeout(() => {
+                                    handleSignUp();
+                                }, 300);
+                            }}
                         />
                         <MainButton 
                             content='Back' 
                             backgroundColor='bg-gray-400' 
-                            onPress={() => router.replace('/sign-up')} 
+                            onPressAction={() => {
+                                setTimeout(() => {
+                                    router.replace('/sign-up');
+                                }, 300);
+                            }} 
                         />
                     </View>
                 </View>

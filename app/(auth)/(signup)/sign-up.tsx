@@ -176,12 +176,20 @@ export default function SignUp() {
                         <MainButton 
                             content='Next' 
                             backgroundColor='bg-primary' 
-                            onPress={handleNextSignUpPage} 
+                            onPressAction={() => {
+                                setTimeout(() => {
+                                    handleNextSignUpPage();
+                                }, 300);
+                            }} 
                         />
                         <MainButton 
                             content='Login' 
                             backgroundColor='bg-gray-400' 
-                            onPress={() => router.replace('/login')} 
+                            onPressAction={() => {
+                                setTimeout(() => {
+                                    router.replace('/login');
+                                }, 300);
+                            }} 
                         />
                     </View>
                 </View>
