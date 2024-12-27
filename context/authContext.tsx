@@ -1,7 +1,6 @@
 import { useStorageState } from '@/hooks/useStorageState';
 import { createContext, useContext, type PropsWithChildren } from 'react';
-
-const API_URL = 'http://www.kicksfolio.app/api/v1/';
+import { BASE_API_URL } from '@env';
 
 const AuthContext = createContext<{
     login: (email: string, password: string) => Promise<void>;
@@ -32,7 +31,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const [[isLoading, session], setSession] = useStorageState('session');
 
     const login = async (email: string, password: string) => {
-        return fetch(`${API_URL}/login`, {
+        return fetch(`${BASE_API_URL}/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -55,7 +54,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string): Promise<void> => {
-        return fetch(`${API_URL}/users`, {
+        return fetch(`${BASE_API_URL}/users`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

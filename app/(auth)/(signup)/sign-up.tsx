@@ -5,7 +5,7 @@ import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
-import { getInputStyle, handleInputChange } from '@/scripts/formUtils';
+import { handleInputChange, checkUsername, checkEmail, checkPassword, checkBeforeNext } from '@/scripts/formUtils';
 
 export default function SignUp() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
@@ -18,6 +18,7 @@ export default function SignUp() {
     const [isPasswordError, setIsPasswordError] = useState(false);
     
     const scrollViewRef = useRef<ScrollView>(null);
+    const usernameInputRef = useRef<TextInput>(null);
     const emailInputRef = useRef<TextInput>(null);
     const passwordInputRef = useRef<TextInput>(null);
 
@@ -41,70 +42,30 @@ export default function SignUp() {
     };
 
     const handleInputBlur = (inputType: 'username' | 'email' | 'password', value: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
         if (inputType === 'username') {
             setIsUsernameFocused(false);
-            if (!value) {
-                setErrorMsg('Please put your username.');
-                setIsUsernameError(true);
-            }
+            checkUsername(value, setErrorMsg, setIsUsernameError);
         } else if (inputType === 'email') {
             setIsEmailFocused(false);
-            if (!value) {
-                setErrorMsg('Please put your email.');
-                setIsEmailError(true);
-            } else if (!emailRegex.test(value)) {
-                setErrorMsg('Please put a valid email.');
-                setIsEmailError(true);
-            }
+            checkEmail(value, setErrorMsg, setIsEmailError);
         } else {
             setIsPasswordFocused(false);
-            if (!value) {
-                setErrorMsg('Please put your password.');
-                setIsPasswordError(true);
-            }
+            checkPassword(value, setErrorMsg, setIsPasswordError);
         }
     };
 
-    const handleNext = () => {
-        if (!signUpProps.username) {
-            setErrorMsg('Please put your username.');
-            setIsUsernameError(true);
-            return;
-        }
+    const handleNextSignUpPage = () => {
+        const isUsernameValid = checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
+        const isEmailValid = checkEmail(signUpProps.email, setErrorMsg, setIsEmailError);
+        const isPasswordValid = checkPassword(signUpProps.password, setErrorMsg, setIsPasswordError);
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!signUpProps.email || !emailRegex.test(signUpProps.email)) {
-            setErrorMsg('Please put a valid email.');
-            setIsEmailError(true);
-            return;
-        }
-
-        if (!signUpProps.password) {
-            setErrorMsg('Please put your password.');
-            setIsPasswordError(true);
-            return;
-        }
-
-        if (!signUpProps.password.match(/^(?=.*[A-Z])(?=.*\d).+$/) || signUpProps.password.length < 8) {
-            setErrorMsg('Password must follow the rules.');
-            setIsPasswordError(true);
+        if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
+            setErrorMsg('Please correct all fields before continuing');
             return;
         }
 
         setErrorMsg('');
         router.replace('/su-second');
-    };
-
-    const handleEmailSubmit = (email: string) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email || !emailRegex.test(email)) {
-            setErrorMsg('Please put a valid email.');
-            setIsEmailError(true);
-            return false;
-        }
-        return true;
     };
 
     return (
@@ -127,20 +88,23 @@ export default function SignUp() {
                             <TextInput
                                 placeholder="johndoe42"
                                 inputMode='text'
+                                ref={usernameInputRef}
                                 value={signUpProps.username}
                                 autoComplete='username'
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => emailInputRef.current?.focus()}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', setErrorMsg, setIsUsernameError, usernameInputRef, emailInputRef)}
                                 onFocus={() => handleInputFocus('username')}
                                 onBlur={() => handleInputBlur('username', signUpProps.username)}
                                 onChangeText={(text) => {
                                     setSignUpProps({ ...signUpProps, username: text });
                                     handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, username: t }), setErrorMsg);
                                 }}
-                                className={getInputStyle(isUsernameError, isUsernameFocused)}
+                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
+                                    isUsernameError ? 'border-2 border-red-500' : ''
+                                } ${isUsernameFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
@@ -156,18 +120,16 @@ export default function SignUp() {
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => {
-                                    if (handleEmailSubmit(signUpProps.email)) {
-                                        passwordInputRef.current?.focus();
-                                    }
-                                }}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', setErrorMsg, setIsEmailError, emailInputRef, passwordInputRef)}
                                 onFocus={() => handleInputFocus('email')}
                                 onBlur={() => handleInputBlur('email', signUpProps.email)}
                                 onChangeText={(text) => {
                                     setSignUpProps({ ...signUpProps, email: text });
                                     handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, email: t }), setErrorMsg);
                                 }}
-                                className={getInputStyle(isEmailError, isEmailFocused)}
+                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
+                                    isEmailError ? 'border-2 border-red-500' : ''
+                                } ${isEmailFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
@@ -187,14 +149,16 @@ export default function SignUp() {
                                 placeholderTextColor='gray'
                                 returnKeyType='done'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={handleNext}
+                                onSubmitEditing={handleNextSignUpPage}
                                 onFocus={() => handleInputFocus('password')}
                                 onBlur={() => handleInputBlur('password', signUpProps.password)}
                                 onChangeText={(text) => {
                                     setSignUpProps({ ...signUpProps, password: text });
                                     handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, password: t }), setErrorMsg);
                                 }}
-                                className={getInputStyle(isPasswordError, isPasswordFocused)}
+                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
+                                    isPasswordError ? 'border-2 border-red-500' : ''
+                                } ${isPasswordFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
                     </View>
@@ -203,7 +167,7 @@ export default function SignUp() {
                         <MainButton 
                             content='Next' 
                             backgroundColor='bg-primary' 
-                            onPress={handleNext} 
+                            onPress={handleNextSignUpPage} 
                         />
                         <MainButton 
                             content='Login' 

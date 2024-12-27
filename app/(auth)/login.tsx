@@ -5,7 +5,7 @@ import { useState, useRef } from 'react';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import ErrorMsg from '@/components/text/ErrorMsg';
-import { getInputStyle, handleInputChange, handleEmailSubmit } from '@/scripts/formUtils';
+import { handleInputChange, checkBeforeNext } from '@/scripts/formUtils';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -15,10 +15,12 @@ export default function Login() {
     const [isEmailError, setIsEmailError] = useState(false);
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
+
     const { login } = useSession();
+
     const scrollViewRef = useRef<ScrollView>(null);
     const passwordInputRef = useRef<TextInput>(null);
-
+    const emailInputRef = useRef<TextInput>(null);
     const scrollToBottom = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
     };
@@ -93,17 +95,20 @@ export default function Login() {
                             <Text className='font-spacemono-bold text-lg'>Email</Text>
                             <TextInput
                                 placeholder="john@doe.com"
+                                ref={emailInputRef}
                                 inputMode='email'
                                 autoComplete='email'
                                 onFocus={() => handleInputFocus('email')}
                                 onBlur={() => handleInputBlur('email', email)}
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => handleEmailSubmit(email, setErrorMsg, setIsEmailError, passwordInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(email, 'email', setErrorMsg, setIsEmailError, emailInputRef, passwordInputRef)}
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
                                 onChangeText={(text) => handleInputChange(text, setEmail, setErrorMsg)}
-                                className={getInputStyle(isEmailError, isEmailFocused)}
+                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
+                                    isEmailError ? 'border-2 border-red-500' : ''
+                                } ${isEmailFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
@@ -111,19 +116,21 @@ export default function Login() {
                             <Text className='font-spacemono-bold text-lg'>Password</Text>
                             <TextInput 
                                 placeholder="********" 
+                                ref={passwordInputRef}
                                 inputMode='text'
                                 autoComplete='password'
-                                ref={passwordInputRef}
                                 autoCorrect={false}
                                 secureTextEntry={true}
                                 onFocus={() => handleInputFocus('password')}
                                 onBlur={() => handleInputBlur('password', password)}
                                 returnKeyType='done'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => {handleLogin()}}
+                                onSubmitEditing={() => handleLogin()}
                                 placeholderTextColor='gray'
                                 onChangeText={(text) => handleInputChange(text, setPassword, setErrorMsg)}
-                                className={getInputStyle(isPasswordError, isPasswordFocused)}
+                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
+                                    isPasswordError ? 'border-2 border-red-500' : ''
+                                } ${isPasswordFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
                     </View>
