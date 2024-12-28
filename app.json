@@ -8,6 +8,14 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/splash-icon.png",
+      "resizeMode": "contain",
+      "imageResizeMode": "contain",
+      "imageWidth": 600,
+      "imageHeight": 600,
+      "backgroundColor": "#F27329"
+    },
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.remyshift.KicksFolio"
@@ -33,8 +41,8 @@
           "image": "./assets/images/splash-icon.png",
           "resizeMode": "contain",
           "imageResizeMode": "contain",
-          "imageWidth": 100,
-          "imageHeight": 100,
+          "imageWidth": 600,
+          "imageHeight": 600,
           "backgroundColor": "#F27329"
         }
       ]
