@@ -16,7 +16,7 @@ export default function Login() {
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
 
-    const { login } = useSessionToken();
+    const { login, userCollection } = useSessionToken();
 
     const scrollViewRef = useRef<ScrollView>(null);
     const passwordInputRef = useRef<TextInput>(null);
@@ -68,8 +68,12 @@ export default function Login() {
 
         if (email && password) {
             await login(email, password).then(() => {
-                router.replace('/(app)/(tabs)');
                 setErrorMsg('');
+                if (!userCollection?.name) {
+                    router.replace('/collection');
+                } else {
+                    router.replace('/(app)/(tabs)');
+                }
             }).catch((error) => {
                 setErrorMsg('Invalid email or password.');
                 setIsEmailError(true);

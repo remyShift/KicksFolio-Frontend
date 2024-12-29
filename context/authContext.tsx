@@ -48,7 +48,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
     useEffect(() => {
         if (sessionToken) {
             getUser();
-            console.log(user);
         }
     }, [sessionToken]);
 
@@ -57,7 +56,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
             getUserCollection();
             getUserSneakers();
             console.log(userCollection);
-            console.log(userSneakers);
         }
     }, [user]);
 
@@ -131,9 +129,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
             return response.json();
         })
-        .then(data => {
-            console.log(data);
-            setUser(data);
+        .then((data) => {
+            setUser(data.user);
             getUserCollection();
             getUserSneakers();
         })
@@ -155,7 +152,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             return response.json();
         })
         .then(data => {
-            setUserCollection(data);
+            setUserCollection(data.collection);
         })
         .catch(error => {
             console.error(`Error when getting user collection: ${error}`);
@@ -175,7 +172,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             return response.json();
         })
         .then(data => {
-            setUserSneakers(data);
+            setUserSneakers(data.sneakers);
         })
         .catch(error => {
             console.error(`Error when getting user sneakers: ${error}`);

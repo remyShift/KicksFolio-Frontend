@@ -3,12 +3,17 @@ import MainButton from "@/components/buttons/MainButton";
 import { useState, useRef } from "react";
 import PageTitle from "@/components/text/PageTitle";
 import ErrorMsg from "@/components/text/ErrorMsg";
+import { router } from "expo-router";
+import { useSessionToken } from "@/context/authContext";
+import { createCollection } from "@/scripts/handleCollection";
 
 export default function Collection() {
     const [isCollectionNameFocused, setIsCollectionNameFocused] = useState(false);
     const [isCollectionNameError, setIsCollectionNameError] = useState(false);
+    const [collectionName, setCollectionName] = useState('');
     const [errorMsg, setErrorMsg] = useState('');
     const scrollViewRef = useRef<ScrollView>(null);
+    const { user, sessionToken, getUserCollection } = useSessionToken();
 
     return (
         <KeyboardAvoidingView 
@@ -27,6 +32,8 @@ export default function Collection() {
                         <Text className="text-lg font-spacemono-bold">Please give a name to your collection :</Text>
                         <TextInput
                             placeholder="Collection name"
+                            value={collectionName}
+                            onChangeText={setCollectionName}
                             className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
                                 isCollectionNameError ? 'border-2 border-red-500' : ''
                             } ${isCollectionNameFocused ? 'border-2 border-primary' : ''}`}
@@ -34,9 +41,25 @@ export default function Collection() {
                         <MainButton 
                             content='Next' 
                             backgroundColor='bg-primary' 
-                            onPressAction={() => {
-                                alert('Next');
-                                }} 
+                            onPressAction={async () => {
+                                if (collectionName.length === 0) {
+                                    setIsCollectionNameError(true);
+                                    setErrorMsg('Please put a name to your collection.');
+                                } else {
+                                    setIsCollectionNameFocused(false);
+                                    setIsCollectionNameError(false);
+                                    setErrorMsg('');
+                                    if (user && sessionToken) {
+                                        createCollection(collectionName, user.id, sessionToken).then(() => {
+                                            getUserCollection().then(() => {
+                                                router.replace('/(app)/(tabs)');
+                                            });
+                                        });
+                                    } else {
+                                        setErrorMsg('Something went wrong, please try again.');
+                                    }
+                                }
+                            }} 
                         />
                     </View>
                 </View>
