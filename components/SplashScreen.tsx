@@ -1,10 +1,33 @@
 import { View } from 'react-native';
-import { useSplash } from '@/context/splashContext';
-import Animated, { FadeIn } from 'react-native-reanimated';
+import Animated, { FadeIn, withTiming, useSharedValue, useAnimatedStyle, runOnJS } from 'react-native-reanimated';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { useState } from 'react';
 
-export default function SplashScreen() {
-  const { setIsSplashScreenVisible } = useSplash();
+type SplashScreenProps = {
+  handleAnimationFinish: () => void;
+}
+
+const AnimatedShoeIcon = Animated.createAnimatedComponent(MaterialCommunityIcons);
+
+export default function SplashScreen({ handleAnimationFinish }: SplashScreenProps) {
+  const [textAnimationFinished, setTextAnimationFinished] = useState(false);
   const letters = 'KicksFolio'.split('');
+  const rotation = useSharedValue(0);
+
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ rotate: `${rotation.value}deg` }],
+  }));
+
+  const startRotation = () => {
+    rotation.value = withTiming(360, { duration: 1000 });
+  };
+
+  if (textAnimationFinished) {
+    setTimeout(() => {
+      startRotation();
+    }, 1000);
+  }
 
   return (
     <View className="flex-1 items-center justify-center bg-primary">
@@ -15,11 +38,20 @@ export default function SplashScreen() {
             entering={FadeIn.duration(500).delay(index * 150)}
             className="text-white text-6xl font-bold font-actonia px-2.5"
             style={{ marginRight: index < letters.length - 1 ? -12 : 0 }}
+            onLayout={index === letters.length - 1 ? () => setTextAnimationFinished(true) : undefined}
           >
             {letter}
           </Animated.Text>
         ))}
       </View>
+      <AnimatedShoeIcon
+        name="shoe-sneaker"
+        size={50}
+        color="white"
+        entering={FadeIn.duration(500).delay(500)}
+        onLayout={() => handleAnimationFinish()}
+        style={animatedStyle}
+      />
     </View>
   );
 }
@@ -27,7 +59,7 @@ export default function SplashScreen() {
 
 
 
-      {/* <LottieView 
+      /* <LottieView 
         source={require('../assets/animations/splash.json')} 
         autoPlay 
         loop={false}
@@ -35,4 +67,4 @@ export default function SplashScreen() {
           setIsSplashScreenVisible(false);
         }}
         style={{ width: '100%', height: '100%' }}
-      /> */}
+      /> */

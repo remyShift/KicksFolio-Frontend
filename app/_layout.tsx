@@ -2,8 +2,8 @@ import { Slot } from 'expo-router';
 import { SessionProvider } from '@/context/authContext';
 import { useFonts } from 'expo-font';
 import "../global.css";
-import { useSplash } from '@/context/splashContext';
 import SplashScreen from '@/components/SplashScreen';
+import { useState } from 'react';
 
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
@@ -14,14 +14,14 @@ export default function RootLayout() {
     'SpaceMono-Bold': require('../assets/fonts/SpaceMono-Bold.ttf'),
   });
 
-  const { isSplashScreenVisible } = useSplash();
-
+  const [isSplashScreenVisible, setIsSplashScreenVisible] = useState(true);
+  
   if (!fontsLoaded) {
     return null;
   }
 
   if (isSplashScreenVisible) {
-    return <SplashScreen />;
+    return <SplashScreen handleAnimationFinish={() => setIsSplashScreenVisible(false)} />;
   }
 
   return (
@@ -30,4 +30,5 @@ export default function RootLayout() {
     </SessionProvider>
   );
 }
+
 
