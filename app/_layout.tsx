@@ -5,14 +5,16 @@ import "../global.css";
 import SplashScreen from '@/components/SplashScreen';
 import { useState } from 'react';
 
+const FONTS = {
+  'Actonia': require('../assets/fonts/Actonia.ttf'),
+  'Spacemono': require('../assets/fonts/SpaceMono-Regular.ttf'),
+  'Syne-ExtraBold': require('../assets/fonts/Syne-ExtraBold.ttf'),
+  'Syne-SemiBold': require('../assets/fonts/Syne-SemiBold.ttf'),
+  'SpaceMono-Bold': require('../assets/fonts/SpaceMono-Bold.ttf'),
+} as const;
+
 export default function RootLayout() {
-  const [fontsLoaded] = useFonts({
-    'Actonia': require('../assets/fonts/Actonia.ttf'),
-    'Spacemono': require('../assets/fonts/SpaceMono-Regular.ttf'),
-    'Syne-ExtraBold': require('../assets/fonts/Syne-ExtraBold.ttf'),
-    'Syne-SemiBold': require('../assets/fonts/Syne-SemiBold.ttf'),
-    'SpaceMono-Bold': require('../assets/fonts/SpaceMono-Bold.ttf'),
-  });
+  const [fontsLoaded] = useFonts(FONTS);
 
   const [isSplashScreenVisible, setIsSplashScreenVisible] = useState(true);
   
@@ -22,13 +24,13 @@ export default function RootLayout() {
 
   if (isSplashScreenVisible) {
     return <SplashScreen handleAnimationFinish={() => setIsSplashScreenVisible(false)} />;
+  } else {
+    return (
+      <SessionProvider>
+        <Slot />
+      </SessionProvider>
+    );
   }
-
-  return (
-    <SessionProvider>
-      <Slot />
-    </SessionProvider>
-  );
 }
 
 

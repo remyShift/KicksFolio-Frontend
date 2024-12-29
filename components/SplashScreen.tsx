@@ -1,33 +1,40 @@
 import { View } from 'react-native';
-import Animated, { FadeIn, withTiming, useSharedValue, useAnimatedStyle, runOnJS } from 'react-native-reanimated';
+import Animated, { FadeIn, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 type SplashScreenProps = {
   handleAnimationFinish: () => void;
 }
 
-const AnimatedShoeIcon = Animated.createAnimatedComponent(MaterialCommunityIcons);
-
 export default function SplashScreen({ handleAnimationFinish }: SplashScreenProps) {
   const [textAnimationFinished, setTextAnimationFinished] = useState(false);
   const letters = 'KicksFolio'.split('');
+  const AnimatedShoeIcon = Animated.createAnimatedComponent(MaterialCommunityIcons);
+
   const rotation = useSharedValue(0);
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${rotation.value}deg` }],
+    };
+  });
 
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: `${rotation.value}deg` }],
-  }));
+  useEffect(() => {
+    if (textAnimationFinished) {
+      setTimeout(() => {
+        handleAnimationFinish();
+      }, 2500);
+    }
+  }, [textAnimationFinished]);
 
-  const startRotation = () => {
-    rotation.value = withTiming(360, { duration: 1000 });
-  };
-
-  if (textAnimationFinished) {
+  useEffect(() => {
+    const halfwayIndex = Math.floor(letters.length / 2);
+    const delay = halfwayIndex * 150 + 250;
     setTimeout(() => {
-      startRotation();
-    }, 1000);
-  }
+      rotation.value = withTiming(360, { duration: 1000 });
+    }, delay);
+  }, []);
 
   return (
     <View className="flex-1 items-center justify-center bg-primary">
@@ -49,22 +56,8 @@ export default function SplashScreen({ handleAnimationFinish }: SplashScreenProp
         size={50}
         color="white"
         entering={FadeIn.duration(500).delay(500)}
-        onLayout={() => handleAnimationFinish()}
         style={animatedStyle}
       />
     </View>
   );
 }
-
-
-
-
-      /* <LottieView 
-        source={require('../assets/animations/splash.json')} 
-        autoPlay 
-        loop={false}
-        onAnimationFinish={() => {
-          setIsSplashScreenVisible(false);
-        }}
-        style={{ width: '100%', height: '100%' }}
-      /> */
