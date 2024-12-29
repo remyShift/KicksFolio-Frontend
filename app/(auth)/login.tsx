@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { View, TextInput, KeyboardAvoidingView, Text, Platform, ScrollView } from 'react-native';
-import { useSessionToken } from '@/context/authContext';
+import { useSession } from '@/context/authContext';
 import { useState, useRef } from 'react';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
@@ -16,7 +16,7 @@ export default function Login() {
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
 
-    const { login, userCollection } = useSessionToken();
+    const { login, userCollection } = useSession();
 
     const scrollViewRef = useRef<ScrollView>(null);
     const passwordInputRef = useRef<TextInput>(null);

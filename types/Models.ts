@@ -8,6 +8,9 @@ export type User = {
     gender: string;
     created_at: string;
     updated_at: string;
+    collection: Collection;
+    friends: User[];
+    sneakers: Sneaker[];
 }
 
 export type Collection = {
@@ -21,6 +24,7 @@ export type Collection = {
 export type Sneaker = {
     id: string;
     name: string;
+    image: string;
     brand: string;
     size: number;
     release_date: string;

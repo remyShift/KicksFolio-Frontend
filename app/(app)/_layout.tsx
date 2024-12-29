@@ -1,10 +1,10 @@
 import { Text } from 'react-native';
 import { Redirect, Stack } from 'expo-router';
 
-import { useSessionToken } from '@/context/authContext';
+import { useSession } from '@/context/authContext';
 
 export default function AppLayout() {
-    const { sessionToken, isLoading, user, userCollection } = useSessionToken();
+    const { sessionToken, isLoading, user, userCollection } = useSession();
 
   // You can keep the splash screen open, or render a loading screen like we do here.
     if (isLoading) {

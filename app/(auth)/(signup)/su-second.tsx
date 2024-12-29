@@ -3,14 +3,14 @@ import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView } fro
 import { useSignUpProps } from '@/context/signUpPropsContext';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
-import { useSessionToken } from '@/context/authContext';
+import { useSession } from '@/context/authContext';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
 import { handleInputChange, checkBeforeNext, checkName, checkSize, checkGender } from '@/scripts/formUtils';
 
 export default function SUSecond() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
-    const { signUp, login } = useSessionToken();
+    const { signUp, login } = useSession();
     const [errorMsg, setErrorMsg] = useState('');
     
     const [isFirstNameFocused, setIsFirstNameFocused] = useState(false);

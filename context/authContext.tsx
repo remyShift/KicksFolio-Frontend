@@ -10,7 +10,8 @@ const AuthContext = createContext<{
     isLoading: boolean;
     user?: User | null;
     userCollection?: Collection | null;
-    userSneakers?: Sneaker | null;
+    userSneakers?: Sneaker[] | null;
+    userFriends?: User[] | null;
     getUser: () => Promise<void>;
     getUserCollection: () => Promise<void>;
     getUserSneakers: () => Promise<void>;
@@ -23,12 +24,13 @@ const AuthContext = createContext<{
         user: null,
         userCollection: null,
         userSneakers: null,
+        userFriends: null,
         getUser: async () => {},
         getUserCollection: async () => {},
         getUserSneakers: async () => {}
 });
 
-export function useSessionToken() {
+export function useSession() {
     const value = useContext(AuthContext);
     if (process.env.NODE_ENV !== 'production') {
         if (!value) {
@@ -42,8 +44,9 @@ export function useSessionToken() {
 export function SessionProvider({ children }: PropsWithChildren) {
     const [[isLoading, sessionToken], setSessionToken] = useStorageState('sessionToken');
     const [userCollection, setUserCollection] = useState<Collection | null>(null);
-    const [userSneakers, setUserSneakers] = useState<Sneaker | null>(null);
+    const [userSneakers, setUserSneakers] = useState<Sneaker[] | null>(null);
     const [user, setUser] = useState<User | null>(null);
+    const [userFriends, setUserFriends] = useState<User[] | null>(null);
 
     useEffect(() => {
         if (sessionToken) {
@@ -140,7 +143,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const getUserCollection = async () => {
-        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me/collection`, {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user?.id}/collection`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
@@ -160,7 +163,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const getUserSneakers = async () => {
-        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me/sneakers`, {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user?.id}/collection/sneakers`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
@@ -176,6 +179,26 @@ export function SessionProvider({ children }: PropsWithChildren) {
         })
         .catch(error => {
             console.error(`Error when getting user sneakers: ${error}`);
+        });
+    };
+
+    const getUserFriends = async () => {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user?.id}/collection/friends`, {
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error when getting user friends');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setUserFriends(data.friends);
+        })
+        .catch(error => {
+            console.error(`Error when getting user friends: ${error}`);
         });
     };
 
