@@ -1,9 +1,9 @@
 import MainButton from '@/components/buttons/MainButton';
 import { Text, View } from 'react-native';
-import { useSession } from '@/context/authContext';
+import { useSessionToken } from '@/context/authContext';
 
 export default function Tab() {
-  const { logout } = useSession();
+  const { logout } = useSessionToken();
 
   return (
     <View className="flex-1 justify-center items-center">

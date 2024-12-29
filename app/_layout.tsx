@@ -24,13 +24,13 @@ export default function RootLayout() {
 
   if (isSplashScreenVisible) {
     return <SplashScreen handleAnimationFinish={() => setIsSplashScreenVisible(false)} />;
-  } else {
-    return (
-      <SessionProvider>
-        <Slot />
-      </SessionProvider>
-    );
   }
+
+  return (
+    <SessionProvider>
+      <Slot />
+    </SessionProvider>
+  );
 }
 
 

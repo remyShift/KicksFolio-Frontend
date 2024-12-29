@@ -24,7 +24,7 @@ export const checkBeforeNext = async (
             isValid = await checkUsername(value, setErrorMsg, setIsError);
             break;
         case 'email':
-            isValid = checkEmail(value, setErrorMsg, setIsError);
+            isValid = await checkEmail(value, setErrorMsg, setIsError);
             break;
         case 'password':
             isValid = checkPassword(value, setErrorMsg, setIsError);
@@ -98,7 +98,7 @@ export const checkUsername = async (
     return Promise.resolve(true);
 };
 
-export const checkEmail = (email: string, setErrorMsg: (msg: string) => void, setIsEmailError: (isError: boolean) => void): boolean => {
+export const checkEmail = async (email: string, setErrorMsg: (msg: string) => void, setIsEmailError: (isError: boolean) => void): Promise<boolean> => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
         setErrorMsg('Please put your email.');
@@ -106,6 +106,10 @@ export const checkEmail = (email: string, setErrorMsg: (msg: string) => void, se
         return false;
     } else if (!emailRegex.test(email)) {
         setErrorMsg('Please put a valid email.');
+        setIsEmailError(true);
+        return false;
+    } else if (await checkEmailExists(email)) {
+        setErrorMsg('This email is already taken.');
         setIsEmailError(true);
         return false;
     }
@@ -179,4 +183,16 @@ export const checkUsernameExists = async (username: string): Promise<boolean> =>
     return data.users.some((user: { username: string }) => user.username === username);
 };
 
-console.log(checkUsernameExists('test')); 
+export const checkEmailExists = async (email: string): Promise<boolean> => {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users`, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+
+    if (!response.ok) return false;
+
+    const data = await response.json();
+    return data.users.some((user: { email: string }) => user.email === email);
+};

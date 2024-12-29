@@ -1,21 +1,34 @@
 import { useStorageState } from '@/hooks/useStorageState';
-import { createContext, useContext, type PropsWithChildren } from 'react';
+import { createContext, useContext, type PropsWithChildren, useState, useEffect } from 'react';
+import { User, Collection, Sneaker } from '@/types/Models';
 
 const AuthContext = createContext<{
     login: (email: string, password: string) => Promise<void>;
     signUp: (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string) => Promise<void>;
     logout: () => void;
-    session?: string | null;
+    sessionToken?: string | null;
     isLoading: boolean;
+    user?: User | null;
+    userCollection?: Collection | null;
+    userSneakers?: Sneaker | null;
+    getUser: () => Promise<void>;
+    getUserCollection: () => Promise<void>;
+    getUserSneakers: () => Promise<void>;
     }>({
         login: async () => {},
         signUp: async () => {},
         logout: () => {},
-        session: null,
+        sessionToken: null,
         isLoading: false,
+        user: null,
+        userCollection: null,
+        userSneakers: null,
+        getUser: async () => {},
+        getUserCollection: async () => {},
+        getUserSneakers: async () => {}
 });
 
-export function useSession() {
+export function useSessionToken() {
     const value = useContext(AuthContext);
     if (process.env.NODE_ENV !== 'production') {
         if (!value) {
@@ -27,7 +40,26 @@ export function useSession() {
 }
 
 export function SessionProvider({ children }: PropsWithChildren) {
-    const [[isLoading, session], setSession] = useStorageState('session');
+    const [[isLoading, sessionToken], setSessionToken] = useStorageState('sessionToken');
+    const [userCollection, setUserCollection] = useState<Collection | null>(null);
+    const [userSneakers, setUserSneakers] = useState<Sneaker | null>(null);
+    const [user, setUser] = useState<User | null>(null);
+
+    useEffect(() => {
+        if (sessionToken) {
+            getUser();
+            console.log(user);
+        }
+    }, [sessionToken]);
+
+    useEffect(() => {
+        if (user) {
+            getUserCollection();
+            getUserSneakers();
+            console.log(userCollection);
+            console.log(userSneakers);
+        }
+    }, [user]);
 
     const login = async (email: string, password: string) => {
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/login`, {
@@ -45,7 +77,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         })
         .then(data => {
             const { token } = data;
-            setSession(token);
+            setSessionToken(token);
         })
         .catch(error => {
             throw new Error('Invalid email or password');
@@ -81,7 +113,73 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const logout = () => {
-        setSession(null);
+        setSessionToken(null);
+        setUserCollection(null);
+        setUserSneakers(null);
+        setUser(null);
+    };
+
+    const getUser = async () => {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me`, {
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error when getting user');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+            setUser(data);
+            getUserCollection();
+            getUserSneakers();
+        })
+        .catch(error => {
+            console.error(`Error when getting user: ${error}`);
+        });
+    };
+
+    const getUserCollection = async () => {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me/collection`, {
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error when getting user collection');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setUserCollection(data);
+        })
+        .catch(error => {
+            console.error(`Error when getting user collection: ${error}`);
+        });
+    };
+
+    const getUserSneakers = async () => {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me/sneakers`, {
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error when getting user sneakers');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setUserSneakers(data);
+        })
+        .catch(error => {
+            console.error(`Error when getting user sneakers: ${error}`);
+        });
     };
 
     return (
@@ -90,8 +188,14 @@ export function SessionProvider({ children }: PropsWithChildren) {
                 login,
                 signUp,
                 logout,
-                session,
+                sessionToken,
                 isLoading,
+                userCollection,
+                userSneakers,
+                user,
+                getUser,
+                getUserCollection,
+                getUserSneakers
             }}>
             {children}
         </AuthContext.Provider>

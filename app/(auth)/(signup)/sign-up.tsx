@@ -56,7 +56,7 @@ export default function SignUp() {
 
     const handleNextSignUpPage = async () => {
         const isUsernameValid = await checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
-        const isEmailValid = checkEmail(signUpProps.email, setErrorMsg, setIsEmailError);
+        const isEmailValid = await checkEmail(signUpProps.email, setErrorMsg, setIsEmailError);
         const isPasswordValid = checkPassword(signUpProps.password, setErrorMsg, setIsPasswordError);
 
         if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
