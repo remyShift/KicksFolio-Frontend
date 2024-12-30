@@ -25,7 +25,7 @@ export default function Collection() {
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
                 scrollEnabled={isCollectionNameFocused}>
-                <View className="flex-1 items-center gap-12 p-4 pt-20 bg-background">
+                <View className="flex-1 items-center gap-12 p-4 bg-background">
                     <PageTitle content='Welcome to KicksFolio !' />
                     <View className='flex justify-center items-center gap-8 w-full mt-32'>
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />

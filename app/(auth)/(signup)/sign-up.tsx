@@ -81,7 +81,7 @@ export default function SignUp() {
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
                 scrollEnabled={isUsernameFocused || isEmailFocused || isPasswordFocused}>
-                <View className="flex-1 items-center gap-12 p-4 pt-20">
+                <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
                     <View className='flex justify-center items-center gap-8 w-full mt-32'>
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />

@@ -140,7 +140,7 @@ export default function SUSecond() {
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
                 scrollEnabled={isFirstNameFocused || isLastNameFocused || isSizeFocused || isGenderFocused}>
-                <View className="flex-1 items-center gap-12 p-4 pt-20">
+                <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
                     <View className='flex gap-6 justify-center items-center w-full mt-20'>
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />

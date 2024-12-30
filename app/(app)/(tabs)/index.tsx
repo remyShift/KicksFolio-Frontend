@@ -12,7 +12,7 @@ export default function Tab() {
 
     return (
         <ScrollView className="flex-1">
-            <View className="flex-1 pt-20 gap-10">
+            <View className="flex-1 gap-10">
                 <PageTitle content="KicksFolio" />
 
                 <View className='flex-1 gap-32'>

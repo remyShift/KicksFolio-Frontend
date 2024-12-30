@@ -8,7 +8,7 @@ export default function Tab() {
   const { logout, user, userCollection, userSneakers } = useSession();
 
   return (
-    <View className="flex-1 pt-20">
+    <View className="flex-1">
       <PageTitle content="Profile" />
       <View className="flex-1 gap-12 mt-12">
         <View className="flex-1 gap-4">

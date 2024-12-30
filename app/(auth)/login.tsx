@@ -92,7 +92,7 @@ export default function Login() {
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
                 scrollEnabled={isEmailFocused || isPasswordFocused}>
-                <View className="flex-1 items-center gap-12 p-4 pt-20">
+                <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Login' />
                     <View className='flex justify-center items-center gap-8 w-full mt-48'>
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />

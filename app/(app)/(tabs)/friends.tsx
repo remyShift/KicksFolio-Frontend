@@ -10,7 +10,7 @@ export default function Tab() {
     const { userFriends } = useSession();
 
     return (
-      <View className="flex-1 pt-20">
+      <View className="flex-1">
         <PageTitle content="Friends" />
 
         {userFriends && userFriends.length > 0 ? (
