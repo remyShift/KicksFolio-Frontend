@@ -94,7 +94,7 @@ export default function Login() {
                 scrollEnabled={isEmailFocused || isPasswordFocused}>
                 <View className="flex-1 items-center gap-12 p-4 pt-20">
                     <PageTitle content='Login' />
-                    <View className='flex justify-center items-center gap-8 w-full mt-48'>
+                    <View className='flex justify-cente r items-center gap-8 w-full mt-48'>
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <Text className='font-spacemono-bold text-lg'>Email</Text>

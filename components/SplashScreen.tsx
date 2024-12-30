@@ -1,5 +1,5 @@
 import { View } from 'react-native';
-import Animated, { FadeIn, useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
+import Animated, { FadeIn } from 'react-native-reanimated';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useState, useEffect } from 'react';
 
@@ -12,29 +12,11 @@ export default function SplashScreen({ handleAnimationFinish }: SplashScreenProp
   const letters = 'KicksFolio'.split('');
   const AnimatedShoeIcon = Animated.createAnimatedComponent(MaterialCommunityIcons);
 
-  const rotation = useSharedValue(0);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      transform: [{ rotate: `${rotation.value}deg` }],
-    };
-  });
-
   useEffect(() => {
-    if (textAnimationFinished) {
-      setTimeout(() => {
-        handleAnimationFinish();
-      }, 2500);
-    }
-  }, [textAnimationFinished]);
-
-  useEffect(() => {
-    const halfwayIndex = Math.floor(letters.length / 2);
-    const delay = halfwayIndex * 150 + 250;
     setTimeout(() => {
-      rotation.value = withTiming(360, { duration: 1000 });
-    }, delay);
-  }, []);
+      handleAnimationFinish();
+    }, 2500);
+  }, [textAnimationFinished]);
 
   return (
     <View className="flex-1 items-center justify-center bg-primary">
@@ -56,7 +38,6 @@ export default function SplashScreen({ handleAnimationFinish }: SplashScreenProp
         size={50}
         color="white"
         entering={FadeIn.duration(500).delay(500)}
-        style={animatedStyle}
       />
     </View>
   );

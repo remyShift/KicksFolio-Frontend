@@ -54,7 +54,7 @@ export default function Collection() {
                                     if (user && sessionToken) {
                                         await createCollection(collectionName, user.id, sessionToken);
                                         await  getUserCollection();
-                                        router.replace('/(app)/(tabs)');
+                                        router.replace('/(app)/(tabs)?newUser=true');
                                     } else {
                                         setErrorMsg('Something went wrong, please try again. 3');
                                     }
