@@ -120,12 +120,13 @@ export default function SUSecond() {
             signUpProps.gender
         ).then(() => {
             login(signUpProps.email, signUpProps.password).then(() => {
+                setSignUpProps({ ...signUpProps, email: '', password: '', username: '', first_name: '', last_name: '', sneaker_size: 0, gender: '' });
                 router.replace('/collection');
             }).catch((error) => {
-                setErrorMsg(`Something went wrong. Please try again. ${error}`);
+                setErrorMsg(`Something went wrong. Please try again 1. ${error}`);
             });
         }).catch((error) => {
-            setErrorMsg(`Something went wrong. Please try again. ${error}`);
+            setErrorMsg(`Something went wrong. Please try again 2. ${error}`);
         });
     };
 

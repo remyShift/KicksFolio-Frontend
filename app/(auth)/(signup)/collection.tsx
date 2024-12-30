@@ -49,12 +49,14 @@ export default function Collection() {
                                     setIsCollectionNameFocused(false);
                                     setIsCollectionNameError(false);
                                     setErrorMsg('');
+                                    console.log(user)
+                                    console.log(sessionToken)
                                     if (user && sessionToken) {
                                         await createCollection(collectionName, user.id, sessionToken);
                                         await  getUserCollection();
                                         router.replace('/(app)/(tabs)');
                                     } else {
-                                        setErrorMsg('Something went wrong, please try again.');
+                                        setErrorMsg('Something went wrong, please try again. 3');
                                     }
                                 }
                             }} 

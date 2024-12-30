@@ -1,5 +1,5 @@
 import { useStorageState } from '@/hooks/useStorageState';
-import { createContext, useContext, type PropsWithChildren, useState } from 'react';
+import { createContext, useContext, type PropsWithChildren, useState, useEffect } from 'react';
 import { User, Collection, Sneaker } from '@/types/Models';
 
 const AuthContext = createContext<{
@@ -50,6 +50,17 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const [user, setUser] = useState<User | null>(null);
     const [userFriends, setUserFriends] = useState<User[] | null>(null);
 
+    useEffect(() => {
+        if (sessionToken) {
+            getUser();
+        } else {
+            setUser(null);
+            setUserCollection(null);
+            setUserSneakers(null);
+            setUserFriends(null);
+        }
+    }, [sessionToken]);
+
     const login = async (email: string, password: string) => {
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/login`, {
             method: 'POST',
@@ -67,7 +78,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
         .then(async data => {
             const { token } = data;
             setSessionToken(token);
-            await getUser();
         })
         .catch(error => {
             throw new Error('Invalid email or password');
