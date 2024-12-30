@@ -21,21 +21,21 @@ export default function Tab() {
                         <CollectionCard userCollection={userCollection} userSneakers={userSneakers} />
                     </View>
 
-                    {userFriends && userFriends.length > 0 && (
+                    {userFriends && userFriends.length > 0 ? (
                         userFriends.map((friend) => (
                             <View className="flex-1 gap-4">
                                 <FriendTitle content={`${friend.username}`} />
                                 <CollectionCard userCollection={friend.collection} userSneakers={friend.sneakers} />
                             </View>
                         ))
+                    ) : (
+                        <View className="flex-1 gap-4 items-center justify-center">
+                            <Title content="Add some friends" isTextCenter={true} />
+                            <MainButton content="Browse" backgroundColor="bg-primary" onPressAction={() => {
+                                alert('Feature in development ...');
+                            }} />
+                        </View>
                     )}
-
-                    <View className="flex-1 gap-4 items-center justify-center">
-                        <Title content="Add some friends" isTextCenter={true} />
-                        <MainButton content="Add friends" backgroundColor="bg-primary" onPressAction={() => {
-                            alert('Feature in development ...');
-                        }} />
-                    </View>
                 </View>
             </View>
         </ScrollView>

@@ -13,6 +13,7 @@ export const handleInputChange = (
 export const checkBeforeNext = async (
     value: string, 
     inputType: 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size' | 'gender',
+    isLoginPage: boolean,
     setErrorMsg: (msg: string) => void,
     setIsError: (isError: boolean) => void,
     nextRef: RefObject<TextInput> | null
@@ -24,7 +25,7 @@ export const checkBeforeNext = async (
             isValid = await checkUsername(value, setErrorMsg, setIsError);
             break;
         case 'email':
-            isValid = await checkEmail(value, setErrorMsg, setIsError);
+            isValid = await checkEmail(value, isLoginPage, setErrorMsg, setIsError);
             break;
         case 'password':
             isValid = checkPassword(value, setErrorMsg, setIsError);
@@ -98,7 +99,7 @@ export const checkUsername = async (
     return Promise.resolve(true);
 };
 
-export const checkEmail = async (email: string, setErrorMsg: (msg: string) => void, setIsEmailError: (isError: boolean) => void): Promise<boolean> => {
+export const checkEmail = async (email: string, isLoginPage: boolean, setErrorMsg: (msg: string) => void, setIsEmailError: (isError: boolean) => void): Promise<boolean> => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email) {
         setErrorMsg('Please put your email.');
@@ -108,7 +109,7 @@ export const checkEmail = async (email: string, setErrorMsg: (msg: string) => vo
         setErrorMsg('Please put a valid email.');
         setIsEmailError(true);
         return false;
-    } else if (await checkEmailExists(email)) {
+    } else if (await checkEmailExists(email) && !isLoginPage) {
         setErrorMsg('This email is already taken.');
         setIsEmailError(true);
         return false;

@@ -109,7 +109,7 @@ export default function Login() {
                                 onBlur={() => handleInputBlur('email', email)}
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(email, 'email', setErrorMsg, setIsEmailError, passwordInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(email, 'email', true, setErrorMsg, setIsEmailError, passwordInputRef)}
                                 autoCorrect={false}
                                 placeholderTextColor='gray'
                                 onChangeText={(text) => handleInputChange(text, setEmail, setErrorMsg)}

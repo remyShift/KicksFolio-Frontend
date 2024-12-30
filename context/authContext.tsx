@@ -1,5 +1,5 @@
 import { useStorageState } from '@/hooks/useStorageState';
-import { createContext, useContext, type PropsWithChildren, useState, useEffect } from 'react';
+import { createContext, useContext, type PropsWithChildren, useState } from 'react';
 import { User, Collection, Sneaker } from '@/types/Models';
 
 const AuthContext = createContext<{
@@ -12,9 +12,10 @@ const AuthContext = createContext<{
     userCollection?: Collection | null;
     userSneakers?: Sneaker[] | null;
     userFriends?: User[] | null;
-    getUser: () => Promise<void>;
-    getUserCollection: () => Promise<void>;
-    getUserSneakers: () => Promise<void>;
+    getUser: () => Promise<void | undefined>;
+    getUserCollection: () => Promise<void | undefined>;
+    getUserSneakers: () => Promise<void | undefined>;
+    getUserFriends: () => Promise<void | undefined>;
     }>({
         login: async () => {},
         signUp: async () => {},
@@ -27,7 +28,8 @@ const AuthContext = createContext<{
         userFriends: null,
         getUser: async () => {},
         getUserCollection: async () => {},
-        getUserSneakers: async () => {}
+        getUserSneakers: async () => {},
+        getUserFriends: async () => {}
 });
 
 export function useSession() {
@@ -48,20 +50,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const [user, setUser] = useState<User | null>(null);
     const [userFriends, setUserFriends] = useState<User[] | null>(null);
 
-    useEffect(() => {
-        if (sessionToken) {
-            getUser();
-        }
-    }, [sessionToken]);
-
-    useEffect(() => {
-        if (user) {
-            getUserCollection();
-            getUserSneakers();
-            console.log(userCollection);
-        }
-    }, [user]);
-
     const login = async (email: string, password: string) => {
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/login`, {
             method: 'POST',
@@ -76,9 +64,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
             return response.json();
         })
-        .then(data => {
+        .then(async data => {
             const { token } = data;
             setSessionToken(token);
+            await getUser();
         })
         .catch(error => {
             throw new Error('Invalid email or password');
@@ -117,88 +106,90 @@ export function SessionProvider({ children }: PropsWithChildren) {
         setSessionToken(null);
         setUserCollection(null);
         setUserSneakers(null);
+        setUserFriends(null);
         setUser(null);
     };
 
     const getUser = async () => {
-        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me`, {
+        if (!sessionToken) return;
+
+        const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error when getting user');
-            }
-            return response.json();
-        })
-        .then((data) => {
-            setUser(data.user);
-            getUserCollection();
-            getUserSneakers();
-        })
-        .catch(error => {
-            console.error(`Error when getting user: ${error}`);
         });
+
+        if (!response.ok) {
+            throw new Error('Error when getting user');
+        }
+
+        const data = await response.json();
+        setUser(data.user);
+        
+        await Promise.all([
+            getUserCollection(),
+            getUserSneakers(),
+            getUserFriends()
+        ]);
     };
 
     const getUserCollection = async () => {
-        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user?.id}/collection`, {
+        console.log(user?.id);
+        console.log(sessionToken);
+
+        if (!user?.id || !sessionToken) return;
+        
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user.id}/collection`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error when getting user collection');
-            }
+            if (!response.ok) return;
             return response.json();
         })
         .then(data => {
-            setUserCollection(data.collection);
-        })
-        .catch(error => {
-            console.error(`Error when getting user collection: ${error}`);
+            if (data) {
+                setUserCollection(data.collection);
+            }
         });
     };
 
     const getUserSneakers = async () => {
-        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user?.id}/collection/sneakers`, {
+        if (!user?.id || !sessionToken) return;
+        
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user.id}/collection/sneakers`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error when getting user sneakers');
-            }
+            if (!response.ok) return;
             return response.json();
         })
         .then(data => {
-            setUserSneakers(data.sneakers);
-        })
-        .catch(error => {
-            console.error(`Error when getting user sneakers: ${error}`);
+            if (data) {
+                setUserSneakers(data.sneakers);
+            }
         });
     };
 
     const getUserFriends = async () => {
-        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user?.id}/collection/friends`, {
+        if (!user?.id || !sessionToken) return;
+        
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user.id}/collection/friends`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
         })
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error when getting user friends');
-            }
+            if (!response.ok) return;
             return response.json();
         })
         .then(data => {
-            setUserFriends(data.friends);
-        })
-        .catch(error => {
-            console.error(`Error when getting user friends: ${error}`);
+            if (data) {
+                setUserFriends(data.friends);
+            }
         });
     };
 
@@ -212,10 +203,12 @@ export function SessionProvider({ children }: PropsWithChildren) {
                 isLoading,
                 userCollection,
                 userSneakers,
+                userFriends,
                 user,
                 getUser,
                 getUserCollection,
-                getUserSneakers
+                getUserSneakers,
+                getUserFriends
             }}>
             {children}
         </AuthContext.Provider>

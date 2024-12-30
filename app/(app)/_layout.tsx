@@ -15,7 +15,7 @@ export default function AppLayout() {
       return <Redirect href="/login" />;
     }
 
-    if (!userCollection?.name) {
+    if (!userCollection) {
       return <Redirect href="/collection" />;
     }
 

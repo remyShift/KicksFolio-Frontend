@@ -47,7 +47,7 @@ export default function SignUp() {
             checkUsername(value, setErrorMsg, setIsUsernameError);
         } else if (inputType === 'email') {
             setIsEmailFocused(false);
-            checkEmail(value, setErrorMsg, setIsEmailError);
+            checkEmail(value, false, setErrorMsg, setIsEmailError);
         } else if (inputType === 'password') {
             setIsPasswordFocused(false);
             checkPassword(value, setErrorMsg, setIsPasswordError);
@@ -56,7 +56,7 @@ export default function SignUp() {
 
     const handleNextSignUpPage = async () => {
         const isUsernameValid = await checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
-        const isEmailValid = await checkEmail(signUpProps.email, setErrorMsg, setIsEmailError);
+        const isEmailValid = await checkEmail(signUpProps.email, false, setErrorMsg, setIsEmailError);
         const isPasswordValid = checkPassword(signUpProps.password, setErrorMsg, setIsPasswordError);
 
         if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
@@ -100,7 +100,7 @@ export default function SignUp() {
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', setErrorMsg, setIsUsernameError, emailInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', false, setErrorMsg, setIsUsernameError, emailInputRef)}
                                 onFocus={() => handleInputFocus('username')}
                                 onBlur={() => handleInputBlur('username', signUpProps.username)}
                                 onChangeText={(text) => {
@@ -127,7 +127,7 @@ export default function SignUp() {
                                 clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', setErrorMsg, setIsEmailError, passwordInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', false, setErrorMsg, setIsEmailError, passwordInputRef)}
                                 onFocus={() => handleInputFocus('email')}
                                 onBlur={() => handleInputBlur('email', signUpProps.email)}
                                 onChangeText={(text) => {

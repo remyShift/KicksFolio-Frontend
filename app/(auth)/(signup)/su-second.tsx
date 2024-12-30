@@ -158,7 +158,7 @@ export default function SUSecond() {
                                 placeholderTextColor='gray'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(signUpProps.first_name, 'firstName', setErrorMsg, setIsFirstNameError, lastNameInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.first_name, 'firstName', false, setErrorMsg, setIsFirstNameError, lastNameInputRef)}
                                 onFocus={() => handleInputFocus('firstName')}
                                 onBlur={() => handleInputBlur('firstName', signUpProps.first_name)}
                                 onChangeText={(text) => {
@@ -185,7 +185,7 @@ export default function SUSecond() {
                                 clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(signUpProps.last_name, 'lastName', setErrorMsg, setIsLastNameError, sizeInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.last_name, 'lastName', false, setErrorMsg, setIsLastNameError, sizeInputRef)}
                                 onFocus={() => handleInputFocus('lastName')}
                                 onBlur={() => handleInputBlur('lastName', signUpProps.last_name)}
                                 onChangeText={(text) => {
@@ -212,7 +212,7 @@ export default function SUSecond() {
                                 clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(String(signUpProps.sneaker_size), 'size', setErrorMsg, setIsSizeError, genderInputRef)}
+                                onSubmitEditing={() => checkBeforeNext(String(signUpProps.sneaker_size), 'size', false, setErrorMsg, setIsSizeError, genderInputRef)}
                                 onFocus={() => handleInputFocus('size')}
                                 onBlur={() => handleInputBlur('size', String(signUpProps.sneaker_size))}
                                 onChangeText={(text) => {

@@ -39,7 +39,7 @@ export default function Collection() {
                             } ${isCollectionNameFocused ? 'border-2 border-primary' : ''}`}
                         />
                         <MainButton 
-                            content='Next' 
+                            content='Create Collection' 
                             backgroundColor='bg-primary' 
                             onPressAction={async () => {
                                 if (collectionName.length === 0) {
@@ -50,11 +50,9 @@ export default function Collection() {
                                     setIsCollectionNameError(false);
                                     setErrorMsg('');
                                     if (user && sessionToken) {
-                                        createCollection(collectionName, user.id, sessionToken).then(() => {
-                                            getUserCollection().then(() => {
-                                                router.replace('/(app)/(tabs)');
-                                            });
-                                        });
+                                        await createCollection(collectionName, user.id, sessionToken);
+                                        await  getUserCollection();
+                                        router.replace('/(app)/(tabs)');
                                     } else {
                                         setErrorMsg('Something went wrong, please try again.');
                                     }
