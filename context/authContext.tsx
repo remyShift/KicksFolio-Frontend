@@ -105,13 +105,13 @@ export function SessionProvider({ children }: PropsWithChildren) {
         .then(async response => {
             const data = await response.json();
             if (!response.ok) {
-                throw new Error(data.message || 'Erreur lors de la création du compte');
+                throw new Error(data.message || 'Error when creating account');
             }
             return data;
         })
         .catch(error => {
             if (error instanceof SyntaxError) {
-                throw new Error('Erreur de réponse du serveur');
+                throw new Error('Error when getting user');
             }
             throw error;
         });
@@ -134,12 +134,17 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
         })
         .then(response => {
+            if (response.status === 401) {
+                logout();
+                return;
+            }
             if (!response.ok) {
                 throw new Error('Error when getting user');
             }
             return response.json();
         })
         .then(async data => {
+            if (!data) return;
             setUser(data.user);
             await Promise.all([
                 getUserCollection(),
@@ -148,8 +153,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
             ]);
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération de l\'utilisateur:', error);
-            throw error;
+            console.error('Error when getting user:', error);
+            logout();
         });
     };
 
@@ -174,7 +179,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération de la collection:', error);
+            console.error('Error when getting collection:', error);
             throw error;
         });
     };
@@ -197,7 +202,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération des sneakers:', error);
+            console.error('Error when getting sneakers:', error);
             throw error;
         });
     };
@@ -220,7 +225,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
             }
         })
         .catch(error => {
-            console.error('Erreur lors de la récupération des amis:', error);
+            console.error('Error when getting friends:', error);
             throw error;
         });
     };
