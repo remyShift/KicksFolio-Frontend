@@ -102,13 +102,18 @@ export function SessionProvider({ children }: PropsWithChildren) {
                 }
             })
         })
-        .then(response => {
+        .then(async response => {
+            const data = await response.json();
             if (!response.ok) {
-                throw new Error('Error when creating account');
+                throw new Error(data.message || 'Erreur lors de la création du compte');
             }
+            return data;
         })
         .catch(error => {
-            console.error(`Error when creating account: ${error}`);
+            if (error instanceof SyntaxError) {
+                throw new Error('Erreur de réponse du serveur');
+            }
+            throw error;
         });
     };
 
@@ -123,24 +128,29 @@ export function SessionProvider({ children }: PropsWithChildren) {
     const getUser = async () => {
         if (!sessionToken) return;
 
-        const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me`, {
+        return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me`, {
             headers: {
                 'Authorization': `Bearer ${sessionToken}`
             }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error when getting user');
+            }
+            return response.json();
+        })
+        .then(async data => {
+            setUser(data.user);
+            await Promise.all([
+                getUserCollection(),
+                getUserSneakers(),
+                getUserFriends()
+            ]);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+            throw error;
         });
-
-        if (!response.ok) {
-            throw new Error('Error when getting user');
-        }
-
-        const data = await response.json();
-        setUser(data.user);
-        
-        await Promise.all([
-            getUserCollection(),
-            getUserSneakers(),
-            getUserFriends()
-        ]);
     };
 
     const getUserCollection = async () => {
@@ -162,6 +172,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
             if (data) {
                 setUserCollection(data.collection);
             }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération de la collection:', error);
+            throw error;
         });
     };
 
@@ -181,6 +195,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
             if (data) {
                 setUserSneakers(data.sneakers);
             }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des sneakers:', error);
+            throw error;
         });
     };
 
@@ -200,6 +218,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
             if (data) {
                 setUserFriends(data.friends);
             }
+        })
+        .catch(error => {
+            console.error('Erreur lors de la récupération des amis:', error);
+            throw error;
         });
     };
 

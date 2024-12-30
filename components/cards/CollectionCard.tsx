@@ -43,7 +43,7 @@ export default function CollectionCard({ userCollection, userSneakers }: { userC
 
                 <View className="flex flex-row justify-between items-center">
                     <Text className="font-spacemono-bold text-lg">{userCollection?.name}</Text>
-                    <Text className="text-primary font-spacemono-bold text-lg">{userSneakers?.length} shoes</Text>
+                    <Text className="text-primary font-spacemono-bold text-lg">{userSneakers?.length || 0} shoes</Text>
                 </View>
             </View>
         </View>
