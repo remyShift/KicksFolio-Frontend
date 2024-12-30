@@ -1,15 +1,16 @@
 import { router } from 'expo-router';
 import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useSignUpProps } from '@/context/signUpPropsContext';
+import { useAuthProps } from '@/context/AuthPropsContext';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import { useSession } from '@/context/authContext';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
-import { handleInputChange, checkBeforeNext, checkName, checkSize, checkGender } from '@/scripts/formUtils';
-
+import { checkBeforeNext } from '@/scripts/validatesForms';
+import CustomTextInput from '@/components/inputs/CustomTextInput';
+        
 export default function SUSecond() {
-    const { signUpProps, setSignUpProps } = useSignUpProps();
+    const { signUpProps, setSignUpProps } = useAuthProps();
     const { signUp, login } = useSession();
     const [errorMsg, setErrorMsg] = useState('');
     
@@ -27,60 +28,6 @@ export default function SUSecond() {
     const sizeInputRef = useRef<TextInput>(null);
     const genderInputRef = useRef<TextInput>(null);
     const firstNameInputRef = useRef<TextInput>(null);
-
-    const scrollToBottom = () => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-    };
-
-    const handleInputFocus = (inputType: 'firstName' | 'lastName' | 'size' | 'gender') => {
-        if (inputType === 'firstName') setIsFirstNameFocused(true);
-        else if (inputType === 'lastName') setIsLastNameFocused(true);
-        else if (inputType === 'size') setIsSizeFocused(true);
-        else setIsGenderFocused(true);
-
-        setIsFirstNameError(false);
-        setIsLastNameError(false);
-        setIsSizeError(false);
-        setIsGenderError(false);
-        setErrorMsg('');
-        scrollToBottom();
-    };
-
-    const handleInputBlur = (inputType: 'firstName' | 'lastName' | 'size' | 'gender', value: string) => {
-        if (inputType === 'firstName') {
-            setIsFirstNameFocused(false);
-            if (!value) {
-                setErrorMsg('Please put your first name.');
-                setIsFirstNameError(true);
-            } else if (!checkName(value, setErrorMsg, setIsFirstNameError)) {
-                return;
-            }
-        } else if (inputType === 'lastName') {
-            setIsLastNameFocused(false);
-            if (!value) {
-                setErrorMsg('Please put your last name.');
-                setIsLastNameError(true);
-            } else if (!checkName(value, setErrorMsg, setIsLastNameError)) {
-                return;
-            }
-        } else if (inputType === 'size') {
-            setIsSizeFocused(false);
-            if (!value || isNaN(Number(value)) || Number(value) <= 0) {
-                setErrorMsg('Please put a valid sneaker size.');
-                setIsSizeError(true);
-            } else if (!checkSize(Number(value), setErrorMsg, setIsSizeError)) {
-                return;
-            }
-        } else {
-            setIsGenderFocused(false);
-            if (!value || !['male', 'female', 'other'].includes(value.toLowerCase())) {
-                setErrorMsg('Please put a valid gender (Male/Female/Other).');
-                setIsGenderError(true);
-            } else if (!checkGender(value, setErrorMsg, setIsGenderError)) {
-                return;
-            }
-        }
-    };
 
     const handleSignUp = () => {
         if (!signUpProps.first_name) {
@@ -146,109 +93,85 @@ export default function SUSecond() {
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
                         
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*First Name</Text>
-                            <TextInput
+                            <CustomTextInput
+                                label="*First Name"
+                                isError={isFirstNameError}
+                                isFocused={isFirstNameFocused}
+                                inputRef={firstNameInputRef}
                                 placeholder="John"
-                                inputMode='text'
                                 textContentType='givenName'
                                 clearButtonMode='while-editing'
-                                ref={firstNameInputRef}
                                 value={signUpProps.first_name}
                                 autoComplete={Platform.OS === 'ios' ? 'cc-name' : 'name-given'}
-                                autoCorrect={false}
-                                placeholderTextColor='gray'
-                                returnKeyType='next'
-                                enablesReturnKeyAutomatically={true}
+                                inputType='firstName'
+                                setFocusedStates={{ firstName: setIsFirstNameFocused }}
+                                setErrorStates={{ firstName: setIsFirstNameError }}
+                                setErrorMsg={setErrorMsg}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.first_name, 'firstName', false, setErrorMsg, setIsFirstNameError, lastNameInputRef)}
-                                onFocus={() => handleInputFocus('firstName')}
-                                onBlur={() => handleInputBlur('firstName', signUpProps.first_name)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, first_name: text });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, first_name: t }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isFirstNameError ? 'border-2 border-red-500' : ''
-                                } ${isFirstNameFocused ? 'border-2 border-primary' : ''}`}
+                                nextInputRef={lastNameInputRef}
                             />
                         </View>
 
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Last Name</Text>
-                            <TextInput
+                            <CustomTextInput
+                                label="*Last Name"
+                                isError={isLastNameError}
+                                isFocused={isLastNameFocused}
+                                inputRef={lastNameInputRef}
                                 placeholder="Doe"
-                                inputMode='text'
                                 textContentType='familyName'
-                                ref={lastNameInputRef}
                                 value={signUpProps.last_name}
                                 autoComplete={Platform.OS === 'ios' ? 'cc-family-name' : 'name-family'}
-                                autoCorrect={false}
-                                placeholderTextColor='gray'
                                 clearButtonMode='while-editing'
-                                returnKeyType='next'
-                                enablesReturnKeyAutomatically={true}
+                                inputType='lastName'
+                                setFocusedStates={{ lastName: setIsLastNameFocused }}
+                                setErrorStates={{ lastName: setIsLastNameError }}
+                                setErrorMsg={setErrorMsg}
+                                nextInputRef={sizeInputRef}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.last_name, 'lastName', false, setErrorMsg, setIsLastNameError, sizeInputRef)}
-                                onFocus={() => handleInputFocus('lastName')}
-                                onBlur={() => handleInputBlur('lastName', signUpProps.last_name)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, last_name: text });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, last_name: t }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isLastNameError ? 'border-2 border-red-500' : ''
-                                } ${isLastNameFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Sneaker Size (US)</Text>
-                            <TextInput
-                                ref={sizeInputRef}
+                            <CustomTextInput
+                                label="*Sneaker Size (US)"
+                                isError={isSizeError}
+                                isFocused={isSizeFocused}
+                                inputRef={sizeInputRef}
                                 placeholder="11"
-                                inputMode='numeric'
                                 value={signUpProps.sneaker_size ? String(signUpProps.sneaker_size) : ''}
                                 autoComplete='off'
-                                autoCorrect={false}
                                 keyboardType='numeric'
-                                placeholderTextColor='gray'
                                 clearButtonMode='while-editing'
-                                returnKeyType='next'
-                                enablesReturnKeyAutomatically={true}
+                                inputType='size'
+                                setFocusedStates={{ size: setIsSizeFocused }}
+                                setErrorStates={{ size: setIsSizeError }}
+                                setErrorMsg={setErrorMsg}
+                                nextInputRef={genderInputRef}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(String(signUpProps.sneaker_size), 'size', false, setErrorMsg, setIsSizeError, genderInputRef)}
-                                onFocus={() => handleInputFocus('size')}
-                                onBlur={() => handleInputBlur('size', String(signUpProps.sneaker_size))}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, sneaker_size: Number(text) });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, sneaker_size: Number(t) }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isSizeError ? 'border-2 border-red-500' : ''
-                                } ${isSizeFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Gender</Text>
-                            <TextInput
-                                ref={genderInputRef}
+                            <CustomTextInput
+                                label="*Gender"
+                                inputType='gender'
+                                setFocusedStates={{ gender: setIsGenderFocused }}
+                                setErrorStates={{ gender: setIsGenderError }}
+                                setErrorMsg={setErrorMsg}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                                isError={isGenderError}
+                                isFocused={isGenderFocused}
+                                inputRef={genderInputRef}
                                 placeholder="Male / Female / Other"
-                                inputMode='text'
                                 value={signUpProps.gender}
                                 autoComplete='off'
-                                autoCorrect={false}
-                                placeholderTextColor='gray'
                                 clearButtonMode='while-editing'
                                 returnKeyType='done'
-                                enablesReturnKeyAutomatically={true}
                                 onSubmitEditing={handleSignUp}
-                                onFocus={() => handleInputFocus('gender')}
-                                onBlur={() => handleInputBlur('gender', signUpProps.gender)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, gender: text.toLowerCase() });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, gender: t.toLowerCase() }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isGenderError ? 'border-2 border-red-500' : ''
-                                } ${isGenderFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>             
                     </View>

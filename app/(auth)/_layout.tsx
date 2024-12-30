@@ -1,10 +1,10 @@
-import { SignUpPropsProvider } from '@/context/signUpPropsContext';
+import { AuthPropsProvider } from '@/context/AuthPropsContext';
 import { Slot } from 'expo-router';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
     return (
-        <SignUpPropsProvider>
+        <AuthPropsProvider>
             <Slot />
-        </SignUpPropsProvider>
+        </AuthPropsProvider>
     );
 }

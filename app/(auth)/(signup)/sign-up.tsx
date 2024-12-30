@@ -1,14 +1,16 @@
 import { router } from 'expo-router';
 import { View, TextInput, KeyboardAvoidingView, Text, Platform, ScrollView } from 'react-native';
-import { useSignUpProps } from '@/context/signUpPropsContext';
+import { useAuthProps } from '@/context/AuthPropsContext';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
-import { handleInputChange, checkUsername, checkEmail, checkPassword, checkBeforeNext } from '@/scripts/formUtils';
+import { checkUsername, checkEmail, checkPassword, checkBeforeNext } from '@/scripts/validatesForms';
+import CustomTextInput from '@/components/inputs/CustomTextInput';
+
 
 export default function SignUp() {
-    const { signUpProps, setSignUpProps } = useSignUpProps();
+    const { signUpProps, setSignUpProps } = useAuthProps();
     const [errorMsg, setErrorMsg] = useState('');
     const [isUsernameFocused, setIsUsernameFocused] = useState(false);
     const [isUsernameError, setIsUsernameError] = useState(false);
@@ -21,38 +23,6 @@ export default function SignUp() {
     const usernameInputRef = useRef<TextInput>(null);
     const emailInputRef = useRef<TextInput>(null);
     const passwordInputRef = useRef<TextInput>(null);
-
-    const scrollToBottom = () => {
-        scrollViewRef.current?.scrollToEnd({ animated: true });
-    };
-
-    const handleInputFocus = (inputType: 'username' | 'email' | 'password') => {
-        if (inputType === 'username') {
-            setIsUsernameFocused(true);
-        } else if (inputType === 'email') {
-            setIsEmailFocused(true);
-        } else if (inputType === 'password') {
-            setIsPasswordFocused(true);
-        }
-        setIsUsernameError(false);
-        setIsEmailError(false);
-        setIsPasswordError(false);
-        setErrorMsg('');
-        scrollToBottom();
-    };
-
-    const handleInputBlur = (inputType: 'username' | 'email' | 'password', value: string) => {
-        if (inputType === 'username') {
-            setIsUsernameFocused(false);
-            checkUsername(value, setErrorMsg, setIsUsernameError);
-        } else if (inputType === 'email') {
-            setIsEmailFocused(false);
-            checkEmail(value, false, setErrorMsg, setIsEmailError);
-        } else if (inputType === 'password') {
-            setIsPasswordFocused(false);
-            checkPassword(value, setErrorMsg, setIsPasswordError);
-        }
-    };
 
     const handleNextSignUpPage = async () => {
         const isUsernameValid = await checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
@@ -87,88 +57,65 @@ export default function SignUp() {
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
                         
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Username</Text>
-                            <TextInput
+                            <CustomTextInput
+                                label="*Username"
+                                isError={isUsernameError}
+                                isFocused={isUsernameFocused}
+                                inputRef={usernameInputRef}
                                 placeholder="johndoe42"
-                                inputMode='text'
-                                ref={usernameInputRef}
                                 value={signUpProps.username}
+                                nextInputRef={emailInputRef}
                                 autoComplete='username'
                                 textContentType='username'
-                                clearButtonMode='while-editing'
-                                autoCorrect={false}
-                                placeholderTextColor='gray'
-                                returnKeyType='next'
-                                enablesReturnKeyAutomatically={true}
+                                inputType='username'
+                                setFocusedStates={{ username: setIsUsernameFocused }}
+                                setErrorStates={{ username: setIsUsernameError }}
+                                setErrorMsg={setErrorMsg}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', false, setErrorMsg, setIsUsernameError, emailInputRef)}
-                                onFocus={() => handleInputFocus('username')}
-                                onBlur={() => handleInputBlur('username', signUpProps.username)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, username: text });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, username: t }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isUsernameError ? 'border-2 border-red-500' : ''
-                                } ${isUsernameFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Email</Text>
-                            <TextInput
-                                ref={emailInputRef}
+                            <CustomTextInput
+                                label="*Email"
+                                isError={isEmailError}
+                                isFocused={isEmailFocused}
+                                inputRef={emailInputRef}
                                 placeholder="johndoe@gmail.com"
-                                inputMode='email'
                                 value={signUpProps.email}
                                 autoComplete='email'
+                                nextInputRef={passwordInputRef}
                                 textContentType='emailAddress'
-                                autoCorrect={false}
-                                placeholderTextColor='gray'
-                                clearButtonMode='while-editing'
-                                returnKeyType='next'
-                                enablesReturnKeyAutomatically={true}
+                                inputType='email'
+                                setFocusedStates={{ email: setIsEmailFocused }}
+                                setErrorStates={{ email: setIsEmailError }}
+                                setErrorMsg={setErrorMsg}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', false, setErrorMsg, setIsEmailError, passwordInputRef)}
-                                onFocus={() => handleInputFocus('email')}
-                                onBlur={() => handleInputBlur('email', signUpProps.email)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, email: text });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, email: t }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isEmailError ? 'border-2 border-red-500' : ''
-                                } ${isEmailFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
 
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Password</Text>
-                            <Text className='font-spacemono-bold text-sm text-center px-6 text-gray-600'>
-                                At least one uppercase letter and one number and be 8 characters long.
-                            </Text>
-                            <TextInput
-                                ref={passwordInputRef}
+                            <CustomTextInput
+                                label="*Password"
+                                isError={isPasswordError}
+                                isFocused={isPasswordFocused}
+                                inputRef={passwordInputRef}
+                                inputType='password'
                                 value={signUpProps.password}
                                 placeholder="********"
-                                inputMode='text'
                                 textContentType='newPassword'
                                 passwordRules='{ "minLength": 8, "requiresUppercase": true, "requiresLowercase": true, "requiresNumeric": true }'
-                                clearButtonMode='while-editing'
-                                autoCorrect={false}
-                                secureTextEntry={true}
-                                placeholderTextColor='gray'
-                                returnKeyType='done'
-                                enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={handleNextSignUpPage}
-                                onFocus={() => handleInputFocus('password')}
-                                onBlur={() => handleInputBlur('password', signUpProps.password)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, password: text });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, password: t }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isPasswordError ? 'border-2 border-red-500' : ''
-                                } ${isPasswordFocused ? 'border-2 border-primary' : ''}`}
+                                setFocusedStates={{ password: setIsPasswordFocused }}
+                                setErrorStates={{ password: setIsPasswordError }}
+                                setErrorMsg={setErrorMsg}
+                                scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
+                                onSubmitEditing={() => handleNextSignUpPage()}
                             />
+                            <Text className='font-spacemono-bold text-sm text-center px-6 text-gray-600'>
+                                At least 8 characters long with one uppercase letter and one number.
+                            </Text>
                         </View>
                     </View>
 

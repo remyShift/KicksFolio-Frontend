@@ -1,15 +1,6 @@
 import { TextInput } from "react-native";
 import { RefObject } from "react";
 
-export const handleInputChange = (
-    text: string, 
-    setter: (text: string) => void,
-    setErrorMsg: (msg: string) => void
-) => {
-    setter(text);
-    setErrorMsg('');
-};
-
 export const checkBeforeNext = async (
     value: string, 
     inputType: 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size' | 'gender',
@@ -19,7 +10,8 @@ export const checkBeforeNext = async (
     nextRef: RefObject<TextInput> | null
 ) => {
     let isValid = false;
-    
+    console.log("value :", value);
+
     switch (inputType) {
         case 'username':
             isValid = await checkUsername(value, setErrorMsg, setIsError);
@@ -42,9 +34,7 @@ export const checkBeforeNext = async (
             break;
     }
 
-    if (isValid && nextRef?.current) {
-        nextRef.current.focus();
-    }
+    return isValid;
 };
 
 export const checkPassword = (password: string, setErrorMsg: (msg: string) => void, setIsPasswordError: (isError: boolean) => void): boolean => {

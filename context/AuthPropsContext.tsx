@@ -1,6 +1,6 @@
 import { createContext, useContext, type PropsWithChildren, useState } from 'react';
 
-const SignUpPropsContext = createContext<{
+const AuthPropsContext = createContext<{
     signUpProps: {
         email: string,
         password: string,
@@ -10,6 +10,10 @@ const SignUpPropsContext = createContext<{
         sneaker_size: number,
         gender: string
     },
+    loginProps: {
+        email: string,
+        password: string
+    },
     setSignUpProps: (signUpProps: {
         email: string,
         password: string,
@@ -18,6 +22,10 @@ const SignUpPropsContext = createContext<{
         last_name: string,
         sneaker_size: number,
         gender: string
+    }) => void,
+    setLoginProps: (loginProps: {
+        email: string,
+        password: string
     }) => void
 }>({
     signUpProps: {
@@ -29,20 +37,25 @@ const SignUpPropsContext = createContext<{
         sneaker_size: 0,
         gender: '',
     },
+    loginProps: {
+        email: '',
+        password: ''
+    },
     setSignUpProps: () => {},
+    setLoginProps: () => {}
 });
 
-export function useSignUpProps() {
-    const value = useContext(SignUpPropsContext);
+export function useAuthProps() {
+    const value = useContext(AuthPropsContext);
     if (process.env.NODE_ENV !== 'production') {
         if (!value) {
-            throw new Error('useSignUpProps must be wrapped in a <SignUpPropsProvider />');
+            throw new Error('useAuthProps must be wrapped in a <AuthPropsProvider />');
         }
     }
     return value;
 }
 
-export function SignUpPropsProvider({ children }: PropsWithChildren) {
+export function AuthPropsProvider({ children }: PropsWithChildren) {
     const [signUpProps, setSignUpProps] = useState<{
         email: string,
         password: string,
@@ -61,9 +74,17 @@ export function SignUpPropsProvider({ children }: PropsWithChildren) {
         gender: '',
     });
 
+    const [loginProps, setLoginProps] = useState<{
+        email: string,
+        password: string
+    }>({
+        email: '',
+        password: ''
+    });
+
     return (
-        <SignUpPropsContext.Provider value={{ signUpProps, setSignUpProps }}>
+        <AuthPropsContext.Provider value={{ signUpProps, loginProps, setSignUpProps, setLoginProps }}>
             {children}
-        </SignUpPropsContext.Provider>
+        </AuthPropsContext.Provider>
     );
 }
