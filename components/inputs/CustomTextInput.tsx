@@ -2,19 +2,15 @@ import { TextInput, Text, View, TextInputProps } from 'react-native';
 import { handleInputBlur, handleInputFocus } from '@/scripts/inputHandlers';
 import { checkBeforeNext } from '@/scripts/validatesForms';
 import { usePathname } from 'expo-router';
-
+import { useState } from 'react';
 type InputType = 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size' | 'gender';
 
 type CustomTextInputProps = TextInputProps & {
     label: string;
-    isError: boolean;
-    isFocused: boolean;
     inputRef?: React.RefObject<TextInput>;
     labelInfo?: string;
     inputType: InputType;
     value?: string;
-    setFocusedStates: { [key: string]: (value: boolean) => void };
-    setErrorStates: { [key: string]: (value: boolean) => void };
     setErrorMsg: (msg: string) => void;
     scrollToBottom?: () => void;
     nextInputRef?: React.RefObject<TextInput>;
@@ -22,13 +18,9 @@ type CustomTextInputProps = TextInputProps & {
 
 export default function CustomTextInput({
     label,
-    isError,
-    isFocused,
     inputRef,
     inputType,
     value,
-    setFocusedStates,
-    setErrorStates,
     setErrorMsg,
     scrollToBottom,
     nextInputRef,
@@ -36,6 +28,8 @@ export default function CustomTextInput({
 }: CustomTextInputProps) {
 
     const isLoginPage = usePathname() === '/login';
+    const [isError, setIsError] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
 
     const defineInputMode = (label: string) => {
         switch (label) {
@@ -48,6 +42,10 @@ export default function CustomTextInput({
         }
     }
 
+    const resetAllErrors = () => {
+        setIsError(false);
+        setErrorMsg('');
+    };
 
     return (
         <View className='flex flex-col gap-2 w-full items-center'>
@@ -66,20 +64,21 @@ export default function CustomTextInput({
                 } ${isFocused ? 'border-2 border-primary' : ''}`}
                 onFocus={() => handleInputFocus({
                     inputType,
-                    setFocusedStates,
-                    setErrorStates,
+                    setIsFocused,
+                    setIsError,
                     setErrorMsg,
-                    scrollToBottom
+                    scrollToBottom,
+                    resetAllErrors
                 })}
                 onBlur={() => handleInputBlur({
                     inputType,
                     value: value ?? '',
-                    setFocusedStates,
-                    setErrorStates,
+                    setIsFocused,
+                    setIsError,
                     setErrorMsg
                 })}
                 onSubmitEditing={async () => {
-                    const isValid = await checkBeforeNext(value ?? '', inputType, isLoginPage, setErrorMsg, setErrorStates[inputType], nextInputRef || null);
+                    const isValid = await checkBeforeNext(value ?? '', inputType, isLoginPage, setErrorMsg, setIsError, nextInputRef || null);
                     if (isValid && nextInputRef?.current) {
                         nextInputRef.current.focus();
                     }

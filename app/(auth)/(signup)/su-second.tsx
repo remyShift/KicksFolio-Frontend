@@ -95,8 +95,6 @@ export default function SUSecond() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="*First Name"
-                                isError={isFirstNameError}
-                                isFocused={isFirstNameFocused}
                                 inputRef={firstNameInputRef}
                                 placeholder="John"
                                 textContentType='givenName'
@@ -104,8 +102,6 @@ export default function SUSecond() {
                                 value={signUpProps.first_name}
                                 autoComplete={Platform.OS === 'ios' ? 'cc-name' : 'name-given'}
                                 inputType='firstName'
-                                setFocusedStates={{ firstName: setIsFirstNameFocused }}
-                                setErrorStates={{ firstName: setIsFirstNameError }}
                                 setErrorMsg={setErrorMsg}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.first_name, 'firstName', false, setErrorMsg, setIsFirstNameError, lastNameInputRef)}
@@ -116,8 +112,6 @@ export default function SUSecond() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="*Last Name"
-                                isError={isLastNameError}
-                                isFocused={isLastNameFocused}
                                 inputRef={lastNameInputRef}
                                 placeholder="Doe"
                                 textContentType='familyName'
@@ -125,8 +119,6 @@ export default function SUSecond() {
                                 autoComplete={Platform.OS === 'ios' ? 'cc-family-name' : 'name-family'}
                                 clearButtonMode='while-editing'
                                 inputType='lastName'
-                                setFocusedStates={{ lastName: setIsLastNameFocused }}
-                                setErrorStates={{ lastName: setIsLastNameError }}
                                 setErrorMsg={setErrorMsg}
                                 nextInputRef={sizeInputRef}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
@@ -137,8 +129,6 @@ export default function SUSecond() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="*Sneaker Size (US)"
-                                isError={isSizeError}
-                                isFocused={isSizeFocused}
                                 inputRef={sizeInputRef}
                                 placeholder="11"
                                 value={signUpProps.sneaker_size ? String(signUpProps.sneaker_size) : ''}
@@ -146,8 +136,6 @@ export default function SUSecond() {
                                 keyboardType='numeric'
                                 clearButtonMode='while-editing'
                                 inputType='size'
-                                setFocusedStates={{ size: setIsSizeFocused }}
-                                setErrorStates={{ size: setIsSizeError }}
                                 setErrorMsg={setErrorMsg}
                                 nextInputRef={genderInputRef}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
@@ -159,12 +147,8 @@ export default function SUSecond() {
                             <CustomTextInput
                                 label="*Gender"
                                 inputType='gender'
-                                setFocusedStates={{ gender: setIsGenderFocused }}
-                                setErrorStates={{ gender: setIsGenderError }}
                                 setErrorMsg={setErrorMsg}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
-                                isError={isGenderError}
-                                isFocused={isGenderFocused}
                                 inputRef={genderInputRef}
                                 placeholder="Male / Female / Other"
                                 value={signUpProps.gender}

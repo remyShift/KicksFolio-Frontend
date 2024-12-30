@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { View, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import ErrorMsg from '@/components/text/ErrorMsg';
@@ -22,10 +22,6 @@ export default function Login() {
     const passwordInputRef = useRef<TextInput>(null);
     const emailInputRef = useRef<TextInput>(null);
 
-    useEffect(() => {
-        console.log("loginProps mis à jour :", loginProps);
-    }, [loginProps]);
-
     return (
         <KeyboardAvoidingView 
             className="flex-1 bg-background" 
@@ -43,16 +39,12 @@ export default function Login() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="Email"
-                                isError={isEmailError}
-                                isFocused={isEmailFocused}
                                 inputRef={emailInputRef}
                                 inputType="email"
                                 value={loginProps.email}
                                 placeholder="john@doe.com"
                                 textContentType='emailAddress'
                                 autoComplete='email'
-                                setFocusedStates={{ email: setIsEmailFocused }}
-                                setErrorStates={{ email: setIsEmailError }}
                                 setErrorMsg={setErrorMsg}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 nextInputRef={passwordInputRef}
@@ -66,16 +58,12 @@ export default function Login() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                         <CustomTextInput
                             label="Password"
-                            isError={isPasswordError}
-                            isFocused={isPasswordFocused}
                             inputRef={passwordInputRef}
                             inputType="password"
                             value={loginProps.password}
                             placeholder="********" 
                             textContentType='password'
                             autoComplete='current-password'
-                            setFocusedStates={{ password: setIsPasswordFocused }}
-                            setErrorStates={{ password: setIsPasswordError }}
                             setErrorMsg={setErrorMsg}
                             scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                             onSubmitEditing={() => handleLogin({
@@ -105,7 +93,7 @@ export default function Login() {
                                     email: loginProps.email, 
                                     password: loginProps.password, 
                                     setErrorMsg, 
-                                    setIsEmailError, 
+                                    setIsEmailError,
                                     setIsPasswordError,
                                     login,
                                     userCollection

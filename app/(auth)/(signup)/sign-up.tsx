@@ -59,8 +59,6 @@ export default function SignUp() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="*Username"
-                                isError={isUsernameError}
-                                isFocused={isUsernameFocused}
                                 inputRef={usernameInputRef}
                                 placeholder="johndoe42"
                                 value={signUpProps.username}
@@ -68,8 +66,6 @@ export default function SignUp() {
                                 autoComplete='username'
                                 textContentType='username'
                                 inputType='username'
-                                setFocusedStates={{ username: setIsUsernameFocused }}
-                                setErrorStates={{ username: setIsUsernameError }}
                                 setErrorMsg={setErrorMsg}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.username, 'username', false, setErrorMsg, setIsUsernameError, emailInputRef)}
@@ -79,8 +75,6 @@ export default function SignUp() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="*Email"
-                                isError={isEmailError}
-                                isFocused={isEmailFocused}
                                 inputRef={emailInputRef}
                                 placeholder="johndoe@gmail.com"
                                 value={signUpProps.email}
@@ -88,8 +82,6 @@ export default function SignUp() {
                                 nextInputRef={passwordInputRef}
                                 textContentType='emailAddress'
                                 inputType='email'
-                                setFocusedStates={{ email: setIsEmailFocused }}
-                                setErrorStates={{ email: setIsEmailError }}
                                 setErrorMsg={setErrorMsg}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => checkBeforeNext(signUpProps.email, 'email', false, setErrorMsg, setIsEmailError, passwordInputRef)}
@@ -99,16 +91,12 @@ export default function SignUp() {
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <CustomTextInput
                                 label="*Password"
-                                isError={isPasswordError}
-                                isFocused={isPasswordFocused}
                                 inputRef={passwordInputRef}
                                 inputType='password'
                                 value={signUpProps.password}
                                 placeholder="********"
                                 textContentType='newPassword'
                                 passwordRules='{ "minLength": 8, "requiresUppercase": true, "requiresLowercase": true, "requiresNumeric": true }'
-                                setFocusedStates={{ password: setIsPasswordFocused }}
-                                setErrorStates={{ password: setIsPasswordError }}
                                 setErrorMsg={setErrorMsg}
                                 scrollToBottom={() => scrollViewRef.current?.scrollToEnd({ animated: true })}
                                 onSubmitEditing={() => handleNextSignUpPage()}

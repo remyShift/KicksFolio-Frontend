@@ -8,9 +8,10 @@ type InputHandlerProps = {
     inputType: InputType;
     value?: string;
     setErrorMsg: (msg: string) => void;
-    setFocusedStates: {[key: string]: (value: boolean) => void};
-    setErrorStates: {[key: string]: (value: boolean) => void};
+    setIsFocused: (value: boolean) => void;
+    setIsError: (value: boolean) => void;
     scrollToBottom?: () => void;
+    resetAllErrors?: () => void;
 }
 
 export const scrollToBottom = (scrollViewRef: RefObject<ScrollView>) => {
@@ -19,33 +20,38 @@ export const scrollToBottom = (scrollViewRef: RefObject<ScrollView>) => {
 
 export const handleInputFocus = ({ 
     inputType, 
-    setFocusedStates, 
-    setErrorStates, 
+    setIsFocused, 
+    setIsError, 
     setErrorMsg, 
-    scrollToBottom 
+    scrollToBottom,
+    resetAllErrors 
 }: Omit<InputHandlerProps, 'value'>) => {
-    Object.values(setErrorStates).forEach(setState => setState(false));
-    
-    Object.keys(setFocusedStates).forEach(key => {
-        setFocusedStates[key](key === inputType);
-    });
-    
+    resetAllErrors?.();
+
+    setIsError(false);
+    setIsFocused(true);
     setErrorMsg('');
+    
+    
     scrollToBottom?.();
 };
 
 export const handleInputBlur = ({ 
     inputType, 
     value, 
-    setFocusedStates, 
-    setErrorStates, 
+    setIsFocused, 
+    setIsError, 
     setErrorMsg 
 }: InputHandlerProps) => {
-    Object.keys(setFocusedStates).forEach(key => {
-        setFocusedStates[key](false);
-    });
+    setIsFocused(false);
+
+    if (!value) {
+        setErrorMsg('This field is required');
+        setIsError(true);
+        return;
+    }
 
     if (value && value.trim() !== '') {
-        checkBeforeNext(value, inputType, false, setErrorMsg, setErrorStates[inputType], null);
+        checkBeforeNext(value, inputType, false, setErrorMsg, setIsError, null);
     }
 };
