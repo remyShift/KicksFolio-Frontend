@@ -49,6 +49,8 @@ export default function Collection() {
                                     setIsCollectionNameFocused(false);
                                     setIsCollectionNameError(false);
                                     setErrorMsg('');
+                                    console.log('user', user);
+                                    console.log('sessionToken', sessionToken);
                                     if (user && sessionToken) {
                                         createCollection(collectionName, user.id, sessionToken).then(() => {
                                             getUserCollection().then(() => {

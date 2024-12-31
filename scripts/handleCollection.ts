@@ -8,13 +8,14 @@ export const createCollection = async (name: string, userId: string, sessionToke
         body: JSON.stringify({ collection: { name } }),
     })
     .then(async response => {
+        const data = await response.json();
         if (!response.ok) {
-            throw new Error('Error when creating collection');
+            throw new Error(data.errors ? data.errors.join(', ') : 'Error when creating collection');
         }
-        return response.json();
+        return data;
     })
     .catch(error => {
         console.error(`Error when creating collection: ${error}`);
-        throw error; // Rethrow l'erreur pour la gérer dans le composant
+        throw error;
     });
 };

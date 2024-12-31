@@ -67,13 +67,9 @@ export default function Login() {
         }
 
         if (email && password) {
-            await login(email, password).then(() => {
+            login(email, password).then(() => {
                 setErrorMsg('');
-                if (!userCollection?.name) {
-                    router.replace('/collection');
-                } else {
-                    router.replace('/(app)/(tabs)');
-                }
+                router.replace('/(app)/(tabs)');
             }).catch((error) => {
                 setErrorMsg('Invalid email or password.');
                 setIsEmailError(true);

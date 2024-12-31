@@ -18,7 +18,7 @@ export default function Tab() {
 
     useEffect(() => {
         console.log('userSneakers', userSneakers);
-        if (isNewUser && userSneakers && userSneakers.length === 0) {
+        if (isNewUser && (userSneakers && userSneakers.length === 0 || !userSneakers)) {
             setModalVisible(true);
         }
     }, [isNewUser, userSneakers]);

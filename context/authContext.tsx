@@ -82,6 +82,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         .then(async data => {
             const { token } = data;
             setSessionToken(token);
+            await getUser();
         })
         .catch(error => {
             throw new Error('Invalid email or password');
