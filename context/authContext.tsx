@@ -159,8 +159,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const getUserCollection = async () => {
-        console.log(user?.id);
-        console.log(sessionToken);
+
 
         if (!user?.id || !sessionToken) return;
         

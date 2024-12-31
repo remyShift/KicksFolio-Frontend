@@ -3,7 +3,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useDownScaleAnimation } from '@/hooks';
 
-export default function ShareButton() {
+export default function BackButton({onPressAction}: {onPressAction: () => void}) {
     const { scale, triggerAnimation } = useDownScaleAnimation();
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -12,14 +12,13 @@ export default function ShareButton() {
         };
     });
 
-    const handlePress = () => {
-        triggerAnimation();
-    };
-
     return (
         <Pressable
             className="bg-white w-16 h-16 rounded-md flex items-center justify-center"
-            onPress={handlePress}
+            onPress={() => {
+                triggerAnimation();
+                onPressAction();
+            }}
         >
             <Animated.View style={animatedStyle}>
                 <MaterialIcons name="arrow-back-ios-new" size={20} color="black" />

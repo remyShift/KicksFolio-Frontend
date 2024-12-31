@@ -4,6 +4,7 @@ import { useFonts } from 'expo-font';
 import "../global.css";
 import SplashScreen from '@/components/SplashScreen';
 import { useState } from 'react';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const FONTS = {
   'Actonia': require('../assets/fonts/Actonia.ttf'),
@@ -27,9 +28,11 @@ export default function RootLayout() {
   }
 
   return (
-    <SessionProvider>
-      <Slot />
-    </SessionProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SessionProvider>
+        <Slot />
+      </SessionProvider>
+    </GestureHandlerRootView>
   );
 }
 

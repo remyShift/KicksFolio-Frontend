@@ -36,6 +36,13 @@
       "expo-router",
       "expo-secure-store",
       [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow KicksFolio to access your photos.",
+          "cameraPermission": "Allow KicksFolio to access your camera."
+        }
+      ],
+      [
         "expo-splash-screen",
         {
           "image": "./assets/images/splash-icon.png",

@@ -5,7 +5,7 @@ import { Text, View } from 'react-native';
 
 export default function Tab() {
   return (
-    <View className="flex-1 pt-20">
+    <View className="flex-1">
       <PageTitle content="Wishlist" />
       <View className="flex-1 gap-4 items-center justify-center">
         <Title content="No favorites yet" isTextCenter={true} />

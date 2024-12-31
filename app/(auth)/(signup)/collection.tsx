@@ -25,7 +25,7 @@ export default function Collection() {
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
                 scrollEnabled={isCollectionNameFocused}>
-                <View className="flex-1 items-center gap-12 p-4 pt-20 bg-background">
+                <View className="flex-1 items-center gap-12 p-4 bg-background">
                     <PageTitle content='Welcome to KicksFolio !' />
                     <View className='flex justify-center items-center gap-8 w-full mt-32'>
                         <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
@@ -49,14 +49,18 @@ export default function Collection() {
                                     setIsCollectionNameFocused(false);
                                     setIsCollectionNameError(false);
                                     setErrorMsg('');
-                                    console.log(user)
-                                    console.log(sessionToken)
                                     if (user && sessionToken) {
-                                        await createCollection(collectionName, user.id, sessionToken);
-                                        await  getUserCollection();
-                                        router.replace('/(app)/(tabs)?newUser=true');
+                                        createCollection(collectionName, user.id, sessionToken).then(() => {
+                                            getUserCollection().then(() => {
+                                                router.replace('/(app)/(tabs)?newUser=true');
+                                            }).catch(error => {
+                                                setErrorMsg('Something went wrong when getting user collection, please try again.');
+                                            });
+                                        }).catch(error => {
+                                            setErrorMsg('Something went wrong when creating collection, please try again.');
+                                        });
                                     } else {
-                                        setErrorMsg('Something went wrong, please try again. 3');
+                                        setErrorMsg('Something went wrong, please try again.');
                                     }
                                 }
                             }} 

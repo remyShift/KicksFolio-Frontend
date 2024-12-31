@@ -3,28 +3,29 @@ import FriendTitle from '@/components/text/FriendTitle';
 import PageTitle from '@/components/text/PageTitle';
 import Title from '@/components/text/Title';
 import MainButton from '@/components/buttons/MainButton';
-import { ScrollView, View } from 'react-native';
+import { ScrollView, View, Modal, Pressable, Text } from 'react-native';
 import { useSession } from '@/context/authContext';
 import { useLocalSearchParams } from "expo-router";
-import { useRef, useEffect } from 'react';
-import BottomSheetModal, { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { useState, useEffect } from 'react';
+import { renderModalContent } from '@/components/modals/AddFirstSneakersModal';
 
 export default function Tab() {
     const params = useLocalSearchParams();
-    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
     const isNewUser = params.newUser === 'true';
     const { userCollection, userSneakers, userFriends } = useSession();
-    
+    const [modalVisible, setModalVisible] = useState(false);
+    const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
+
     useEffect(() => {
-        if (isNewUser && userCollection && userSneakers?.length === 0) {
-            bottomSheetModalRef.current?.expand();
+        if (isNewUser) {
+            setModalVisible(true);
         }
     }, [isNewUser]);
 
     return (
-        <BottomSheetModalProvider>
+        <View className="flex-1">
             <ScrollView className="flex-1">
-                <View className="flex-1 pt-20 gap-10">
+                <View className="flex-1 gap-10">
                     <PageTitle content="KicksFolio" />
 
                     <View className='flex-1 gap-32'>
@@ -52,17 +53,32 @@ export default function Tab() {
                 </View>
             </ScrollView>
 
-            <BottomSheetModal
-                ref={bottomSheetModalRef}
-                index={0}
-                snapPoints={['80%']}
-                enablePanDownToClose={false}
-                backgroundStyle={{ backgroundColor: 'red' }}
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={true}
+                onRequestClose={() => setModalVisible(false)}
             >
-                <View className="flex-1 gap-4 items-center justify-center"> 
-                    <Title content="Hello" />
-                </View>
-            </BottomSheetModal>
-        </BottomSheetModalProvider>
+                <Pressable 
+                    className="flex-1 bg-black/50" 
+                    onPress={() => setModalVisible(false)}
+                >
+                    <View className="flex-1 justify-end">
+                        <Pressable 
+                            className="h-[80%] bg-background rounded-t-3xl p-4"
+                            onPress={(e) => {
+                                e.stopPropagation();
+                            }}
+                        >
+                            {renderModalContent({ 
+                                modalStep,
+                                setModalStep,
+                                closeModal: () => setModalVisible(false) 
+                            })}
+                        </Pressable>
+                    </View>
+                </Pressable>
+            </Modal>
+        </View>
     );
 }
