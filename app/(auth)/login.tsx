@@ -91,7 +91,9 @@ export default function Login() {
                 <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Login' />
                     <View className='flex justify-cente r items-center gap-8 w-full mt-48'>
-                        <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
+                        <View className="absolute w-full flex items-center" style={{ top: -50 }}>
+                            <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
+                        </View>
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <Text className='font-spacemono-bold text-lg'>Email</Text>
                             <TextInput

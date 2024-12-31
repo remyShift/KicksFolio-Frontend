@@ -1,6 +1,12 @@
 import { useState } from 'react';
 import { View, Text, Pressable, ScrollView, TextInput } from 'react-native';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Animated, { 
+    useAnimatedStyle, 
+    withTiming, 
+    useSharedValue,
+    withSpring 
+} from 'react-native-reanimated';
 
 type DropdownInputProps = {
     value: string;
@@ -9,11 +15,26 @@ type DropdownInputProps = {
     placeholder: string;
     isError?: boolean;
     isFocused?: boolean;
+    onOpen?: () => void;
+    onBlur?: () => void;
+    customInputRegex?: RegExp;
 };
 
-export default function DropdownInput({ value, onSelect, options, placeholder, isError, isFocused }: DropdownInputProps) {
+export default function DropdownInput({ 
+    value, 
+    onSelect, 
+    options, 
+    placeholder, 
+    isError, 
+    isFocused,
+    onOpen,
+    onBlur,
+    customInputRegex 
+}: DropdownInputProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isCustomInput, setIsCustomInput] = useState(false);
+    const [customValue, setCustomValue] = useState('');
+    const dropdownHeight = useSharedValue(0);
 
     const handleOptionSelect = (option: string) => {
         if (option === 'Other') {
@@ -23,7 +44,46 @@ export default function DropdownInput({ value, onSelect, options, placeholder, i
             setIsCustomInput(false);
             onSelect(option);
         }
+        dropdownHeight.value = withTiming(0, { duration: 300 });
         setIsOpen(false);
+        onBlur?.();
+    };
+
+    const handleCustomInputChange = (text: string) => {
+        setCustomValue(text);
+        if (customInputRegex && customInputRegex.test(text)) {
+            onSelect(text);
+        }
+    };
+
+    const toggleDropdown = () => {
+        if (!isOpen) {
+            onOpen?.();
+            setIsOpen(true);
+            dropdownHeight.value = withSpring(200, {
+                damping: 15,
+                stiffness: 100
+            });
+        } else {
+            dropdownHeight.value = withTiming(0, { duration: 300 });
+            setIsOpen(false);
+        }
+    };
+
+    const animatedStyle = useAnimatedStyle(() => {
+        return {
+            maxHeight: dropdownHeight.value,
+            opacity: dropdownHeight.value === 0 ? 0 : 1,
+            overflow: 'hidden'
+        };
+    });
+
+    const handleCustomInputFocus = () => {
+        onOpen?.();
+    };
+
+    const handleCustomInputBlur = () => {
+        onBlur?.();
     };
 
     return (
@@ -33,7 +93,7 @@ export default function DropdownInput({ value, onSelect, options, placeholder, i
                     className={`bg-white rounded-md p-3 font-spacemono-bold flex-row justify-between items-center
                         ${isError ? 'border-2 border-red-500' : ''}
                         ${isFocused ? 'border-2 border-primary' : ''}`}
-                    onPress={() => setIsOpen(!isOpen)}
+                    onPress={toggleDropdown}
                 >
                     <Text className="font-spacemono-bold text-base">
                         {value || placeholder}
@@ -47,9 +107,11 @@ export default function DropdownInput({ value, onSelect, options, placeholder, i
             ) : (
                 <View className="flex-row items-center gap-2">
                     <TextInput
-                        value={value}
-                        onChangeText={onSelect}
+                        value={customValue}
+                        onChangeText={handleCustomInputChange}
                         placeholder="Enter custom value"
+                        onFocus={handleCustomInputFocus}
+                        onBlur={handleCustomInputBlur}
                         className={`flex-1 bg-white rounded-md p-3 font-spacemono-bold
                             ${isError ? 'border-2 border-red-500' : ''}
                             ${isFocused ? 'border-2 border-primary' : ''}`}
@@ -66,21 +128,25 @@ export default function DropdownInput({ value, onSelect, options, placeholder, i
                 </View>
             )}
 
-            {isOpen && (
-                <View className="absolute top-14 w-full bg-white rounded-md shadow-lg z-50 max-h-48">
-                    <ScrollView>
-                        {[...options, 'Other'].map((option) => (
-                            <Pressable
-                                key={option}
-                                className="p-3 border-b border-gray-200"
-                                onPress={() => handleOptionSelect(option)}
-                            >
-                                <Text className="font-spacemono">{option}</Text>
-                            </Pressable>
-                        ))}
-                    </ScrollView>
-                </View>
-            )}
+            <Animated.View 
+                className="relative top-2 w-full bg-white rounded-md shadow-md z-50"
+                style={animatedStyle}
+            >
+                <ScrollView 
+                    nestedScrollEnabled={true}
+                    className="max-h-48"
+                >
+                    {[...options, 'Other'].map((option) => (
+                        <Pressable
+                            key={option}
+                            className="p-3 border-b border-gray-200"
+                            onPress={() => handleOptionSelect(option)}
+                        >
+                            <Text className="font-spacemono">{option}</Text>
+                        </Pressable>
+                    ))}
+                </ScrollView>
+            </Animated.View>
         </View>
     );
 }

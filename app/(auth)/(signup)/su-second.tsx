@@ -142,7 +142,9 @@ export default function SUSecond() {
                 <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
                     <View className='flex gap-6 justify-center items-center w-full mt-20'>
-                        <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
+                        <View className="absolute w-full flex items-center" style={{ top: -50 }}>
+                            <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
+                        </View>
                         
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <Text className='font-spacemono-bold text-lg'>*First Name</Text>

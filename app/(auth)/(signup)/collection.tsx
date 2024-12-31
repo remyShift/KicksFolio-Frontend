@@ -28,7 +28,9 @@ export default function Collection() {
                 <View className="flex-1 items-center gap-12 p-4 bg-background">
                     <PageTitle content='Welcome to KicksFolio !' />
                     <View className='flex justify-center items-center gap-8 w-full mt-32'>
-                        <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
+                        <View className="absolute w-full flex items-center" style={{ top: -50 }}>
+                            <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
+                        </View>
                         <Text className="text-lg font-spacemono-bold">Please give a name to your collection :</Text>
                         <TextInput
                             placeholder="Collection name"
