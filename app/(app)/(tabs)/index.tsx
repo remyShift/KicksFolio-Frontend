@@ -56,7 +56,7 @@ export default function Tab() {
             <Modal
                 animationType="slide"
                 transparent={true}
-                visible={true}
+                visible={modalVisible}
                 onRequestClose={() => setModalVisible(false)}
             >
                 <Pressable 

@@ -1,4 +1,4 @@
-import { Text, View, Pressable, Image } from 'react-native';
+import { Text, View, Pressable, Image, ImageBackground } from 'react-native';
 import BackButton from '@/components/buttons/BackButton';
 import NextButton from '@/components/buttons/NextButton';
 import MainButton from '@/components/buttons/MainButton';
@@ -8,6 +8,8 @@ import { useState } from 'react';
 import DropdownInput from '../inputs/DropDownInput';
 import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
+import { handleAddSneaker } from '@/scripts/handleSneakers';
+import { useSession } from '@/context/authContext';
 
 type AddSneakersModalProps = {
     modalStep: 'index' | 'box' | 'noBox';
@@ -36,15 +38,18 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
     const [isSneakerConditionError, setIsSneakerConditionError] = useState(false);
     const [sneakerImage, setSneakerImage] = useState<string | null>(null);
 
+    const { user, sessionToken, getUserSneakers } = useSession();
+    const userId = user?.id;
+
     const pickImage = async () => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         if (status !== 'granted') {
-            alert('Désolé, nous avons besoin des permissions pour accéder à vos photos!');
+            alert('Sorry, we need permissions to access your photos!');
             return;
         }
 
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            mediaTypes: "images",
             allowsEditing: true,
             aspect: [4, 3],
             quality: 1,
@@ -56,10 +61,9 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
     };
 
     const takePhoto = async () => {
-        // Demander les permissions
         const { status } = await ImagePicker.requestCameraPermissionsAsync();
         if (status !== 'granted') {
-            alert('Désolé, nous avons besoin des permissions pour accéder à votre caméra!');
+            alert('Sorry, we need permissions to access your camera!');
             return;
         }
 
@@ -114,39 +118,40 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
             return (
                 <>
                     <View className="flex-1 h-full p-2 gap-4">
-                        <Pressable 
-                            onPress={() => {
-                                Alert.alert(
-                                    'Ajouter une photo',
-                                    'Choisissez une source',
-                                    [
-                                        {
-                                            text: 'Prendre une photo',
-                                            onPress: takePhoto
-                                        },
-                                        {
-                                            text: 'Choisir depuis la galerie',
-                                            onPress: pickImage
-                                        },
-                                        {
-                                            text: 'Annuler',
-                                            style: 'cancel'
-                                        }
-                                    ]
-                                );
-                            }}
-                            className="bg-gray-400 rounded-md h-48 w-full p-4 flex items-center justify-center"
-                        >
-                            {sneakerImage ? (
-                                <Image 
-                                    source={{ uri: sneakerImage }} 
-                                    className="w-full h-full rounded-md"
-                                    resizeMode="cover"
-                                />
-                            ) : (
+                        {sneakerImage ? (
+                            <ImageBackground
+                                source={{ uri: sneakerImage }} 
+                                className="h-48 w-full rounded-md"
+                                resizeMode="cover"
+                                imageStyle={{ borderRadius: 10 }}
+                            />
+                        ) : (
+                            <Pressable 
+                                onPress={() => {
+                                    Alert.alert(
+                                        'Ajouter une photo',
+                                        'Choisissez une source',
+                                        [
+                                            {
+                                                text: 'Prendre une photo',
+                                                onPress: takePhoto
+                                            },
+                                            {
+                                                text: 'Choisir depuis la galerie',
+                                                onPress: pickImage
+                                            },
+                                            {
+                                                text: 'Annuler',
+                                                style: 'cancel'
+                                            }
+                                        ]
+                                    );
+                                }}
+                                className="bg-gray-400 rounded-md h-48 w-full p-4 flex items-center justify-center"
+                            >
                                 <MaterialIcons name="add-a-photo" size={30} color="white" />
-                            )}
-                        </Pressable>
+                            </Pressable>
+                        )}
                         <View className='flex flex-col gap-1 w-full justify-center'>
                             <Text className='font-spacemono-bold text-lg'>*Sneaker name :</Text>
                             <TextInput 
@@ -212,14 +217,32 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                 isFocused={isSneakerStatusFocused}
                             />
                         </View>
-                        <View className="flex-row gap-44 items-end w-full">
+                        <View className="flex-row gap-44 items-end w-full mt-10">
                             <BackButton 
                                 onPressAction={() => setModalStep('index')} 
                             />
                             <NextButton
                                 content="Add" 
                                 backgroundColor="bg-primary"
-                                onPressAction={() => setModalStep('box')} 
+                                onPressAction={async () => {
+                                    await handleAddSneaker({
+                                        image: sneakerImage || '',
+                                        name: sneakerName,
+                                        brand: sneakerBrand,
+                                        size: Number(sneakerSize),
+                                        condition: Number(sneakerCondition),
+                                        status: sneakerStatus,
+                                        userId: userId || '',
+                                    }, sessionToken || null)
+                                    .then(async data => {
+                                        console.log('Sneaker added successfully:', data);
+                                        await getUserSneakers();
+                                        closeModal();
+                                    })
+                                    .catch(error => {
+                                        console.error('Error adding sneaker:', error);
+                                    });
+                                }}
                             />
                         </View>
                     </View>

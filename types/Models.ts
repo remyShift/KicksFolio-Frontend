@@ -27,7 +27,9 @@ export type Sneaker = {
     image: string;
     brand: string;
     size: number;
-    release_date: string;
+    condition: number;
+    status: string;
+    release_date: string | null;
     collection_id: string;
     created_at: string;
     updated_at: string;
