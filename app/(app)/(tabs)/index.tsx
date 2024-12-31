@@ -32,7 +32,9 @@ export default function Tab() {
                     <View className='flex-1 gap-32'>
                         <View className="flex-1 gap-4">
                             <Title content="My collection" />
-                            <CollectionCard userCollection={userCollection} userSneakers={userSneakers} />
+                            <View className="flex-1 px-4">
+                                <CollectionCard userCollection={userCollection} userSneakers={userSneakers} />
+                            </View>
                         </View>
 
                         {userFriends && userFriends.length > 0 ? (

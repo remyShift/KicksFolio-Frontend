@@ -52,6 +52,10 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
     useEffect(() => {
         if (sessionToken) {
+            setUser(null);
+            setUserCollection(null);
+            setUserSneakers(null);
+            setUserFriends(null);
             getUser();
         } else {
             setUser(null);

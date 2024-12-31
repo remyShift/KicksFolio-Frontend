@@ -129,19 +129,19 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                             <Pressable 
                                 onPress={() => {
                                     Alert.alert(
-                                        'Ajouter une photo',
-                                        'Choisissez une source',
+                                        'Add a photo',
+                                        'Choose a source',
                                         [
                                             {
-                                                text: 'Prendre une photo',
+                                                text: 'Take a photo',
                                                 onPress: takePhoto
                                             },
                                             {
-                                                text: 'Choisir depuis la galerie',
+                                                text: 'Choose from gallery',
                                                 onPress: pickImage
                                             },
                                             {
-                                                text: 'Annuler',
+                                                text: 'Cancel',
                                                 style: 'cancel'
                                             }
                                         ]
