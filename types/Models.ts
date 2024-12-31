@@ -33,4 +33,8 @@ export type Sneaker = {
     collection_id: string;
     created_at: string;
     updated_at: string;
+    images: {
+        id: string;
+        url: string;
+    }[];
 }

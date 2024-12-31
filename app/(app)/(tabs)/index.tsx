@@ -17,10 +17,11 @@ export default function Tab() {
     const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
 
     useEffect(() => {
-        if (isNewUser) {
+        console.log('userSneakers', userSneakers);
+        if (isNewUser && userSneakers && userSneakers.length === 0) {
             setModalVisible(true);
         }
-    }, [isNewUser]);
+    }, [isNewUser, userSneakers]);
 
     return (
         <View className="flex-1">
