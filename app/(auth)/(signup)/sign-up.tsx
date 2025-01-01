@@ -174,22 +174,22 @@ export default function SignUp() {
                         </View>
                     </View>
 
-                    <View className='flex gap-2 w-full justify-center items-center'>
-                        <MainButton 
-                            content='Next' 
-                            backgroundColor='bg-primary' 
-                            onPressAction={() => {
-                                setTimeout(() => {
-                                    handleNextSignUpPage();
-                                }, 300);
-                            }} 
-                        />
+                    <View className='flex-row gap-2 w-full justify-center items-center'>
                         <MainButton 
                             content='Login' 
                             backgroundColor='bg-gray-400' 
                             onPressAction={() => {
                                 setTimeout(() => {
                                     router.replace('/login');
+                                }, 300);
+                            }} 
+                        />
+                        <MainButton 
+                            content='Next' 
+                            backgroundColor='bg-primary' 
+                            onPressAction={() => {
+                                setTimeout(() => {
+                                    handleNextSignUpPage();
                                 }, 300);
                             }} 
                         />

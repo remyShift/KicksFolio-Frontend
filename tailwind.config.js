@@ -15,6 +15,7 @@ module.exports = {
         'syne-extrabold': ['Syne-ExtraBold', 'sans-serif'],
         'syne-semibold': ['Syne-SemiBold', 'sans-serif'],
         'spacemono-bold': ['SpaceMono-Bold', 'monospace'],
+        'spacemono-bold-italic': ['SpaceMono-BoldItalic', 'monospace'],
       },
       backgroundImage: {
         'condition-gradient': 'linear-gradient(to right, #FF8E4C, #F27329)',

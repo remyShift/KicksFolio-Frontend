@@ -41,7 +41,7 @@ export default function Collection() {
                             } ${isCollectionNameFocused ? 'border-2 border-primary' : ''}`}
                         />
                         <MainButton 
-                            content='Create Collection' 
+                            content='Create'
                             backgroundColor='bg-primary' 
                             onPressAction={async () => {
                                 if (collectionName.length === 0) {

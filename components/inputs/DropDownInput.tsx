@@ -29,7 +29,7 @@ export default function DropdownInput({
     isFocused,
     onOpen,
     onBlur,
-    customInputRegex 
+    customInputRegex
 }: DropdownInputProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isCustomInput, setIsCustomInput] = useState(false);
@@ -87,15 +87,15 @@ export default function DropdownInput({
     };
 
     return (
-        <View className="w-2/3">
+        <View className='w-3/5'>
             {!isCustomInput ? (
                 <Pressable
-                    className={`bg-white rounded-md p-3 font-spacemono-bold flex-row justify-between items-center
+                    className={`bg-white rounded-md p-2 font-spacemono-bold flex-row justify-between items-center
                         ${isError ? 'border-2 border-red-500' : ''}
                         ${isFocused ? 'border-2 border-primary' : ''}`}
                     onPress={toggleDropdown}
                 >
-                    <Text className="font-spacemono-bold text-base">
+                    <Text className="font-spacemono-bold-italic text-base">
                         {value || placeholder}
                     </Text>
                     <MaterialIcons 
@@ -109,12 +109,13 @@ export default function DropdownInput({
                     <TextInput
                         value={customValue}
                         onChangeText={handleCustomInputChange}
-                        placeholder="Enter custom value"
+                        placeholder="Enter a brand"
+                        placeholderTextColor='gray'
                         onFocus={handleCustomInputFocus}
                         onBlur={handleCustomInputBlur}
-                        className={`flex-1 bg-white rounded-md p-3 font-spacemono-bold
-                            ${isError ? 'border-2 border-red-500' : ''}
-                            ${isFocused ? 'border-2 border-primary' : ''}`}
+                        className={`bg-white rounded-md p-2 w-[85%] font-spacemono-bold-italic ${
+                            isError ? 'border-2 border-red-500' : ''
+                        } ${isFocused ? 'border-2 border-primary' : ''}`}
                     />
                     <Pressable
                         onPress={() => {
@@ -142,7 +143,7 @@ export default function DropdownInput({
                             className="p-3 border-b border-gray-200"
                             onPress={() => handleOptionSelect(option)}
                         >
-                            <Text className="font-spacemono">{option}</Text>
+                            <Text className="font-spacemono-bold-italic">{option}</Text>
                         </Pressable>
                     ))}
                 </ScrollView>

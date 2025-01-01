@@ -254,16 +254,7 @@ export default function SUSecond() {
                         </View>             
                     </View>
 
-                    <View className='flex gap-2 w-full justify-center items-center'>
-                        <MainButton 
-                            content='Sign Up' 
-                            backgroundColor='bg-primary' 
-                            onPressAction={() => {
-                                setTimeout(() => {
-                                    handleSignUp();
-                                }, 300);
-                            }}
-                        />
+                    <View className='flex-row gap-2 w-full justify-center items-center'>
                         <MainButton 
                             content='Back' 
                             backgroundColor='bg-gray-400' 
@@ -272,6 +263,15 @@ export default function SUSecond() {
                                     router.replace('/sign-up');
                                 }, 300);
                             }} 
+                        />
+                        <MainButton 
+                            content='Sign Up' 
+                            backgroundColor='bg-primary' 
+                            onPressAction={() => {
+                                setTimeout(() => {
+                                    handleSignUp();
+                                }, 300);
+                            }}
                         />
                     </View>
                 </View>

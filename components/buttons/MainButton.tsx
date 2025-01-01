@@ -14,7 +14,7 @@ export default function MainButton({content, onPressAction, backgroundColor}: {c
     return (
         <Animated.View className="flex flex-row" style={ animatedStyle }>
                 <Pressable 
-                    className={`${backgroundColor} py-3 px-6 rounded-md w-2/3`}
+                    className={`${backgroundColor} py-3 px-4 rounded-md w-32`}
                     onPress={() => {
                         triggerAnimation();
                         onPressAction();

@@ -19,8 +19,8 @@ type AddSneakersModalProps = {
     closeModal: () => void;
 }
 
-const BRANDS = ['Nike', 'Adidas', 'Jordan', 'New Balance', 'Asics', 'Puma', 'Reebok', 'Converse', 'Vans', ];
-const STATUS = ['Stocking', 'Selling', 'Rocking'];
+const BRANDS = ['NIKE', 'ADIDAS', 'JORDAN', 'NEW BALANCE', 'ASICS', 'PUMA', 'REEBOK', 'CONVERSE', 'VANS', ];
+const STATUS = ['STOCKING', 'SELLING', 'ROCKING'];
 
 export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddSneakersModalProps) => {
     const [sneakerName, setSneakerName] = useState('');
@@ -203,7 +203,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                         nestedScrollEnabled={true}
                         contentContainerStyle={{ minHeight: '100%' }}
                     >
-                        <View className="flex-1 h-full p-2 gap-4 justify-between">
+                        <View className="flex-1 h-full p-2 gap-4">
                             {sneakerImage ? (
                                 <ImageBackground
                                     source={{ uri: sneakerImage }} 
@@ -238,106 +238,125 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                     <MaterialIcons name="add-a-photo" size={30} color="white" />
                                 </Pressable>
                             )}
-                            <View className='flex flex-col gap-1 w-full justify-center'>
-                                <ErrorMsg content={errorMsg} display={errorMsg !== ''}/>
-                                <Text className='font-spacemono-bold text-lg'>*Sneaker name :</Text>
-                                <TextInput 
-                                    className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                        isSneakerNameError ? 'border-2 border-red-500' : ''
-                                    } ${isSneakerNameFocused ? 'border-2 border-primary' : ''}`} 
-                                    placeholder="Air Jordan 1"
-                                    placeholderTextColor='gray'
-                                    value={sneakerName}
-                                    onChangeText={setSneakerName}
-                                    onFocus={() => handleInputFocus('name')}
-                                    onBlur={() => handleInputBlur('name', sneakerName)}
-                                />
+
+                            <View className="flex flex-col gap-8">
+                                <View className="flex flex-col gap-4">
+                                    <View className='flex flex-col gap-2 w-full justify-center'>
+                                        <ErrorMsg content={errorMsg} display={errorMsg !== ''}/>
+                                        <TextInput 
+                                            className={`bg-white rounded-md p-2 w-3/5 font-spacemono-bold ${
+                                                isSneakerNameError ? 'border-2 border-red-500' : ''
+                                            } ${isSneakerNameFocused ? 'border-2 border-primary' : ''}`} 
+                                            placeholder="Air Jordan 1"
+                                            placeholderTextColor='gray'
+                                            value={sneakerName}
+                                            onChangeText={setSneakerName}
+                                            onFocus={() => handleInputFocus('name')}
+                                            onBlur={() => handleInputBlur('name', sneakerName)}
+                                        />
+                                    </View>
+
+                                        <DropdownInput
+                                            value={sneakerBrand}
+                                            onSelect={setSneakerBrand}
+                                            options={BRANDS}
+                                            placeholder="Select a brand"
+                                            isError={isSneakerBrandError}
+                                            isFocused={isSneakerBrandFocused}
+                                            onOpen={() => handleInputFocus('brand')}
+                                            onBlur={() => handleInputBlur('brand', sneakerBrand)}
+                                            customInputRegex={/^[a-zA-Z\s]+$/}
+                                        />
+
+                                        <DropdownInput
+                                            value={sneakerStatus}
+                                            onSelect={setSneakerStatus}
+                                            options={STATUS}
+                                            placeholder="Select a status"
+                                            isError={isSneakerStatusError}
+                                            isFocused={isSneakerStatusFocused}
+                                            onOpen={() => handleInputFocus('status')}
+                                            onBlur={() => handleInputBlur('status', sneakerStatus)}
+                                        />
+                                </View>
+
+                                <View className="flex-row items-center w-full">
+                                    <View className='flex-col items-center gap-1 w-1/3 border-t-2 border-r-2 border-gray-300'>
+                                        <Text className='font-spacemono text-center'>Size</Text>
+                                        <TextInput
+                                            className={`bg-white rounded-md p-2 w-4/5 font-spacemono-bold text-center 
+                                                ${isSneakerSizeError ? 'border-2 border-red-500' : ''} 
+                                                ${isSneakerSizeFocused ? 'border-2 border-primary' : ''}`} 
+                                            placeholder="9"
+                                            value={sneakerSize}
+                                            onChangeText={setSneakerSize}
+                                            onFocus={() => handleInputFocus('size')}
+                                            onBlur={() => handleInputBlur('size', sneakerSize)}
+                                        />
+                                    </View>
+
+                                    <View className='flex-col items-center gap-1 w-1/3 border-t-2 border-r-2 border-gray-300'>
+                                        <Text className='font-spacemono text-center'>Price Paid</Text>
+                                        <TextInput
+                                            className={`bg-white rounded-md p-2 w-4/5 font-spacemono-bold text-center ${
+                                                isSneakerConditionError ? 'border-2 border-red-500' : ''
+                                            } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
+                                            placeholder="150" 
+                                            value={sneakerCondition}
+                                            onChangeText={setSneakerCondition}
+                                            onFocus={() => handleInputFocus('condition')}
+                                            onBlur={() => handleInputBlur('condition', sneakerCondition)}
+                                        />
+                                    </View>
+
+                                    <View className='flex-col items-center gap-1 w-1/3 border-t-2 border-gray-300'>
+                                        <Text className='font-spacemono text-center'>Condition</Text>
+                                        <TextInput
+                                            className={`bg-white rounded-md p-2 w-4/5 font-spacemono-bold text-center ${
+                                                isSneakerConditionError ? 'border-2 border-red-500' : ''
+                                            } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
+                                            placeholder="0 - 10" 
+                                            value={sneakerCondition}
+                                            onChangeText={setSneakerCondition}
+                                            onFocus={() => handleInputFocus('condition')}
+                                            onBlur={() => handleInputBlur('condition', sneakerCondition)}
+                                        />
+                                    </View>
+                                </View>
                             </View>
-                            <View className='flex flex-col gap-1 w-full justify-center'>
-                                <Text className='font-spacemono-bold text-lg'>*Brand :</Text>
-                                <DropdownInput
-                                    value={sneakerBrand}
-                                    onSelect={setSneakerBrand}
-                                    options={BRANDS}
-                                    placeholder="Select a brand"
-                                    isError={isSneakerBrandError}
-                                    isFocused={isSneakerBrandFocused}
-                                    onOpen={() => handleInputFocus('brand')}
-                                    onBlur={() => handleInputBlur('brand', sneakerBrand)}
-                                    customInputRegex={/^[a-zA-Z\s]+$/}
-                                />
-                            </View>
-                            <View className="flex-row justify-between items-center w-full">
-                                <View className='flex-col gap-1 justify-center w-[45%]'>
-                                    <Text className='font-spacemono-bold text-lg'>*Size (US):</Text>
-                                    <TextInput
-                                        className={`bg-white rounded-md p-3 w-full font-spacemono-bold ${
-                                            isSneakerSizeError ? 'border-2 border-red-500' : ''
-                                        } ${isSneakerSizeFocused ? 'border-2 border-primary' : ''}`} 
-                                        placeholder="9"
-                                        value={sneakerSize}
-                                        onChangeText={setSneakerSize}
-                                        onFocus={() => handleInputFocus('size')}
-                                        onBlur={() => handleInputBlur('size', sneakerSize)}
+
+                            <View className="flex-1 justify-end pb-4">
+                                <View className="flex-row justify-between w-full mt-10">
+                                    <BackButton 
+                                        onPressAction={() => setModalStep('index')} 
+                                    />
+                                    <NextButton
+                                        content="Add" 
+                                        backgroundColor="bg-primary"
+                                        onPressAction={async () => {
+                                            const isValid = validateAllFields(sneakerName, sneakerBrand, sneakerSize, sneakerCondition, sneakerStatus, setErrorMsg, setIsSneakerNameError, setIsSneakerBrandError, setIsSneakerSizeError, setIsSneakerConditionError, setIsSneakerStatusError);
+                                            if (!isValid) {
+                                                return;
+                                            }
+                                            await handleAddSneaker({
+                                                image: sneakerImage || '',
+                                                name: sneakerName,
+                                                brand: sneakerBrand,
+                                                size: Number(sneakerSize),
+                                                condition: Number(sneakerCondition),
+                                                status: sneakerStatus,
+                                                userId: userId || '',
+                                            }, sessionToken || null)
+                                            .then(async data => {
+                                                await getUserSneakers();
+                                                closeModal();
+                                            })
+                                            .catch(error => {
+                                                console.error('Error adding sneaker:', error);
+                                            });
+                                        }}
                                     />
                                 </View>
-                                <View className='flex-col gap-1 justify-center w-[45%]'>
-                                    <Text className='font-spacemono-bold text-lg'>*Condition :</Text>
-                                    <TextInput
-                                        className={`bg-white rounded-md p-3 w-full font-spacemono-bold ${
-                                            isSneakerConditionError ? 'border-2 border-red-500' : ''
-                                        } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
-                                        placeholder="0 - 10" 
-                                        value={sneakerCondition}
-                                        onChangeText={setSneakerCondition}
-                                        onFocus={() => handleInputFocus('condition')}
-                                        onBlur={() => handleInputBlur('condition', sneakerCondition)}
-                                    />
-                                </View>
-                            </View>
-                            <View className='flex flex-col gap-1 w-full justify-center'>
-                                <Text className='font-spacemono-bold text-lg'>*Status :</Text>
-                                <DropdownInput
-                                    value={sneakerStatus}
-                                    onSelect={setSneakerStatus}
-                                    options={STATUS}
-                                    placeholder="Select a status"
-                                    isError={isSneakerStatusError}
-                                    isFocused={isSneakerStatusFocused}
-                                    onOpen={() => handleInputFocus('status')}
-                                    onBlur={() => handleInputBlur('status', sneakerStatus)}
-                                />
-                            </View>
-                            <View className="flex-row gap-44 items-end w-full mt-10">
-                                <BackButton 
-                                    onPressAction={() => setModalStep('index')} 
-                                />
-                                <NextButton
-                                    content="Add" 
-                                    backgroundColor="bg-primary"
-                                    onPressAction={async () => {
-                                        const isValid = validateAllFields(sneakerName, sneakerBrand, sneakerSize, sneakerCondition, sneakerStatus, setErrorMsg, setIsSneakerNameError, setIsSneakerBrandError, setIsSneakerSizeError, setIsSneakerConditionError, setIsSneakerStatusError);
-                                        if (!isValid) {
-                                            return;
-                                        }
-                                        await handleAddSneaker({
-                                            image: sneakerImage || '',
-                                            name: sneakerName,
-                                            brand: sneakerBrand,
-                                            size: Number(sneakerSize),
-                                            condition: Number(sneakerCondition),
-                                            status: sneakerStatus,
-                                            userId: userId || '',
-                                        }, sessionToken || null)
-                                        .then(async data => {
-                                            await getUserSneakers();
-                                            closeModal();
-                                        })
-                                        .catch(error => {
-                                            console.error('Error adding sneaker:', error);
-                                        });
-                                    }}
-                                />
                             </View>
                         </View>
                     </ScrollView>

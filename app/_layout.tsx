@@ -12,6 +12,7 @@ const FONTS = {
   'Syne-ExtraBold': require('../assets/fonts/Syne-ExtraBold.ttf'),
   'Syne-SemiBold': require('../assets/fonts/Syne-SemiBold.ttf'),
   'SpaceMono-Bold': require('../assets/fonts/SpaceMono-Bold.ttf'),
+  'SpaceMono-BoldItalic': require('../assets/fonts/SpaceMono-BoldItalic.ttf'),
 } as const;
 
 export default function RootLayout() {
