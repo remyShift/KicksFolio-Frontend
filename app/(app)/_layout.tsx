@@ -8,9 +8,7 @@ export default function AppLayout() {
     const { sessionToken, isLoading, user, userCollection, getUser } = useSession();
     
     useEffect(() => {
-        console.log('getUser TOTO----------------------------------------------');
         getUser();
-        console.log(userCollection);
     }, []);
 
     if (isLoading) {

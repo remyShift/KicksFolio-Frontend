@@ -32,12 +32,6 @@ export const handleAddSneaker = async (sneaker: SneakerProps, sessionToken: stri
 
     formData.append('sneaker[images][]', imageFile as any);
 
-    console.log('Sending request with:', {
-        url: `${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${sneaker.userId}/collection/sneakers`,
-        token: sessionToken,
-        formData: JSON.stringify(Object.fromEntries(formData))
-    });
-
     return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${sneaker.userId}/collection/sneakers`, {
         method: 'POST',
         headers: {
@@ -48,7 +42,6 @@ export const handleAddSneaker = async (sneaker: SneakerProps, sessionToken: stri
     })
     .then(async response => {
         const text = await response.text();
-        console.log('Response:', text);
         return JSON.parse(text);
     })
     .catch(error => {

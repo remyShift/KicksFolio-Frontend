@@ -274,14 +274,13 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                         className={`bg-white rounded-md p-3 w-full font-spacemono-bold ${
                                             isSneakerSizeError ? 'border-2 border-red-500' : ''
                                         } ${isSneakerSizeFocused ? 'border-2 border-primary' : ''}`} 
-                                        placeholder="9" 
+                                        placeholder="9"
                                         value={sneakerSize}
                                         onChangeText={setSneakerSize}
                                         onFocus={() => handleInputFocus('size')}
                                         onBlur={() => handleInputBlur('size', sneakerSize)}
                                     />
                                 </View>
-                                
                                 <View className='flex-col gap-1 justify-center w-[45%]'>
                                     <Text className='font-spacemono-bold text-lg'>*Condition :</Text>
                                     <TextInput
@@ -331,7 +330,6 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                             userId: userId || '',
                                         }, sessionToken || null)
                                         .then(async data => {
-                                            console.log('Sneaker added successfully:', data);
                                             await getUserSneakers();
                                             closeModal();
                                         })

@@ -17,7 +17,6 @@ export default function Tab() {
     const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
 
     useEffect(() => {
-        console.log('userSneakers', userSneakers);
         if (isNewUser && (userSneakers && userSneakers.length === 0 || !userSneakers)) {
             setModalVisible(true);
         }

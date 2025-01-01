@@ -202,7 +202,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
         })
         .then(data => {
             if (data) {
-                console.log('data', data);
                 setUserSneakers(data.sneakers);
             }
         })
