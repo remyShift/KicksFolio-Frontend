@@ -109,6 +109,28 @@ export const checkSneakerStatus = (status: string, setErrorMsg: (msg: string) =>
     return true;
 };
 
+export const checkSneakerImage = (image: string, setErrorMsg: (msg: string) => void, setIsError: (isError: boolean) => void): boolean => {
+    if (!image) {
+        setErrorMsg('Please select an image.');
+        setIsError(true);
+        return false;
+    }
+    return true;
+};
+
+export const checkPricePaid = (pricePaid: string, setErrorMsg: (msg: string) => void, setIsError: (isError: boolean) => void): boolean => {
+    if (!pricePaid) {
+        setErrorMsg('Please enter a price paid.');
+        setIsError(true);
+        return false;
+    } else if (isNaN(parseFloat(pricePaid)) || parseFloat(pricePaid) < 0) {
+        setErrorMsg('Price paid invalid, price paid must be a positive number.');
+        setIsError(true);
+        return false;
+    }
+    return true;
+};
+
 export const validateAllFields = (sneakerName: string, sneakerBrand: string, sneakerSize: string, sneakerCondition: string, sneakerStatus: string, setErrorMsg: (msg: string) => void, setIsSneakerNameError: (isError: boolean) => void, setIsSneakerBrandError: (isError: boolean) => void, setIsSneakerSizeError: (isError: boolean) => void, setIsSneakerConditionError: (isError: boolean) => void, setIsSneakerStatusError: (isError: boolean) => void) => {
     const isNameValid = checkSneakerName(sneakerName, setErrorMsg, setIsSneakerNameError);
     const isBrandValid = checkSneakerBrand(sneakerBrand, setErrorMsg, setIsSneakerBrandError);

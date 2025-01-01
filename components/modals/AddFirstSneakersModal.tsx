@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import { handleAddSneaker } from '@/scripts/handleSneakers';
 import { useSession } from '@/context/authContext';
-import { checkSneakerName, checkSneakerSize, checkSneakerCondition, checkSneakerBrand, checkSneakerStatus, validateAllFields } from '@/scripts/validatesSneakersForm';
+import { checkSneakerName, checkSneakerSize, checkSneakerCondition, checkSneakerBrand, checkSneakerStatus, validateAllFields, checkSneakerImage, checkPricePaid } from '@/scripts/validatesSneakersForm';
 import ErrorMsg from '@/components/text/ErrorMsg';
 
 type AddSneakersModalProps = {
@@ -18,6 +18,8 @@ type AddSneakersModalProps = {
     setModalStep: (step: 'index' | 'box' | 'noBox') => void;
     closeModal: () => void;
 }
+
+type InputTypeProps = 'name' | 'size' | 'condition' | 'status' | 'pricePaid' | 'brand';
 
 const BRANDS = ['NIKE', 'ADIDAS', 'JORDAN', 'NEW BALANCE', 'ASICS', 'PUMA', 'REEBOK', 'CONVERSE', 'VANS', ];
 const STATUS = ['STOCKING', 'SELLING', 'ROCKING'];
@@ -40,6 +42,9 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
     const [isSneakerConditionError, setIsSneakerConditionError] = useState(false);
     const [sneakerImage, setSneakerImage] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState('');
+    const [isPricePaidError, setIsPricePaidError] = useState(false);
+    const [isPricePaidFocused, setIsPricePaidFocused] = useState(false);
+    const [sneakerPricePaid, setSneakerPricePaid] = useState('');
 
 
     const { user, sessionToken, getUserSneakers } = useSession();
@@ -57,7 +62,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         }, 100);
     };
 
-    const handleInputFocus = (inputType: 'name' | 'brand' | 'size' | 'condition' | 'status') => {
+    const handleInputFocus = (inputType: InputTypeProps) => {
         switch(inputType) {
             case 'name':
                 setIsSneakerNameFocused(true);
@@ -80,11 +85,27 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         setIsSneakerSizeError(false);
         setIsSneakerConditionError(false);
         setIsSneakerStatusError(false);
+        setIsPricePaidError(false);
         setErrorMsg('');
         scrollToBottom();
     };
 
-    const handleInputBlur = (inputType: 'name' | 'brand' | 'size' | 'condition' | 'status', value: string) => {
+    const handleInputBlur = (inputType: InputTypeProps, value: string) => {
+        setIsSneakerNameError(false);
+        setIsSneakerBrandError(false);
+        setIsSneakerSizeError(false);
+        setIsSneakerConditionError(false);
+        setIsSneakerStatusError(false);
+        setIsPricePaidError(false);
+        
+        if (inputType === 'brand') {
+            setTimeout(() => {
+                setIsSneakerBrandFocused(false);
+                checkSneakerBrand(value, setErrorMsg, setIsSneakerBrandError);
+            }, 100);
+            return;
+        }
+
         switch(inputType) {
             case 'name':
                 setIsSneakerNameFocused(false);
@@ -113,6 +134,10 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                 } else {
                     checkSneakerStatus(value, setErrorMsg, setIsSneakerStatusError);
                 }
+                break;
+            case 'pricePaid':
+                setIsPricePaidFocused(false);
+                checkPricePaid(value, setErrorMsg, setIsPricePaidError);
                 break;
         }
     };
@@ -212,7 +237,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                     imageStyle={{ borderRadius: 10 }}
                                 />
                             ) : (
-                                <Pressable 
+                                <Pressable
                                     onPress={() => {
                                         Alert.alert(
                                             'Add a photo',
@@ -280,47 +305,53 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                         />
                                 </View>
 
-                                <View className="flex-row items-center w-full">
-                                    <View className='flex-col items-center gap-1 w-1/3 border-t-2 border-r-2 border-gray-300'>
-                                        <Text className='font-spacemono text-center'>Size</Text>
-                                        <TextInput
-                                            className={`bg-white rounded-md p-2 w-4/5 font-spacemono-bold text-center 
-                                                ${isSneakerSizeError ? 'border-2 border-red-500' : ''} 
-                                                ${isSneakerSizeFocused ? 'border-2 border-primary' : ''}`} 
-                                            placeholder="9"
-                                            value={sneakerSize}
-                                            onChangeText={setSneakerSize}
-                                            onFocus={() => handleInputFocus('size')}
-                                            onBlur={() => handleInputBlur('size', sneakerSize)}
-                                        />
+                                <View className="flex-row items-center w-full border-t-2 border-gray-300">
+                                    <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
+                                        <Text className='font-spacemono text-center'>Size (US)</Text>
+                                        <View className="w-4/5">
+                                            <TextInput
+                                                className={`bg-white rounded-md p-2 w-full font-spacemono-bold text-center relative ${
+                                                    isSneakerSizeError ? 'border-2 border-red-500' : ''
+                                                } ${isSneakerSizeFocused ? 'border-2 border-primary' : ''}`} 
+                                                placeholder="9"
+                                                value={sneakerSize}
+                                                onChangeText={setSneakerSize}
+                                                onFocus={() => handleInputFocus('size')}
+                                                onBlur={() => handleInputBlur('size', sneakerSize)}
+                                            />
+                                        </View>
                                     </View>
 
-                                    <View className='flex-col items-center gap-1 w-1/3 border-t-2 border-r-2 border-gray-300'>
+                                    <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
                                         <Text className='font-spacemono text-center'>Price Paid</Text>
-                                        <TextInput
-                                            className={`bg-white rounded-md p-2 w-4/5 font-spacemono-bold text-center ${
-                                                isSneakerConditionError ? 'border-2 border-red-500' : ''
-                                            } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
-                                            placeholder="150" 
-                                            value={sneakerCondition}
-                                            onChangeText={setSneakerCondition}
-                                            onFocus={() => handleInputFocus('condition')}
-                                            onBlur={() => handleInputBlur('condition', sneakerCondition)}
-                                        />
+                                        <View className="w-4/5">
+                                            <TextInput
+                                                className={`bg-white rounded-md p-2 w-full font-spacemono-bold text-center relative ${
+                                                    isPricePaidError ? 'border-2 border-red-500' : ''
+                                                } ${isPricePaidFocused ? 'border-2 border-primary' : ''}`} 
+                                                placeholder="150" 
+                                                value={sneakerPricePaid}
+                                                onChangeText={setSneakerPricePaid}
+                                                onFocus={() => handleInputFocus('pricePaid')}
+                                                onBlur={() => handleInputBlur('pricePaid', sneakerPricePaid)}
+                                            />
+                                        </View>
                                     </View>
 
-                                    <View className='flex-col items-center gap-1 w-1/3 border-t-2 border-gray-300'>
+                                    <View className='flex-col items-center p-2 gap-1 w-1/3'>
                                         <Text className='font-spacemono text-center'>Condition</Text>
-                                        <TextInput
-                                            className={`bg-white rounded-md p-2 w-4/5 font-spacemono-bold text-center ${
-                                                isSneakerConditionError ? 'border-2 border-red-500' : ''
-                                            } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
-                                            placeholder="0 - 10" 
-                                            value={sneakerCondition}
-                                            onChangeText={setSneakerCondition}
-                                            onFocus={() => handleInputFocus('condition')}
-                                            onBlur={() => handleInputBlur('condition', sneakerCondition)}
-                                        />
+                                        <View className="w-4/5">
+                                            <TextInput
+                                                className={`bg-white rounded-md p-2 w-full font-spacemono-bold text-center relative ${
+                                                    isSneakerConditionError ? 'border-2 border-red-500' : ''
+                                                } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
+                                                placeholder="0 - 10" 
+                                                value={sneakerCondition}
+                                                onChangeText={setSneakerCondition}
+                                                onFocus={() => handleInputFocus('condition')}
+                                                onBlur={() => handleInputBlur('condition', sneakerCondition)}
+                                            />
+                                        </View>
                                     </View>
                                 </View>
                             </View>

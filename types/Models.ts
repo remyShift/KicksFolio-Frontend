@@ -24,6 +24,7 @@ export type Collection = {
 export type Sneaker = {
     id: string;
     model: string;
+    price_paid: number;
     brand: string;
     size: number;
     condition: number;

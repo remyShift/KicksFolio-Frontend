@@ -41,7 +41,7 @@ export default function Collection() {
                             } ${isCollectionNameFocused ? 'border-2 border-primary' : ''}`}
                         />
                         <MainButton 
-                            content='Create'
+                            content='Create' 
                             backgroundColor='bg-primary' 
                             onPressAction={async () => {
                                 if (collectionName.length === 0) {
@@ -51,6 +51,8 @@ export default function Collection() {
                                     setIsCollectionNameFocused(false);
                                     setIsCollectionNameError(false);
                                     setErrorMsg('');
+                                    console.log('user', user);
+                                    console.log('sessionToken', sessionToken);
                                     if (user && sessionToken) {
                                         createCollection(collectionName, user.id, sessionToken).then(() => {
                                             getUserCollection().then(() => {
