@@ -12,7 +12,7 @@ export const handleInputChange = (
 
 export const checkBeforeNext = async (
     value: string, 
-    inputType: 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size' | 'gender',
+    inputType: 'username' | 'email' | 'password' | 'firstName' | 'lastName' | 'size',
     isLoginPage: boolean,
     setErrorMsg: (msg: string) => void,
     setIsError: (isError: boolean) => void,
@@ -36,9 +36,6 @@ export const checkBeforeNext = async (
             break;
         case 'size':
             isValid = checkSize(Number(value), setErrorMsg, setIsError);
-            break;
-        case 'gender':
-            isValid = checkGender(value, setErrorMsg, setIsError);
             break;
     }
 
@@ -132,21 +129,6 @@ export const checkSize = (size: number, setErrorMsg: (msg: string) => void, setI
 
     setErrorMsg('');
     setIsSizeError(false);
-    return true;
-};
-
-export const checkGender = (gender: string, setErrorMsg: (msg: string) => void, setIsGenderError: (isError: boolean) => void): boolean => {
-    if (!gender) {
-        setErrorMsg('Please put your gender.');
-        setIsGenderError(true);
-        return false;
-    } else if (gender !== 'male' && gender !== 'female' && gender !== 'other') {
-        setErrorMsg('Please put a valid gender.');
-        setIsGenderError(true);
-        return false;
-    }
-    setErrorMsg('');
-    setIsGenderError(false);
     return true;
 };
 

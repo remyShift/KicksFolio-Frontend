@@ -5,7 +5,6 @@ export type User = {
     first_name: string;
     last_name: string;
     sneaker_size: number;
-    gender: string;
     created_at: string;
     updated_at: string;
     collection: Collection;

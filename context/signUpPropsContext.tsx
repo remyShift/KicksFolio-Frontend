@@ -8,7 +8,6 @@ const SignUpPropsContext = createContext<{
         first_name: string,
         last_name: string,
         sneaker_size: number,
-        gender: string
     },
     setSignUpProps: (signUpProps: {
         email: string,
@@ -17,7 +16,6 @@ const SignUpPropsContext = createContext<{
         first_name: string,
         last_name: string,
         sneaker_size: number,
-        gender: string
     }) => void
 }>({
     signUpProps: {
@@ -27,7 +25,6 @@ const SignUpPropsContext = createContext<{
         first_name: '',
         last_name: '',
         sneaker_size: 0,
-        gender: '',
     },
     setSignUpProps: () => {},
 });
@@ -50,7 +47,6 @@ export function SignUpPropsProvider({ children }: PropsWithChildren) {
         first_name: string,
         last_name: string,
         sneaker_size: number,
-        gender: string
     }>({
         email: '',
         password: '',
@@ -58,7 +54,6 @@ export function SignUpPropsProvider({ children }: PropsWithChildren) {
         first_name: '',
         last_name: '',
         sneaker_size: 0,
-        gender: '',
     });
 
     return (

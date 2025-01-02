@@ -4,7 +4,7 @@ import { User, Collection, Sneaker } from '@/types/Models';
 
 const AuthContext = createContext<{
     login: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string) => Promise<void>;
+    signUp: (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number) => Promise<void>;
     logout: () => void;
     sessionToken?: string | null;
     isLoading: boolean;
@@ -89,7 +89,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
         });
     };
 
-    const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, gender: string): Promise<void> => {
+    const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number): Promise<void> => {
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users`, {
             method: 'POST',
             headers: {
@@ -102,8 +102,7 @@ export function SessionProvider({ children }: PropsWithChildren) {
                     username,
                     first_name,
                     last_name,
-                    sneaker_size,
-                    gender
+                    sneaker_size
                 }
             })
         })

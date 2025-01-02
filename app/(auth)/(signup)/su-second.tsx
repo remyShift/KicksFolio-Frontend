@@ -6,7 +6,7 @@ import MainButton from '@/components/buttons/MainButton';
 import { useSession } from '@/context/authContext';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
-import { handleInputChange, checkBeforeNext, checkName, checkSize, checkGender } from '@/scripts/formUtils';
+import { handleInputChange, checkBeforeNext, checkName, checkSize } from '@/scripts/formUtils';
 
 export default function SUSecond() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
@@ -19,34 +19,29 @@ export default function SUSecond() {
     const [isLastNameError, setIsLastNameError] = useState(false);
     const [isSizeFocused, setIsSizeFocused] = useState(false);
     const [isSizeError, setIsSizeError] = useState(false);
-    const [isGenderFocused, setIsGenderFocused] = useState(false);
-    const [isGenderError, setIsGenderError] = useState(false);
 
     const scrollViewRef = useRef<ScrollView>(null);
     const lastNameInputRef = useRef<TextInput>(null);
     const sizeInputRef = useRef<TextInput>(null);
-    const genderInputRef = useRef<TextInput>(null);
     const firstNameInputRef = useRef<TextInput>(null);
 
     const scrollToBottom = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
     };
 
-    const handleInputFocus = (inputType: 'firstName' | 'lastName' | 'size' | 'gender') => {
+    const handleInputFocus = (inputType: 'firstName' | 'lastName' | 'size') => {
         if (inputType === 'firstName') setIsFirstNameFocused(true);
         else if (inputType === 'lastName') setIsLastNameFocused(true);
         else if (inputType === 'size') setIsSizeFocused(true);
-        else setIsGenderFocused(true);
 
         setIsFirstNameError(false);
         setIsLastNameError(false);
         setIsSizeError(false);
-        setIsGenderError(false);
         setErrorMsg('');
         scrollToBottom();
     };
 
-    const handleInputBlur = (inputType: 'firstName' | 'lastName' | 'size' | 'gender', value: string) => {
+    const handleInputBlur = (inputType: 'firstName' | 'lastName' | 'size', value: string) => {
         if (inputType === 'firstName') {
             setIsFirstNameFocused(false);
             if (!value) {
@@ -71,14 +66,6 @@ export default function SUSecond() {
             } else if (!checkSize(Number(value), setErrorMsg, setIsSizeError)) {
                 return;
             }
-        } else {
-            setIsGenderFocused(false);
-            if (!value || !['male', 'female', 'other'].includes(value.toLowerCase())) {
-                setErrorMsg('Please put a valid gender (Male/Female/Other).');
-                setIsGenderError(true);
-            } else if (!checkGender(value, setErrorMsg, setIsGenderError)) {
-                return;
-            }
         }
     };
 
@@ -101,12 +88,6 @@ export default function SUSecond() {
             return;
         }
 
-        if (!signUpProps.gender || !['male', 'female', 'other'].includes(signUpProps.gender.toLowerCase())) {
-            setErrorMsg('Please put a valid gender (Male/Female/Other).');
-            setIsGenderError(true);
-            return;
-        }
-
         setErrorMsg('');
         signUp(
             signUpProps.email,
@@ -114,11 +95,10 @@ export default function SUSecond() {
             signUpProps.username,
             signUpProps.first_name,
             signUpProps.last_name,
-            signUpProps.sneaker_size,
-            signUpProps.gender
+            signUpProps.sneaker_size
         ).then(() => {
             login(signUpProps.email, signUpProps.password).then(() => {
-                setSignUpProps({ ...signUpProps, email: '', password: '', username: '', first_name: '', last_name: '', sneaker_size: 0, gender: '' });
+                setSignUpProps({ ...signUpProps, email: '', password: '', username: '', first_name: '', last_name: '', sneaker_size: 0 });
                 router.replace('/collection');
             }).catch((error) => {
                 setErrorMsg(`Something went wrong. Please try again 1. ${error}`);
@@ -137,7 +117,7 @@ export default function SUSecond() {
                 ref={scrollViewRef}
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
-                scrollEnabled={isFirstNameFocused || isLastNameFocused || isSizeFocused || isGenderFocused}>
+                scrollEnabled={isFirstNameFocused || isLastNameFocused || isSizeFocused}>
                 <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
                     <View className='flex gap-6 justify-center items-center w-full mt-20'>
@@ -213,7 +193,7 @@ export default function SUSecond() {
                                 clearButtonMode='while-editing'
                                 returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={() => checkBeforeNext(String(signUpProps.sneaker_size), 'size', false, setErrorMsg, setIsSizeError, genderInputRef)}
+                                onSubmitEditing={() => handleSignUp()}
                                 onFocus={() => handleInputFocus('size')}
                                 onBlur={() => handleInputBlur('size', String(signUpProps.sneaker_size))}
                                 onChangeText={(text) => {
@@ -225,32 +205,6 @@ export default function SUSecond() {
                                 } ${isSizeFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
-
-                        <View className='flex flex-col gap-2 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold text-lg'>*Gender</Text>
-                            <TextInput
-                                ref={genderInputRef}
-                                placeholder="Male / Female / Other"
-                                inputMode='text'
-                                value={signUpProps.gender}
-                                autoComplete='off'
-                                autoCorrect={false}
-                                placeholderTextColor='gray'
-                                clearButtonMode='while-editing'
-                                returnKeyType='done'
-                                enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={handleSignUp}
-                                onFocus={() => handleInputFocus('gender')}
-                                onBlur={() => handleInputBlur('gender', signUpProps.gender)}
-                                onChangeText={(text) => {
-                                    setSignUpProps({ ...signUpProps, gender: text.toLowerCase() });
-                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, gender: t.toLowerCase() }), setErrorMsg);
-                                }}
-                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
-                                    isGenderError ? 'border-2 border-red-500' : ''
-                                } ${isGenderFocused ? 'border-2 border-primary' : ''}`}
-                            />
-                        </View>             
                     </View>
 
                     <View className='flex-row gap-2 w-full justify-center items-center'>
