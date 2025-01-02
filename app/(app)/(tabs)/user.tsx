@@ -6,13 +6,37 @@ import Title from '@/components/text/Title';
 import SneakerCard from '@/components/cards/SneakerCard';
 import AddButton from '@/components/buttons/AddButton';
 import { Pressable } from 'react-native';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { renderModalContent } from '@/components/modals/AddSneakersModal';
+import BrandTitle from '@/components/text/BrandTitle';
+
+const brandLogos: Record<string, any> = {
+  nike: require('@/assets/images/brands/nike.png'),
+  adidas: require('@/assets/images/brands/adidas.png'),
+  jordan: require('@/assets/images/brands/jordan.png'),
+  newbalance: require('@/assets/images/brands/newbalance.png'),
+  asics: require('@/assets/images/brands/asics.png'),
+  puma: require('@/assets/images/brands/puma.png'),
+  reebok: require('@/assets/images/brands/reebok.png'),
+  converse: require('@/assets/images/brands/converse.png'),
+  vans: require('@/assets/images/brands/vans.png'),
+};
 
 export default function User() {
   const { logout, user, userSneakers } = useSession();
   const [modalVisible, setModalVisible] = useState(false);
   const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
+
+  const sneakersByBrand = useMemo(() => {
+    if (!userSneakers) return {};
+    return userSneakers.reduce((acc, sneaker) => {
+      if (!acc[sneaker.brand]) {
+        acc[sneaker.brand] = [];
+      }
+      acc[sneaker.brand].push(sneaker);
+      return acc;
+    }, {} as Record<string, typeof userSneakers>);
+  }, [userSneakers]);
 
   return (
     <>
@@ -55,10 +79,22 @@ export default function User() {
                 </View>
               ) : (
                 <View className="flex-1 gap-4">
-                  <Title content='Your Sneakers' isTextCenter={true} />
-                  {userSneakers?.map((sneaker) => (
-                    <View key={sneaker.id} className="flex-1 px-4">
-                      <SneakerCard sneaker={sneaker} />
+                  {Object.entries(sneakersByBrand).map(([brand, sneakers]) => (
+                    <View key={brand} className="flex-1">
+                      <BrandTitle
+                        content={brand} 
+                        brandLogo={brandLogos[brand.toLowerCase()]} 
+                      />
+                      <ScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                      >
+                        {sneakers.map((sneaker) => (
+                          <View key={sneaker.id} className="w-[50%] p-4">
+                            <SneakerCard sneaker={sneaker} />
+                          </View>
+                        ))}
+                      </ScrollView>
                     </View>
                   ))}
                 </View>

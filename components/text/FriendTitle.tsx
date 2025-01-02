@@ -1,6 +1,6 @@
 import { View, Text, Image } from 'react-native';
 
-export default function BrandTitle({ content, isTextCenter = false }: { content: string, isTextCenter?: boolean }) {
+export default function FriendTitle({ content }: { content: string }) {
     return (
         <View className="w-full flex justify-center overflow-hidden px-6">
             <Text className="font-syne-extrabold w-[200%] text-4xl text-primary opacity-15 absolute">
