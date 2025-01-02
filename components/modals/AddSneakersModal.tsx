@@ -168,6 +168,31 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         }
     };
 
+    const resetFields = () => {
+        setSneakerName('');
+        setSneakerBrand('');
+        setSneakerStatus('');
+        setSneakerSize('');
+        setSneakerCondition('');
+        setSneakerImage(null);
+        setSneakerPricePaid('');
+        setErrorMsg('');
+        
+        setIsSneakerNameError(false);
+        setIsSneakerBrandError(false);
+        setIsSneakerStatusError(false);
+        setIsSneakerSizeError(false);
+        setIsSneakerConditionError(false);
+        setIsPricePaidError(false);
+        
+        setIsSneakerNameFocused(false);
+        setIsSneakerBrandFocused(false);
+        setIsSneakerStatusFocused(false);
+        setIsSneakerSizeFocused(false);
+        setIsSneakerConditionFocused(false);
+        setIsPricePaidFocused(false);
+    };
+
     switch (modalStep) {
         case 'index':
             return (
@@ -360,7 +385,19 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                         content="Add" 
                                         backgroundColor="bg-primary"
                                         onPressAction={async () => {
-                                            const isValid = validateAllFields(sneakerName, sneakerBrand, sneakerSize, sneakerCondition, sneakerStatus, setErrorMsg, setIsSneakerNameError, setIsSneakerBrandError, setIsSneakerSizeError, setIsSneakerConditionError, setIsSneakerStatusError);
+                                            const isValid = validateAllFields(
+                                                sneakerName, 
+                                                sneakerBrand, 
+                                                sneakerSize, 
+                                                sneakerCondition, 
+                                                sneakerStatus, 
+                                                setErrorMsg, 
+                                                setIsSneakerNameError, 
+                                                setIsSneakerBrandError, 
+                                                setIsSneakerSizeError, 
+                                                setIsSneakerConditionError, 
+                                                setIsSneakerStatusError
+                                            );
                                             if (!isValid) {
                                                 return;
                                             }
@@ -374,6 +411,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                                 userId: userId || '',
                                             }, sessionToken || null)
                                             .then(async data => {
+                                                resetFields();
                                                 await getUserSneakers();
                                                 closeModal();
                                             })
