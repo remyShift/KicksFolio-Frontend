@@ -41,7 +41,7 @@ export default function Tab() {
             {userSneakers && userSneakers.length === 0 || !userSneakers ? (
               <View className="flex-1 gap-8 items-center">
                 <Title content='Add Sneakers' isTextCenter={true} />
-                <MainButton content='Add Sneakers' backgroundColor='bg-primary' onPressAction={() => {
+                <MainButton content='Add' backgroundColor='bg-primary' onPressAction={() => {
                   console.log('add sneakers');
                 }} />
               </View>

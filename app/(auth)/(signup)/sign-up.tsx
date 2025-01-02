@@ -5,7 +5,7 @@ import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
-import { handleInputChange, checkUsername, checkEmail, checkPassword, checkBeforeNext } from '@/scripts/formUtils';
+import { handleInputChange, checkUsername, checkEmail, checkPassword, checkBeforeNext, checkConfirmPassword } from '@/scripts/formUtils';
 
 export default function SignUp() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
@@ -16,32 +16,38 @@ export default function SignUp() {
     const [isEmailError, setIsEmailError] = useState(false);
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
-    
+    const [isConfirmPasswordFocused, setIsConfirmPasswordFocused] = useState(false);
+    const [isConfirmPasswordError, setIsConfirmPasswordError] = useState(false);
+
     const scrollViewRef = useRef<ScrollView>(null);
     const usernameInputRef = useRef<TextInput>(null);
     const emailInputRef = useRef<TextInput>(null);
     const passwordInputRef = useRef<TextInput>(null);
+    const confirmPasswordInputRef = useRef<TextInput>(null);
 
     const scrollToBottom = () => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
     };
 
-    const handleInputFocus = (inputType: 'username' | 'email' | 'password') => {
+    const handleInputFocus = (inputType: 'username' | 'email' | 'password' | 'confirmPassword') => {
         if (inputType === 'username') {
             setIsUsernameFocused(true);
         } else if (inputType === 'email') {
             setIsEmailFocused(true);
         } else if (inputType === 'password') {
             setIsPasswordFocused(true);
+        } else if (inputType === 'confirmPassword') {
+            setIsConfirmPasswordFocused(true);
         }
         setIsUsernameError(false);
         setIsEmailError(false);
         setIsPasswordError(false);
+        setIsConfirmPasswordError(false);
         setErrorMsg('');
         scrollToBottom();
     };
 
-    const handleInputBlur = (inputType: 'username' | 'email' | 'password', value: string) => {
+    const handleInputBlur = (inputType: 'username' | 'email' | 'password' | 'confirmPassword', value: string) => {
         if (inputType === 'username') {
             setIsUsernameFocused(false);
             checkUsername(value, setErrorMsg, setIsUsernameError);
@@ -51,6 +57,9 @@ export default function SignUp() {
         } else if (inputType === 'password') {
             setIsPasswordFocused(false);
             checkPassword(value, setErrorMsg, setIsPasswordError);
+        } else if (inputType === 'confirmPassword') {
+            setIsConfirmPasswordFocused(false);
+            checkConfirmPassword(value, signUpProps.password, setErrorMsg, setIsConfirmPasswordError);
         }
     };
 
@@ -58,12 +67,14 @@ export default function SignUp() {
         const isUsernameValid = await checkUsername(signUpProps.username, setErrorMsg, setIsUsernameError);
         const isEmailValid = await checkEmail(signUpProps.email, false, setErrorMsg, setIsEmailError);
         const isPasswordValid = checkPassword(signUpProps.password, setErrorMsg, setIsPasswordError);
+        const isConfirmPasswordValid = checkConfirmPassword(signUpProps.confirmPassword, signUpProps.password, setErrorMsg, setIsConfirmPasswordError);
 
-        if (!isUsernameValid || !isEmailValid || !isPasswordValid) {
+        if (!isUsernameValid || !isEmailValid || !isPasswordValid || !isConfirmPasswordValid) {
             setErrorMsg('Please correct your inputs before continuing');
             setIsUsernameError(true);
             setIsEmailError(true);
             setIsPasswordError(true);
+            setIsConfirmPasswordError(true);
             return;
         }
 
@@ -83,7 +94,7 @@ export default function SignUp() {
                 scrollEnabled={isUsernameFocused || isEmailFocused || isPasswordFocused}>
                 <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
-                    <View className='flex justify-center items-center gap-8 w-full mt-32'>
+                    <View className='flex justify-center items-center gap-8 w-full mt-20'>
                         <View className="absolute w-full flex items-center" style={{ top: -50 }}>
                             <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
                         </View>
@@ -158,9 +169,9 @@ export default function SignUp() {
                                 autoCorrect={false}
                                 secureTextEntry={true}
                                 placeholderTextColor='gray'
-                                returnKeyType='done'
+                                returnKeyType='next'
                                 enablesReturnKeyAutomatically={true}
-                                onSubmitEditing={handleNextSignUpPage}
+                                onSubmitEditing={() => checkBeforeNext(signUpProps.password, 'password', false, setErrorMsg, setIsPasswordError, confirmPasswordInputRef)}
                                 onFocus={() => handleInputFocus('password')}
                                 onBlur={() => handleInputBlur('password', signUpProps.password)}
                                 onChangeText={(text) => {
@@ -170,6 +181,33 @@ export default function SignUp() {
                                 className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
                                     isPasswordError ? 'border-2 border-red-500' : ''
                                 } ${isPasswordFocused ? 'border-2 border-primary' : ''}`}
+                            />
+                        </View>
+
+                        <View className='flex flex-col gap-2 w-full justify-center items-center'>
+                            <Text className='font-spacemono-bold text-lg'>*Confirm Password</Text>
+                            <TextInput
+                                ref={confirmPasswordInputRef}
+                                value={signUpProps.confirmPassword}
+                                placeholder="********"
+                                inputMode='text'
+                                textContentType='newPassword'
+                                clearButtonMode='while-editing'
+                                autoCorrect={false}
+                                secureTextEntry={true}
+                                placeholderTextColor='gray'
+                                returnKeyType='done'
+                                enablesReturnKeyAutomatically={true}
+                                onSubmitEditing={handleNextSignUpPage}
+                                onFocus={() => handleInputFocus('confirmPassword')}
+                                onBlur={() => handleInputBlur('confirmPassword', signUpProps.confirmPassword)}
+                                onChangeText={(text) => {
+                                    setSignUpProps({ ...signUpProps, confirmPassword: text });
+                                    handleInputChange(text, (t) => setSignUpProps({ ...signUpProps, confirmPassword: t }), setErrorMsg);
+                                }}
+                                className={`bg-white rounded-md p-3 w-2/3 font-spacemono-bold ${
+                                    isConfirmPasswordError ? 'border-2 border-red-500' : ''
+                                } ${isConfirmPasswordFocused ? 'border-2 border-primary' : ''}`}
                             />
                         </View>
                     </View>

@@ -63,6 +63,24 @@ export const checkPassword = (password: string, setErrorMsg: (msg: string) => vo
     return true;
 };
 
+export const checkConfirmPassword = (confirmPassword: string, password: string, setErrorMsg: (msg: string) => void, setIsConfirmPasswordError: (isError: boolean) => void): boolean => {
+    if (!confirmPassword) {
+        setErrorMsg('Please confirm your password.');
+        setIsConfirmPasswordError(true);
+        return false;
+    }
+
+    if (confirmPassword !== password) {
+        setErrorMsg('Passwords do not match.');
+        setIsConfirmPasswordError(true);
+        return false;
+    }
+
+    setErrorMsg('');
+    setIsConfirmPasswordError(false);
+    return true;
+};
+
 export const checkUsername = async (
     username: string, 
     setErrorMsg: (msg: string) => void, 
