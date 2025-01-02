@@ -90,7 +90,7 @@ export default function User() {
                         showsHorizontalScrollIndicator={false}
                       >
                         {sneakers.map((sneaker) => (
-                          <View key={sneaker.id} className="w-[50%] p-4">
+                          <View key={sneaker.id} className="w-96 p-4">
                             <SneakerCard sneaker={sneaker} />
                           </View>
                         ))}

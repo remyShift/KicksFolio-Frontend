@@ -191,6 +191,8 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         setIsSneakerSizeFocused(false);
         setIsSneakerConditionFocused(false);
         setIsPricePaidFocused(false);
+
+        setModalStep('index');
     };
 
     switch (modalStep) {
