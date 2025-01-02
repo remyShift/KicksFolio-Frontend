@@ -46,11 +46,13 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
     const [isPricePaidFocused, setIsPricePaidFocused] = useState(false);
     const [sneakerPricePaid, setSneakerPricePaid] = useState('');
 
-
-    const { user, sessionToken, getUserSneakers } = useSession();
+    const { user, userSneakers, sessionToken, getUserSneakers } = useSession();
     const userId = user?.id;
 
     const scrollViewRef = useRef<ScrollView>(null);
+
+    console.log(userSneakers);
+    const indexTitle = userSneakers?.length === 0 ? 'Add your first sneaker' : 'Add a new sneaker';
 
     const scrollToBottom = () => {
         setTimeout(() => {
@@ -139,7 +141,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: "images",
             allowsEditing: true,
-            aspect: [16, 9],
+            aspect: [1, 1],
             quality: 1,
         });
 
@@ -158,7 +160,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         const result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             aspect: [16, 9],
-            quality: 1,
+            quality: 0.8,
         });
 
         if (!result.canceled) {
@@ -171,7 +173,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
             return (
                 <>
                     <View className="flex-1 justify-center items-center gap-8">
-                        <Text className="font-actonia text-primary text-4xl text-center">Add your first sneaker</Text>
+                        <Text className="font-actonia text-primary text-4xl text-center">{indexTitle}</Text>
                         <Text className="font-spacemono-bold text-xl text-center">Do you have the box ?</Text>
                         <View className="flex justify-center items-center gap-4">
                             <MainButton
@@ -220,7 +222,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                 onPress={() => {
                                     Alert.alert(
                                         'Add a photo',
-                                        'Choose a source',
+                                        'Make sure the sneaker is in the center of the image.',
                                         [
                                             {
                                                 text: 'Take a photo',
@@ -259,7 +261,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                             className={`bg-white rounded-md p-2 w-3/5 font-spacemono-bold ${
                                                 isSneakerNameError ? 'border-2 border-red-500' : ''
                                             } ${isSneakerNameFocused ? 'border-2 border-primary' : ''}`} 
-                                            placeholder="Air Jordan 1"
+                                            placeholder="Air Max 1"
                                             placeholderTextColor='gray'
                                             value={sneakerName}
                                             onChangeText={setSneakerName}
@@ -301,7 +303,8 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                                 className={`bg-white rounded-md p-2 w-full font-spacemono-bold text-center relative ${
                                                     isSneakerSizeError ? 'border-2 border-red-500' : ''
                                                 } ${isSneakerSizeFocused ? 'border-2 border-primary' : ''}`} 
-                                                placeholder="9"
+                                                placeholder="9.5"
+                                                placeholderTextColor='gray'
                                                 value={sneakerSize}
                                                 onChangeText={setSneakerSize}
                                                 onFocus={() => handleInputFocus('size')}
@@ -317,7 +320,9 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                                 className={`bg-white rounded-md p-2 w-full font-spacemono-bold text-center relative ${
                                                     isPricePaidError ? 'border-2 border-red-500' : ''
                                                 } ${isPricePaidFocused ? 'border-2 border-primary' : ''}`} 
-                                                placeholder="150" 
+                                                placeholder="150"
+                                                keyboardType="numeric"
+                                                placeholderTextColor='gray'
                                                 value={sneakerPricePaid}
                                                 onChangeText={setSneakerPricePaid}
                                                 onFocus={() => handleInputFocus('pricePaid')}
@@ -334,6 +339,8 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                                     isSneakerConditionError ? 'border-2 border-red-500' : ''
                                                 } ${isSneakerConditionFocused ? 'border-2 border-primary' : ''}`} 
                                                 placeholder="0 - 10" 
+                                                keyboardType="numeric"
+                                                placeholderTextColor='gray'
                                                 value={sneakerCondition}
                                                 onChangeText={setSneakerCondition}
                                                 onFocus={() => handleInputFocus('condition')}

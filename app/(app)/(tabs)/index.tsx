@@ -9,7 +9,7 @@ import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from 'react';
 import { renderModalContent } from '@/components/modals/AddSneakersModal';
 
-export default function Tab() {
+export default function Index() {
     const params = useLocalSearchParams();
     const isNewUser = params.newUser === 'true';
     const { userCollection, userSneakers, userFriends } = useSession();
@@ -17,7 +17,7 @@ export default function Tab() {
     const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
 
     useEffect(() => {
-        if (isNewUser && (userSneakers && userSneakers.length === 0 || !userSneakers)) {
+        if (isNewUser || (userSneakers && userSneakers.length === 0 || !userSneakers)) {
             setModalVisible(true);
         }
     }, [isNewUser, userSneakers]);

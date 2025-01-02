@@ -3,7 +3,7 @@ import PageTitle from '@/components/text/PageTitle';
 import Title from '@/components/text/Title';
 import { Text, View } from 'react-native';
 
-export default function Tab() {
+export default function Wishlist() {
   return (
     <View className="flex-1">
       <PageTitle content="Wishlist" />

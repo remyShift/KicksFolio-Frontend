@@ -16,7 +16,7 @@ export default function Login() {
     const [isPasswordFocused, setIsPasswordFocused] = useState(false);
     const [isPasswordError, setIsPasswordError] = useState(false);
 
-    const { login, userCollection } = useSession();
+    const { login } = useSession();
 
     const scrollViewRef = useRef<ScrollView>(null);
     const passwordInputRef = useRef<TextInput>(null);
@@ -146,7 +146,8 @@ export default function Login() {
                             setTimeout(() => {
                                 router.replace('/sign-up');
                             }, 300);
-                        }} />                        <MainButton content='Login' backgroundColor='bg-primary' onPressAction={() => {
+                        }} />                        
+                        <MainButton content='Login' backgroundColor='bg-primary' onPressAction={() => {
                             setTimeout(() => {
                                 handleLogin();
                             }, 300);

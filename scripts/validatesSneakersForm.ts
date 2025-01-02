@@ -38,7 +38,7 @@ export const checkSneakerBrand = (value: string, setErrorMsg: (msg: string) => v
 };
 
 export const checkSneakerSize = (size: string, setErrorMsg: (msg: string) => void, setIsError: (isError: boolean) => void): boolean => {
-    if (!size) {
+    if (!size || isNaN(parseFloat(size))) {
         setErrorMsg('Please enter a size.');
         setIsError(true);
         return false;
@@ -51,7 +51,7 @@ export const checkSneakerSize = (size: string, setErrorMsg: (msg: string) => voi
         return false;
     }
 
-    if (!Number.isInteger(sizeNum * 2)) {
+    if (sizeNum % 0.5 !== 0) {
         setErrorMsg('Size invalid, size must be a multiple of 0.5.');
         setIsError(true);
         return false;

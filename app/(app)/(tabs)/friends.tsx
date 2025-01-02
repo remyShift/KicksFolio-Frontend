@@ -6,7 +6,7 @@ import Title from '@/components/text/Title';
 import MainButton from '@/components/buttons/MainButton';
 import PageTitle from '@/components/text/PageTitle';
 
-export default function Tab() {
+export default function Friends() {
     const { userFriends } = useSession();
 
     return (

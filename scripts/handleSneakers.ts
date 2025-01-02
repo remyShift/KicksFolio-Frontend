@@ -20,7 +20,6 @@ export const handleAddSneaker = async (sneaker: SneakerProps, sessionToken: stri
     formData.append('sneaker[condition]', sneaker.condition.toString());
     formData.append('sneaker[status]', sneaker.status);
     
-    // Créer le fichier pour l'image
     const imageUriParts = sneaker.image.split('.');
     const fileType = imageUriParts[imageUriParts.length - 1];
     
@@ -42,6 +41,7 @@ export const handleAddSneaker = async (sneaker: SneakerProps, sessionToken: stri
     })
     .then(async response => {
         const text = await response.text();
+        console.log(text);
         return JSON.parse(text);
     })
     .catch(error => {

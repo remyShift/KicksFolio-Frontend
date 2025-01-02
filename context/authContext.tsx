@@ -163,8 +163,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
     };
 
     const getUserCollection = async () => {
-
-
         if (!user?.id || !sessionToken) return;
         
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/${user.id}/collection`, {
