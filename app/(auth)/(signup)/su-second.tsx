@@ -107,7 +107,6 @@ export default function SUSecond() {
             return;
         }
 
-
         setErrorMsg('');
         signUp(
             signUpProps.email,

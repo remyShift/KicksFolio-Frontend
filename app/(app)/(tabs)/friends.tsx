@@ -23,7 +23,7 @@ export default function Tab() {
         ) : (
             <View className="flex-1 gap-4 items-center justify-center">
                 <Title content="No friends yet" isTextCenter={true} />
-                <MainButton content="Add friends" backgroundColor="bg-primary" onPressAction={() => {
+                <MainButton content="Add" backgroundColor="bg-primary" onPressAction={() => {
                     alert('Feature in development ...');
                 }} />
             </View>

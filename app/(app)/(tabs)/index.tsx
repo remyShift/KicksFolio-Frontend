@@ -7,7 +7,7 @@ import { ScrollView, View, Modal, Pressable, Text } from 'react-native';
 import { useSession } from '@/context/authContext';
 import { useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from 'react';
-import { renderModalContent } from '@/components/modals/AddFirstSneakersModal';
+import { renderModalContent } from '@/components/modals/AddSneakersModal';
 
 export default function Tab() {
     const params = useLocalSearchParams();

@@ -79,6 +79,9 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
             case 'status':
                 setIsSneakerStatusFocused(true);
                 break;
+            case 'pricePaid':
+                setIsPricePaidFocused(true);
+                break;
         }
         setIsSneakerNameError(false);
         setIsSneakerBrandError(false);
@@ -97,14 +100,6 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         setIsSneakerConditionError(false);
         setIsSneakerStatusError(false);
         setIsPricePaidError(false);
-        
-        if (inputType === 'brand') {
-            setTimeout(() => {
-                setIsSneakerBrandFocused(false);
-                checkSneakerBrand(value, setErrorMsg, setIsSneakerBrandError);
-            }, 100);
-            return;
-        }
 
         switch(inputType) {
             case 'name':
@@ -113,11 +108,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                 break;
             case 'brand':
                 setIsSneakerBrandFocused(false);
-                if (value === 'Other') {
-                    checkSneakerBrand(value, setErrorMsg, setIsSneakerBrandError);
-                } else {
-                    checkSneakerBrand(value, setErrorMsg, setIsSneakerBrandError);
-                }
+                checkSneakerBrand(value, setErrorMsg, setIsSneakerBrandError);
                 break;
             case 'size':
                 setIsSneakerSizeFocused(false);
@@ -129,11 +120,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                 break;
             case 'status':
                 setIsSneakerStatusFocused(false);
-                if (value === 'Other') {
-                    checkSneakerStatus(value, setErrorMsg, setIsSneakerStatusError);
-                } else {
-                    checkSneakerStatus(value, setErrorMsg, setIsSneakerStatusError);
-                }
+                checkSneakerStatus(value, setErrorMsg, setIsSneakerStatusError);
                 break;
             case 'pricePaid':
                 setIsPricePaidFocused(false);
@@ -152,7 +139,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: "images",
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [16, 9],
             quality: 1,
         });
 
@@ -170,7 +157,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
 
         const result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
-            aspect: [4, 3],
+            aspect: [16, 9],
             quality: 1,
         });
 
@@ -220,7 +207,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                 <KeyboardAvoidingView 
                     className="flex-1" 
                     behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}>
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 20}>
                     <ScrollView 
                         ref={scrollViewRef}
                         className='flex-1'
@@ -229,40 +216,40 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                         contentContainerStyle={{ minHeight: '100%' }}
                     >
                         <View className="flex-1 h-full p-2 gap-4">
-                            {sneakerImage ? (
-                                <ImageBackground
-                                    source={{ uri: sneakerImage }} 
-                                    className="h-48 w-full rounded-md"
-                                    resizeMode="cover"
-                                    imageStyle={{ borderRadius: 10 }}
-                                />
-                            ) : (
-                                <Pressable
-                                    onPress={() => {
-                                        Alert.alert(
-                                            'Add a photo',
-                                            'Choose a source',
-                                            [
-                                                {
-                                                    text: 'Take a photo',
-                                                    onPress: takePhoto
-                                                },
-                                                {
-                                                    text: 'Choose from gallery',
-                                                    onPress: pickImage
-                                                },
-                                                {
-                                                    text: 'Cancel',
-                                                    style: 'cancel'
-                                                }
-                                            ]
-                                        );
-                                    }}
-                                    className="bg-gray-400 rounded-md h-48 w-full p-4 flex items-center justify-center"
-                                >
+                            <Pressable
+                                onPress={() => {
+                                    Alert.alert(
+                                        'Add a photo',
+                                        'Choose a source',
+                                        [
+                                            {
+                                                text: 'Take a photo',
+                                                onPress: takePhoto
+                                            },
+                                            {
+                                                text: 'Choose from gallery',
+                                                onPress: pickImage
+                                            },
+                                            {
+                                                text: 'Cancel',
+                                                style: 'cancel'
+                                            }
+                                        ]
+                                    );
+                                }}
+                                className="bg-gray-400 rounded-md h-48 w-full flex items-center justify-center"
+                            >
+                                {sneakerImage ? (
+                                    <ImageBackground
+                                        source={{ uri: sneakerImage }} 
+                                        className="h-48 w-full rounded-md"
+                                        resizeMode="cover"
+                                        imageStyle={{ borderRadius: 10 }}
+                                    />
+                                ) : (
                                     <MaterialIcons name="add-a-photo" size={30} color="white" />
-                                </Pressable>
-                            )}
+                                )}
+                            </Pressable>
 
                             <View className="flex flex-col gap-8">
                                 <View className="flex flex-col gap-4">
@@ -283,25 +270,26 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
 
                                         <DropdownInput
                                             value={sneakerBrand}
-                                            onSelect={setSneakerBrand}
+                                            onSelect={(value) => {
+                                                setSneakerBrand(value);
+                                                handleInputBlur('brand', value);
+                                            }}
                                             options={BRANDS}
                                             placeholder="Select a brand"
                                             isError={isSneakerBrandError}
-                                            isFocused={isSneakerBrandFocused}
                                             onOpen={() => handleInputFocus('brand')}
-                                            onBlur={() => handleInputBlur('brand', sneakerBrand)}
-                                            customInputRegex={/^[a-zA-Z\s]+$/}
                                         />
 
                                         <DropdownInput
                                             value={sneakerStatus}
-                                            onSelect={setSneakerStatus}
+                                            onSelect={(value) => {
+                                                setSneakerStatus(value);
+                                                handleInputBlur('status', value);
+                                            }}
                                             options={STATUS}
                                             placeholder="Select a status"
                                             isError={isSneakerStatusError}
-                                            isFocused={isSneakerStatusFocused}
                                             onOpen={() => handleInputFocus('status')}
-                                            onBlur={() => handleInputBlur('status', sneakerStatus)}
                                         />
                                 </View>
 

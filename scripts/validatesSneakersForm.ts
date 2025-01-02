@@ -17,20 +17,19 @@ export const checkSneakerName = (name: string, setErrorMsg: (msg: string) => voi
     return true;
 };
 
-export const checkSneakerBrand = (brand: string, setErrorMsg: (msg: string) => void, setIsError: (isError: boolean) => void): boolean => {
-    if (!brand) {
+export const checkSneakerBrand = (value: string, setErrorMsg: (msg: string) => void, setIsError: (isError: boolean) => void): boolean => {
+    if (!value) {
         setErrorMsg('Please select a brand.');
         setIsError(true);
         return false;
     }
     
-    if (brand === 'Other') {
-        const brandRegex = /^[a-zA-Z\s]+$/;
-        if (!brandRegex.test(brand)) {
-            setErrorMsg('Brand invalid, brand must contain only letters and spaces.');
-            setIsError(true);
-            return false;
-        }
+    const brandRegex = /^[a-zA-Z\s]+$/;
+
+    if (!brandRegex.test(value)) {
+        setErrorMsg('Brand invalid, brand must contain only letters and spaces.');
+        setIsError(true);
+        return false;
     }
     
     setErrorMsg('');
@@ -91,14 +90,15 @@ export const checkSneakerStatus = (status: string, setErrorMsg: (msg: string) =>
         return false;
     }
 
-    if (status === 'other') {
-        const statusRegex = /^[a-zA-Z\s]+$/;
-        if (!statusRegex.test(status)) {
-            setErrorMsg('Status invalid, status must contain only letters.');
-            setIsError(true);
+    const statusRegex = /^[a-zA-Z\s]+$/;
+
+    if (!statusRegex.test(status)) {
+        setErrorMsg('Status invalid, status must contain only letters.');
+        setIsError(true);
             return false;
-        }
-    } else if (!validStatuses.includes(status.toLowerCase())) {
+    }
+
+    if (!validStatuses.includes(status.toLowerCase())) {
         setErrorMsg('Status invalid, status must be one of the following: rocking, stocking, selling, other.');
         setIsError(true);
         return false;
@@ -119,14 +119,12 @@ export const checkSneakerImage = (image: string, setErrorMsg: (msg: string) => v
 };
 
 export const checkPricePaid = (pricePaid: string, setErrorMsg: (msg: string) => void, setIsError: (isError: boolean) => void): boolean => {
-    if (!pricePaid) {
-        setErrorMsg('Please enter a price paid.');
-        setIsError(true);
-        return false;
-    } else if (isNaN(parseFloat(pricePaid)) || parseFloat(pricePaid) < 0) {
-        setErrorMsg('Price paid invalid, price paid must be a positive number.');
-        setIsError(true);
-        return false;
+    if (pricePaid) {
+        if (isNaN(parseFloat(pricePaid)) || parseFloat(pricePaid) < 0) {
+            setErrorMsg('Price paid invalid, price paid must be a positive number.');
+            setIsError(true);
+            return false;
+        }
     }
     return true;
 };
