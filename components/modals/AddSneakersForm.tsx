@@ -1,4 +1,4 @@
-import { Text, View, Pressable, Image, ImageBackground, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { Text, View, Pressable, Image, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
 import BackButton from '@/components/buttons/BackButton';
 import NextButton from '@/components/buttons/NextButton';
 import MainButton from '@/components/buttons/MainButton';
@@ -10,13 +10,17 @@ import * as ImagePicker from 'expo-image-picker';
 import { Alert } from 'react-native';
 import { handleAddSneaker } from '@/scripts/handleSneakers';
 import { useSession } from '@/context/authContext';
-import { checkSneakerName, checkSneakerSize, checkSneakerCondition, checkSneakerBrand, checkSneakerStatus, validateAllFields, checkSneakerImage, checkPricePaid } from '@/scripts/validatesSneakersForm';
+import { checkSneakerName, checkSneakerSize, checkSneakerCondition, checkSneakerBrand, checkSneakerStatus, validateAllFields, checkPricePaid } from '@/scripts/validatesSneakersForm';
 import ErrorMsg from '@/components/text/ErrorMsg';
+import { Sneaker } from '@/types/Models';
+import ShareButton from '../buttons/ShareButton';
+import { ConditionBar } from '../ConditionBar';
 
 type AddSneakersModalProps = {
-    modalStep: 'index' | 'box' | 'noBox';
-    setModalStep: (step: 'index' | 'box' | 'noBox') => void;
+    modalStep: 'index' | 'box' | 'noBox' | 'sneakerInfo';
+    setModalStep: (step: 'index' | 'box' | 'noBox' | 'sneakerInfo') => void;
     closeModal: () => void;
+    sneaker: Sneaker | null | undefined;
 }
 
 type InputTypeProps = 'name' | 'size' | 'condition' | 'status' | 'pricePaid' | 'brand';
@@ -24,7 +28,7 @@ type InputTypeProps = 'name' | 'size' | 'condition' | 'status' | 'pricePaid' | '
 const BRANDS = ['NIKE', 'ADIDAS', 'JORDAN', 'NEW BALANCE', 'ASICS', 'PUMA', 'REEBOK', 'CONVERSE', 'VANS', ];
 const STATUS = ['STOCKING', 'SELLING', 'ROCKING'];
 
-export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddSneakersModalProps) => {
+export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneaker }: AddSneakersModalProps) => {
     const [sneakerName, setSneakerName] = useState('');
     const [isSneakerNameError, setIsSneakerNameError] = useState(false);
     const [isSneakerNameFocused, setIsSneakerNameFocused] = useState(false);
@@ -244,7 +248,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                         nestedScrollEnabled={true}
                         contentContainerStyle={{ minHeight: '100%' }}
                     >
-                        <View className="flex-1 h-full p-2 gap-4">
+                        <View className="flex-1 h-full p-2 gap-8">
                             <Pressable
                                 onPress={() => {
                                     Alert.alert(
@@ -269,11 +273,10 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                 className="bg-gray-400 rounded-md h-48 w-full flex items-center justify-center"
                             >
                                 {sneakerImage ? (
-                                    <ImageBackground
+                                    <Image
                                         source={{ uri: sneakerImage }} 
-                                        className="h-48 w-full rounded-md"
+                                        className="h-56 w-full rounded-md"
                                         resizeMode="cover"
-                                        imageStyle={{ borderRadius: 10 }}
                                     />
                                 ) : (
                                     <MaterialIcons name="add-a-photo" size={30} color="white" />
@@ -411,6 +414,10 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                                                 condition: Number(sneakerCondition),
                                                 status: sneakerStatus,
                                                 userId: userId || '',
+                                                price_paid: Number(sneakerPricePaid),
+                                                purchase_date: '',
+                                                description: '',
+                                                estimated_value: 0,
                                             }, sessionToken || null)
                                             .then(async data => {
                                                 resetFields();
@@ -427,6 +434,49 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal }: AddS
                         </View>
                     </ScrollView>
                 </KeyboardAvoidingView>
+            );
+        case 'sneakerInfo':
+            return (
+                <View className="flex-1 gap-6">
+                    <Image 
+                        source={{ uri: sneaker?.images?.[0]?.url }} 
+                        className="w-full h-56 rounded-xl" 
+                        resizeMode="cover"
+                    />
+
+                    <View className="flex-row justify-between items-center px-2">
+                        <View className="flex gap-0">
+                            <Text className="font-spacemono-bold text-lg">{sneaker?.model}</Text>
+                            <Text className="font-spacemono-bold-italic text-base">{sneaker?.brand}</Text>
+                        </View>
+                        <ShareButton />
+                    </View>
+
+                    <View className="flex-row items-center w-full border-t-2 border-gray-300">
+                        <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
+                            <Text className='font-spacemono text-center text-sm'>Size</Text>
+                            <View className="w-4/5">
+                                <Text className="font-spacemono-bold text-xl text-center">{sneaker?.size}US</Text>
+                            </View>
+                        </View>
+
+                        <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
+                            <Text className='font-spacemono text-center text-sm'>Status</Text>
+                            <View className="w-4/5">
+                                <Text className="font-spacemono-bold text-xl text-center">{sneaker?.status.toUpperCase()}</Text>
+                            </View>
+                        </View>
+
+                        <View className='flex-col items-center p-2 gap-1 w-1/3'>
+                            <Text className='font-spacemono text-center text-sm'>Price Paid</Text>
+                            <View className="w-4/5">
+                                <Text className="font-spacemono-bold text-xl text-center">{sneaker?.price_paid ? sneaker?.price_paid + '$' : 'N/A'}</Text>
+                            </View>
+                        </View>
+                    </View>
+
+                    <ConditionBar condition={sneaker?.condition || 0} />
+                </View>
             );
     }
 };

@@ -5,16 +5,16 @@ import Title from '@/components/text/Title';
 import MainButton from '@/components/buttons/MainButton';
 import { ScrollView, View, Modal, Pressable, Text } from 'react-native';
 import { useSession } from '@/context/authContext';
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from 'react';
-import { renderModalContent } from '@/components/modals/AddSneakersModal';
+import { renderModalContent } from '@/components/modals/AddSneakersForm';
 
 export default function Index() {
     const params = useLocalSearchParams();
     const isNewUser = params.newUser === 'true';
     const { userCollection, userSneakers, userFriends } = useSession();
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
+    const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox' | 'sneakerInfo'>('index');
 
     useEffect(() => {
         if (isNewUser || (userSneakers && userSneakers.length === 0 || !userSneakers)) {
@@ -74,8 +74,12 @@ export default function Index() {
                         >
                             {renderModalContent({ 
                                 modalStep,
+                                sneaker: null,
                                 setModalStep,
-                                closeModal: () => setModalVisible(false) 
+                                closeModal: () => {
+                                    setModalVisible(false);
+                                    router.replace('/(app)/(tabs)');
+                                }
                             })}
                         </Pressable>
                     </View>

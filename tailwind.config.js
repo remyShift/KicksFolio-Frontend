@@ -23,6 +23,9 @@ module.exports = {
       boxShadow: {
         'card': '4px 6px 0px 0px #F27329',
       },
+      backgroundColor: {
+        'condition-gradient': 'linear-gradient(to right, #FF8E4C, #F27329)',
+      },
     },
   },
   plugins: [],

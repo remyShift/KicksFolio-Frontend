@@ -6,9 +6,10 @@ import Title from '@/components/text/Title';
 import SneakerCard from '@/components/cards/SneakerCard';
 import AddButton from '@/components/buttons/AddButton';
 import { Pressable } from 'react-native';
-import { useState, useMemo } from 'react';
-import { renderModalContent } from '@/components/modals/AddSneakersModal';
+import { useState, useMemo, useEffect } from 'react';
+import { renderModalContent } from '@/components/modals/AddSneakersForm';
 import BrandTitle from '@/components/text/BrandTitle';
+import { Sneaker } from '@/types/Models';
 
 const brandLogos: Record<string, any> = {
   nike: require('@/assets/images/brands/nike.png'),
@@ -25,7 +26,8 @@ const brandLogos: Record<string, any> = {
 export default function User() {
   const { logout, user, userSneakers } = useSession();
   const [modalVisible, setModalVisible] = useState(false);
-  const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox'>('index');
+  const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox' | 'sneakerInfo'>('index');
+  const [sneaker, setSneaker] = useState<Sneaker | null>(null);
 
   const sneakersByBrand = useMemo(() => {
     if (!userSneakers) return {};
@@ -100,7 +102,12 @@ export default function User() {
                       >
                         {sneakers.map((sneaker) => (
                           <View key={sneaker.id} className="w-96 p-4">
-                            <SneakerCard sneaker={sneaker} />
+                            <SneakerCard
+                              setModalVisible={(isVisible) => setModalVisible(isVisible)}
+                              sneaker={sneaker}
+                              setSneaker={(s) => setSneaker(s)}
+                              setModalStep={(step) => setModalStep(step)}
+                            />
                           </View>
                         ))}
                       </ScrollView>
@@ -138,6 +145,7 @@ export default function User() {
                   >
                       {renderModalContent({ 
                           modalStep,
+                          sneaker,
                           setModalStep,
                           closeModal: () => setModalVisible(false) 
                       })}
@@ -148,6 +156,7 @@ export default function User() {
       </ScrollView>
 
       <AddButton onPress={() => {
+        setModalStep('index');
         setModalVisible(true);
       }}/>
     </>

@@ -1,5 +1,3 @@
-import { useSession } from '../context/authContext';
-
 type SneakerProps = {
     image: string;
     name: string;
@@ -8,6 +6,10 @@ type SneakerProps = {
     condition: number;
     status: string;
     userId: string;
+    price_paid: number;
+    purchase_date: string;
+    description: string;
+    estimated_value: number;
 }
 
 export const handleAddSneaker = async (sneaker: SneakerProps, sessionToken: string | null) => {
@@ -18,8 +20,12 @@ export const handleAddSneaker = async (sneaker: SneakerProps, sessionToken: stri
     formData.append('sneaker[brand]', sneaker.brand);
     formData.append('sneaker[size]', sneaker.size.toString());
     formData.append('sneaker[condition]', sneaker.condition.toString());
-    formData.append('sneaker[status]', sneaker.status);
-    
+    formData.append('sneaker[status]', sneaker.status.toLowerCase());
+    formData.append('sneaker[price_paid]', sneaker.price_paid.toString());
+    formData.append('sneaker[purchase_date]', sneaker.purchase_date);
+    formData.append('sneaker[description]', sneaker.description);
+    formData.append('sneaker[estimated_value]', sneaker.estimated_value.toString());
+
     const imageUriParts = sneaker.image.split('.');
     const fileType = imageUriParts[imageUriParts.length - 1];
     

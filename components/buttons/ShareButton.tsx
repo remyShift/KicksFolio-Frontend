@@ -18,7 +18,7 @@ export default function ShareButton() {
 
     return (
         <Pressable
-            className="bg-white w-16 h-16 rounded-md flex items-center justify-center"
+            className="bg-white p-3 rounded-md flex items-center justify-center"
             onPress={handlePress}
         >
             <Animated.View style={animatedStyle}>
