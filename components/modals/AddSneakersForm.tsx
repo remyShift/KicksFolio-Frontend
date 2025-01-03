@@ -501,7 +501,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneake
                                 />
                             </View>
 
-                            <NextButton 
+                            <NextButton
                                 content="Next" 
                                 onPressAction={() => {
                                     if (!userSneakers || currentSneakerId === -1) return;
