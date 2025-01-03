@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView, Image, Pressable, Alert } from 'react-native';
 import { useSignUpProps } from '@/context/signUpPropsContext';
 import PageTitle from '@/components/text/PageTitle';
@@ -290,16 +290,7 @@ export default function SUSecond() {
                         </View>
                     </View>
 
-                    <View className='flex-row gap-2 w-full justify-center items-center'>
-                        <MainButton 
-                            content='Back' 
-                            backgroundColor='bg-gray-400' 
-                            onPressAction={() => {
-                                setTimeout(() => {
-                                    router.replace('/sign-up');
-                                }, 300);
-                            }} 
-                        />
+                    <View className='flex gap-4 w-full justify-center items-center'>
                         <MainButton 
                             content='Sign Up' 
                             backgroundColor='bg-primary' 
@@ -309,6 +300,14 @@ export default function SUSecond() {
                                 }, 300);
                             }}
                         />
+                        <View className='flex gap-0 w-full justify-center items-center'>
+                            <Text className='font-spacemono-bold'>Go to previous step ?</Text>
+                            <Link href='/sign-up'>
+                                <Text className='text-primary font-spacemono-bold'>
+                                    Back
+                                </Text>
+                            </Link>
+                        </View>
                     </View>
                 </View>
             </ScrollView>

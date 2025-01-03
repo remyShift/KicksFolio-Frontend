@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { View, TextInput, KeyboardAvoidingView, Text, Platform, ScrollView } from 'react-native';
 import { useSignUpProps } from '@/context/signUpPropsContext';
 import PageTitle from '@/components/text/PageTitle';
@@ -94,7 +94,7 @@ export default function SignUp() {
                 scrollEnabled={isUsernameFocused || isEmailFocused || isPasswordFocused}>
                 <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
-                    <View className='flex justify-center items-center gap-8 w-full mt-20'>
+                    <View className='flex justify-center items-center gap-8 w-full mt-10'>
                         <View className="absolute w-full flex items-center" style={{ top: -50 }}>
                             <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
                         </View>
@@ -212,16 +212,7 @@ export default function SignUp() {
                         </View>
                     </View>
 
-                    <View className='flex-row gap-2 w-full justify-center items-center'>
-                        <MainButton 
-                            content='Login' 
-                            backgroundColor='bg-gray-400' 
-                            onPressAction={() => {
-                                setTimeout(() => {
-                                    router.replace('/login');
-                                }, 300);
-                            }} 
-                        />
+                    <View className='flex gap-4 w-full justify-center items-center'>
                         <MainButton 
                             content='Next' 
                             backgroundColor='bg-primary' 
@@ -231,6 +222,14 @@ export default function SignUp() {
                                 }, 300);
                             }} 
                         />
+                        <View className='flex gap-0 w-full justify-center items-center'>
+                            <Text className='font-spacemono-bold'>Already have an account ?</Text>
+                            <Link href='/login'>
+                                <Text className='text-primary font-spacemono-bold'>
+                                    Login
+                                </Text>
+                            </Link>
+                        </View>
                     </View>
                 </View>
             </ScrollView>

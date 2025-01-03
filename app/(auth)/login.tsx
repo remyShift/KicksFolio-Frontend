@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { View, TextInput, KeyboardAvoidingView, Text, Platform, ScrollView } from 'react-native';
 import { useSession } from '@/context/authContext';
 import { useState, useRef } from 'react';
@@ -141,17 +141,20 @@ export default function Login() {
                             />
                         </View>
                     </View>
-                    <View className='flex-row gap-2 w-full justify-center items-center'>
-                        <MainButton content='Sign Up' backgroundColor='bg-gray-400' onPressAction={() => {
-                            setTimeout(() => {
-                                router.replace('/sign-up');
-                            }, 300);
-                        }} />                        
+                    <View className='flex gap-4 w-full justify-center items-center'>                      
                         <MainButton content='Login' backgroundColor='bg-primary' onPressAction={() => {
                             setTimeout(() => {
                                 handleLogin();
                             }, 300);
                         }} />
+                        <View className='flex gap-0 w-full justify-center items-center'>
+                            <Text className='font-spacemono-bold'>Don't have an account ?</Text>
+                            <Link href='/sign-up'>
+                                <Text className='text-primary font-spacemono-bold'>
+                                    Sign Up
+                                </Text>
+                            </Link>
+                        </View>
                     </View>
                 </View>
             </ScrollView>
