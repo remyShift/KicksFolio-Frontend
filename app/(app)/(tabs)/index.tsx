@@ -3,7 +3,7 @@ import FriendTitle from '@/components/text/FriendTitle';
 import PageTitle from '@/components/text/PageTitle';
 import Title from '@/components/text/Title';
 import MainButton from '@/components/buttons/MainButton';
-import { ScrollView, View, Modal, Pressable, Text } from 'react-native';
+import { ScrollView, View, Modal, Pressable, Image } from 'react-native';
 import { useSession } from '@/context/authContext';
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from 'react';
@@ -18,11 +18,24 @@ export default function Index() {
     const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox' | 'sneakerInfo'>('index');
     const [currentSneaker, setCurrentSneaker] = useState<Sneaker | null>(null);
 
+    const preloadImages = async (imageUris: string[]) => {
+        const prefetchTasks = imageUris.map(uri => Image.prefetch(uri));
+        await Promise.all(prefetchTasks);
+    };
+
     useEffect(() => {
         if (isNewUser || (userSneakers && userSneakers.length === 0 || !userSneakers)) {
             setModalVisible(true);
         }
     }, [isNewUser, userSneakers]);
+
+    useEffect(() => {
+        if (userSneakers) {
+            const sneakerImages = userSneakers.map(sneaker => sneaker.images[0]);
+            const imageUris = sneakerImages.map(image => image.url);
+            preloadImages(imageUris);
+        }
+    }, []);
 
     return (
         <View className="flex-1">

@@ -232,6 +232,12 @@ PODS:
     - ExpoModulesCore
   - ExpoHead (4.0.15):
     - ExpoModulesCore
+  - ExpoImage (2.0.3):
+    - ExpoModulesCore
+    - libavif/libdav1d
+    - SDWebImage (~> 5.19.1)
+    - SDWebImageAVIFCoder (~> 0.11.0)
+    - SDWebImageSVGCoder (~> 1.7.0)
   - ExpoImagePicker (16.0.3):
     - ExpoModulesCore
   - ExpoKeepAwake (14.0.1):
@@ -281,6 +287,11 @@ PODS:
   - hermes-engine (0.76.5):
     - hermes-engine/Pre-built (= 0.76.5)
   - hermes-engine/Pre-built (0.76.5)
+  - libavif/core (0.11.1)
+  - libavif/libdav1d (0.11.1):
+    - libavif/core
+    - libdav1d (>= 0.6.0)
+  - libdav1d (1.2.0)
   - lottie-ios (4.5.0)
   - lottie-react-native (7.1.0):
     - DoubleConversion
@@ -2046,6 +2057,14 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - SDWebImage (5.19.7):
+    - SDWebImage/Core (= 5.19.7)
+  - SDWebImage/Core (5.19.7)
+  - SDWebImageAVIFCoder (0.11.0):
+    - libavif/core (>= 0.11.0)
+    - SDWebImage (~> 5.10)
+  - SDWebImageSVGCoder (1.7.0):
+    - SDWebImage/Core (~> 5.6)
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
@@ -2068,6 +2087,7 @@ DEPENDENCIES:
   - ExpoFont (from `../node_modules/expo-font/ios`)
   - ExpoHaptics (from `../node_modules/expo-haptics/ios`)
   - ExpoHead (from `../node_modules/expo-router/ios`)
+  - ExpoImage (from `../node_modules/expo-image/ios`)
   - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
@@ -2151,7 +2171,12 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - libavif
+    - libdav1d
     - lottie-ios
+    - SDWebImage
+    - SDWebImageAVIFCoder
+    - SDWebImageSVGCoder
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2191,6 +2216,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-haptics/ios"
   ExpoHead:
     :path: "../node_modules/expo-router/ios"
+  ExpoImage:
+    :path: "../node_modules/expo-image/ios"
   ExpoImagePicker:
     :path: "../node_modules/expo-image-picker/ios"
   ExpoKeepAwake:
@@ -2368,6 +2395,7 @@ SPEC CHECKSUMS:
   ExpoFont: b089994dac1fe603deda1cec151e32c81f46c2f1
   ExpoHaptics: f8eacde90398b8be3648ed823b6e9e6bf87ece3f
   ExpoHead: 09fa14b978c938d40bf6b516460da411ae54a7c2
+  ExpoImage: 7f0f4381c75054b4c4a5a0e2cf474b67e9fb2dc0
   ExpoImagePicker: 4eff722eec3f969b3978a8a3b64efbe52f800905
   ExpoKeepAwake: 22173f45d767c7d37403fdf48292726901d69ce7
   ExpoLinearGradient: 18148bd38f98fa0229c1f9df23393b32ab6d2d32
@@ -2383,6 +2411,8 @@ SPEC CHECKSUMS:
   fmt: 10c6e61f4be25dc963c36bd73fc7b1705fe975be
   glog: 08b301085f15bcbb6ff8632a8ebaf239aae04e6a
   hermes-engine: 06a9c6900587420b90accc394199527c64259db4
+  libavif: 84bbb62fb232c3018d6f1bab79beea87e35de7b7
+  libdav1d: 23581a4d8ec811ff171ed5e2e05cd27bad64c39f
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: f6bc5e59ad94cb15984cfe5010e803532259c056
   RCT-Folly: 84578c8756030547307e4572ab1947de1685c599
@@ -2446,6 +2476,9 @@ SPEC CHECKSUMS:
   RNGestureHandler: 16ef3dc2d7ecb09f240f25df5255953c4098819b
   RNReanimated: ee9a749b8f2ee2a743d2dd7b4ab66f22d63f3bda
   RNScreens: 1b1282f5fd21119667bb361d736d4edaca3c35e0
+  SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
+  SDWebImageAVIFCoder: 00310d246aab3232ce77f1d8f0076f8c4b021d90
+  SDWebImageSVGCoder: 15a300a97ec1c8ac958f009c02220ac0402e936c
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: fcc198acd4a55599b3468cfb6ebc526baff5f06e
 
