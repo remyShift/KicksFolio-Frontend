@@ -1,9 +1,9 @@
 import { Slot } from 'expo-router';
-import { SessionProvider } from '@/context/authContext';
+import { SessionProvider, useSession } from '@/context/authContext';
 import { useFonts } from 'expo-font';
 import "../global.css";
 import SplashScreen from '@/components/SplashScreen';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const FONTS = {
@@ -16,10 +16,32 @@ const FONTS = {
 } as const;
 
 export default function RootLayout() {
+  const { sessionToken, logout, getUser } = useSession();
   const [fontsLoaded] = useFonts(FONTS);
 
   const [isSplashScreenVisible, setIsSplashScreenVisible] = useState(true);
   
+  useEffect(() => {
+    const checkSession = () => {
+        if (sessionToken) {
+            fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/verify_token`, {
+                headers: {
+                    'Authorization': `Bearer ${sessionToken}`,
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return logout();
+                }
+                return getUser();
+            })
+            .catch(() => logout());
+        }
+    };
+    
+    checkSession();
+  }, []);
+
   if (!fontsLoaded) {
     return null;
   }

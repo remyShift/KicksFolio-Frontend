@@ -16,6 +16,7 @@ const AuthContext = createContext<{
     getUserCollection: () => Promise<void | undefined>;
     getUserSneakers: () => Promise<void | undefined>;
     getUserFriends: () => Promise<void | undefined>;
+    verifyToken: () => Promise<boolean>;
     }>({
         login: async () => {},
         signUp: async () => {},
@@ -29,7 +30,8 @@ const AuthContext = createContext<{
         getUser: async () => {},
         getUserCollection: async () => {},
         getUserSneakers: async () => {},
-        getUserFriends: async () => {}
+        getUserFriends: async () => {},
+        verifyToken: async () => false
 });
 
 export function useSession() {
@@ -120,7 +122,6 @@ export function SessionProvider({ children }: PropsWithChildren) {
         })
         .then(async response => {
             const text = await response.text();
-            console.log('Server response:', text);
             const data = JSON.parse(text);
             
             if (!response.ok) {
@@ -140,12 +141,22 @@ export function SessionProvider({ children }: PropsWithChildren) {
         });
     };
 
-    const logout = () => {
+    const logout = async () => {
+        if (sessionToken) {
+            await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/logout`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${sessionToken}`,
+                    'Accept': 'application/json'
+                }
+            });
+        }
+        
         setSessionToken(null);
+        setUser(null);
         setUserCollection(null);
         setUserSneakers(null);
         setUserFriends(null);
-        setUser(null);
     };
 
     const getUser = async () => {
@@ -252,6 +263,31 @@ export function SessionProvider({ children }: PropsWithChildren) {
         });
     };
 
+    const verifyToken = async () => {
+        if (!sessionToken) return false;
+
+        const response = await fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/verify_token`, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${sessionToken}`,
+                'Accept': 'application/json'
+            }
+        }).catch(() => {
+            console.error('Error when verifying token');
+            return new Response(null, { status: 500 });
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                await logout();
+            }
+            return false;
+        }
+
+        const data = await response.json().catch(() => ({ valid: false }));
+        return data.valid;
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -267,7 +303,8 @@ export function SessionProvider({ children }: PropsWithChildren) {
                 getUser,
                 getUserCollection,
                 getUserSneakers,
-                getUserFriends
+                getUserFriends,
+                verifyToken
             }}>
             {children}
         </AuthContext.Provider>
