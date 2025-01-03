@@ -290,7 +290,7 @@ export default function SUSecond() {
                         </View>
                     </View>
 
-                    <View className='flex gap-4 w-full justify-center items-center'>
+                    <View className='flex gap-5 w-full justify-center items-center'>
                         <MainButton 
                             content='Sign Up' 
                             backgroundColor='bg-primary' 
@@ -301,9 +301,9 @@ export default function SUSecond() {
                             }}
                         />
                         <View className='flex gap-0 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold'>Go to previous step ?</Text>
+                            <Text className='font-spacemono-bold text-sm'>Go to previous step ?</Text>
                             <Link href='/sign-up'>
-                                <Text className='text-primary font-spacemono-bold'>
+                                <Text className='text-primary font-spacemono-bold text-sm'>
                                     Back
                                 </Text>
                             </Link>

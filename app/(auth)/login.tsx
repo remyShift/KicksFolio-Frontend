@@ -141,16 +141,16 @@ export default function Login() {
                             />
                         </View>
                     </View>
-                    <View className='flex gap-4 w-full justify-center items-center'>                      
+                    <View className='flex gap-5 w-full justify-center items-center'>                      
                         <MainButton content='Login' backgroundColor='bg-primary' onPressAction={() => {
                             setTimeout(() => {
                                 handleLogin();
                             }, 300);
                         }} />
-                        <View className='flex gap-0 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold'>Don't have an account ?</Text>
+                        <View className='flex gap-0 justify-center items-center'>
+                            <Text className='font-spacemono-bold text-sm'>Don't have an account ?</Text>
                             <Link href='/sign-up'>
-                                <Text className='text-primary font-spacemono-bold'>
+                                <Text className='text-primary font-spacemono-bold text-sm'>
                                     Sign Up
                                 </Text>
                             </Link>

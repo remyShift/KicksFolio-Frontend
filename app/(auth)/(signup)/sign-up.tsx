@@ -216,7 +216,7 @@ export default function SignUp() {
                         </View>
                     </View>
 
-                    <View className='flex gap-4 w-full justify-center items-center'>
+                    <View className='flex gap-5 w-full justify-center items-center'>
                         <MainButton 
                             content='Next' 
                             backgroundColor='bg-primary' 
@@ -227,9 +227,9 @@ export default function SignUp() {
                             }} 
                         />
                         <View className='flex gap-0 w-full justify-center items-center'>
-                            <Text className='font-spacemono-bold'>Already have an account ?</Text>
+                            <Text className='font-spacemono-bold text-sm'>Already have an account ?</Text>
                             <Link href='/login'>
-                                <Text className='text-primary font-spacemono-bold'>
+                                <Text className='text-primary font-spacemono-bold text-sm'>
                                     Login
                                 </Text>
                             </Link>
