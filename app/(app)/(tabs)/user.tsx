@@ -1,5 +1,5 @@
 import MainButton from '@/components/buttons/MainButton';
-import { ScrollView, Text, View, Modal } from 'react-native';
+import { ScrollView, Text, View, Modal, Image } from 'react-native';
 import { useSession } from '@/context/authContext';
 import PageTitle from '@/components/text/PageTitle';
 import Title from '@/components/text/Title';
@@ -48,7 +48,16 @@ export default function User() {
               <Title content={user?.username || ''} />
 
               <View className="flex-row justify-between w-full px-4 gap-4 items-center">
-                <View className='w-24 h-24 bg-primary rounded-full'></View>
+                
+                {user?.profile_picture_url ? (
+                  <View className='w-24 h-24 rounded-full'>
+                    <Image source={{ uri: user?.profile_picture_url }} className='w-full h-full rounded-full' />
+                  </View>
+                ) : (
+                  <View className='w-24 h-24 bg-primary rounded-full items-center justify-center'>
+                    <Text className='text-white font-actonia text-6xl text-center'>{user?.username.charAt(0)}</Text>
+                  </View>
+                )}
 
                 <View className="flex-row w-full gap-10">
                   <View>

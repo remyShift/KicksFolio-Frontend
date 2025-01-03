@@ -4,7 +4,7 @@ import { User, Collection, Sneaker } from '@/types/Models';
 
 const AuthContext = createContext<{
     login: (email: string, password: string) => Promise<void>;
-    signUp: (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number) => Promise<void>;
+    signUp: (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, profile_picture: string) => Promise<void>;
     logout: () => void;
     sessionToken?: string | null;
     isLoading: boolean;
@@ -89,34 +89,53 @@ export function SessionProvider({ children }: PropsWithChildren) {
         });
     };
 
-    const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number): Promise<void> => {
+    const signUp = async (email: string, password: string, username: string, first_name: string, last_name: string, sneaker_size: number, profile_picture: string): Promise<void> => {
+        const formData = new FormData();
+        formData.append('user[email]', email);
+        formData.append('user[password]', password);
+        formData.append('user[username]', username);
+        formData.append('user[first_name]', first_name);
+        formData.append('user[last_name]', last_name);
+        formData.append('user[sneaker_size]', sneaker_size.toString());
+
+        if (profile_picture) {
+            const imageUriParts = profile_picture.split('.');
+            const fileType = imageUriParts[imageUriParts.length - 1];
+            
+            const imageFile = {
+                uri: profile_picture,
+                type: 'image/jpeg',
+                name: `profile_picture.${fileType}`
+            };
+
+            formData.append('user[profile_picture]', imageFile as any);
+        }
+
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json',
+                'Accept': 'application/json',
             },
-            body: JSON.stringify({
-                user: {
-                    email,
-                    password,
-                    username,
-                    first_name,
-                    last_name,
-                    sneaker_size
-                }
-            })
+            body: formData,
         })
         .then(async response => {
-            const data = await response.json();
+            const text = await response.text();
+            console.log('Server response:', text);
+            const data = JSON.parse(text);
+            
             if (!response.ok) {
-                throw new Error(data.message || 'Error when creating account');
+                const errorMessage = data.message || data.error || 'Error when creating account';
+                console.error('Error on server:', {
+                    status: response.status,
+                    data: data
+                });
+                throw new Error(errorMessage);
             }
+
             return data;
         })
         .catch(error => {
-            if (error instanceof SyntaxError) {
-                throw new Error('Error when getting user');
-            }
+            console.error('Complete error:', error);
             throw error;
         });
     };
@@ -134,31 +153,33 @@ export function SessionProvider({ children }: PropsWithChildren) {
 
         return fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/users/me`, {
             headers: {
-                'Authorization': `Bearer ${sessionToken}`
+                'Authorization': `Bearer ${sessionToken}`,
+                'Accept': 'application/json'
             }
         })
-        .then(response => {
+        .then(async response => {
+            const text = await response.text();
+            console.log('Get user response:', text);
+            const data = JSON.parse(text);
+            
             if (response.status === 401) {
                 logout();
                 return;
             }
+            
             if (!response.ok) {
-                throw new Error('Error when getting user');
+                throw new Error(data.message || 'Error when getting user');
             }
-            return response.json();
-        })
-        .then(async data => {
-            if (!data) return;
+
             setUser(data.user);
-            await Promise.all([
-                getUserCollection(),
-                getUserSneakers(),
-                getUserFriends()
-            ]);
+            await getUserCollection();
+            await getUserSneakers();
+            await getUserFriends();
         })
         .catch(error => {
-            console.error('Error when getting user:', error);
+            console.error('Complete get user error:', error);
             logout();
+            throw error;
         });
     };
 

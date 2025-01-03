@@ -10,6 +10,11 @@ export type User = {
     collection: Collection;
     friends: User[];
     sneakers: Sneaker[];
+    profile_picture: {
+        id: string;
+        url: string;
+    };
+    profile_picture_url: string;
 }
 
 export type Collection = {

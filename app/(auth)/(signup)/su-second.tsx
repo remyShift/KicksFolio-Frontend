@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView, Image, Pressable, Alert } from 'react-native';
 import { useSignUpProps } from '@/context/signUpPropsContext';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
@@ -7,6 +7,8 @@ import { useSession } from '@/context/authContext';
 import ErrorMsg from '@/components/text/ErrorMsg';
 import { useState, useRef } from 'react';
 import { handleInputChange, checkBeforeNext, checkName, checkSize } from '@/scripts/formUtils';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import * as ImagePicker from 'expo-image-picker';
 
 export default function SUSecond() {
     const { signUpProps, setSignUpProps } = useSignUpProps();
@@ -70,6 +72,11 @@ export default function SUSecond() {
     };
 
     const handleSignUp = () => {
+        if (!signUpProps.username.trim()) {
+            setErrorMsg('Please put your username.');
+            return;
+        }
+
         if (!signUpProps.first_name) {
             setErrorMsg('Please put your first name.');
             setIsFirstNameError(true);
@@ -95,10 +102,11 @@ export default function SUSecond() {
             signUpProps.username,
             signUpProps.first_name,
             signUpProps.last_name,
-            signUpProps.sneaker_size
+            signUpProps.sneaker_size,
+            signUpProps.profile_picture
         ).then(() => {
             login(signUpProps.email, signUpProps.password).then(() => {
-                setSignUpProps({ ...signUpProps, email: '', password: '', username: '', first_name: '', last_name: '', sneaker_size: 0 });
+                setSignUpProps({ ...signUpProps, email: '', password: '', username: '', first_name: '', last_name: '', sneaker_size: 0, profile_picture: '' });
                 router.replace('/collection');
             }).catch((error) => {
                 setErrorMsg(`Something went wrong. Please try again 1. ${error}`);
@@ -106,6 +114,43 @@ export default function SUSecond() {
         }).catch((error) => {
             setErrorMsg(`Something went wrong. Please try again 2. ${error}`);
         });
+    };
+
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Désolé, nous avons besoin des permissions pour accéder à vos photos !');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: "images",
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1
+        });
+
+        if (!result.canceled) {
+            setSignUpProps({ ...signUpProps, profile_picture: result.assets[0].uri });
+        }
+    };
+
+    const takePhoto = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Désolé, nous avons besoin des permissions pour accéder à votre caméra !');
+            return;
+        }
+
+        const result = await ImagePicker.launchCameraAsync({
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 0.8
+        });
+
+        if (!result.canceled) {
+            setSignUpProps({ ...signUpProps, profile_picture: result.assets[0].uri });
+        }
     };
 
     return (
@@ -124,7 +169,45 @@ export default function SUSecond() {
                         <View className="absolute w-full flex items-center" style={{ top: -50 }}>
                             <ErrorMsg content={errorMsg} display={errorMsg !== ''} />
                         </View>
-                        
+
+                        <View className='flex flex-col gap-2 w-full justify-center items-center'>
+                            <Text className='font-spacemono-bold text-lg'>Profile Picture</Text>
+                            {signUpProps.profile_picture ?
+                                <View className='w-24 h-24 rounded-full bg-gray-400 flex items-center justify-center'>
+                                    <Image 
+                                        source={{ uri: signUpProps.profile_picture }} 
+                                        className='w-full h-full rounded-full' 
+                                        resizeMode='cover'
+                                    /> 
+                                </View>
+                                : 
+                                <Pressable 
+                                    className='w-24 h-24 rounded-full bg-gray-400 flex items-center justify-center'
+                                    onPress={() => {
+                                        Alert.alert(
+                                            'Add a profile picture',
+                                            'Choose a profile picture',
+                                            [
+                                                {
+                                                    text: 'Take a photo',
+                                                    onPress: takePhoto
+                                                },
+                                                {
+                                                    text: 'Choose from gallery',
+                                                    onPress: pickImage
+                                                },
+                                                {
+                                                    text: 'Cancel',
+                                                    style: 'cancel'
+                                                }
+                                            ]
+                                        );
+                                    }}
+                                >
+                                    <FontAwesome5 name="user-edit" size={24} color="white" />
+                                </Pressable>
+                            }
+                        </View>
                         <View className='flex flex-col gap-2 w-full justify-center items-center'>
                             <Text className='font-spacemono-bold text-lg'>*First Name</Text>
                             <TextInput
