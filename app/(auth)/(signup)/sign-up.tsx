@@ -44,7 +44,10 @@ export default function SignUp() {
         setIsPasswordError(false);
         setIsConfirmPasswordError(false);
         setErrorMsg('');
-        scrollToBottom();
+
+        if (inputType === 'password' || inputType === 'confirmPassword') {
+            scrollToBottom();
+        }
     };
 
     const handleInputBlur = (inputType: 'username' | 'email' | 'password' | 'confirmPassword', value: string) => {
@@ -91,7 +94,8 @@ export default function SignUp() {
                 ref={scrollViewRef}
                 className='flex-1'
                 keyboardShouldPersistTaps="handled"
-                scrollEnabled={isUsernameFocused || isEmailFocused || isPasswordFocused}>
+                scrollEnabled={true}
+                showsVerticalScrollIndicator={false}>
                 <View className="flex-1 items-center gap-12 p-4">
                     <PageTitle content='Sign Up' />
                     <View className='flex justify-center items-center gap-8 w-full mt-10'>
