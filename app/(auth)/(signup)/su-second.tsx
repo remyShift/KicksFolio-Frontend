@@ -1,6 +1,7 @@
 import { Link, router } from 'expo-router';
-import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView, Image, Pressable, Alert } from 'react-native';
+import { View, TextInput, Text, KeyboardAvoidingView, Platform, ScrollView, Pressable, Alert } from 'react-native';
 import { useSignUpProps } from '@/context/signUpPropsContext';
+import { Image } from 'expo-image';
 import PageTitle from '@/components/text/PageTitle';
 import MainButton from '@/components/buttons/MainButton';
 import { useSession } from '@/context/authContext';
@@ -177,7 +178,8 @@ export default function SUSecond() {
                                     <Image 
                                         source={{ uri: signUpProps.profile_picture }} 
                                         className='w-full h-full rounded-full' 
-                                        resizeMode='cover'
+                                        contentFit='cover'
+                                        cachePolicy={'memory-disk'}
                                     /> 
                                 </View>
                                 : 

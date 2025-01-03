@@ -1,9 +1,9 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Image, Text, View, Pressable } from 'react-native';
+import { Text, View, Pressable } from 'react-native';
 import { Collection } from '@/types/Models';
 import { Sneaker } from '@/types/Models';
 import { router } from 'expo-router';
-
+import { Image } from 'expo-image';
 export default function CollectionCard({ userCollection, userSneakers }: { userCollection: Collection | null | undefined, userSneakers: Sneaker[] | null | undefined }) {
 
     return (
@@ -15,7 +15,7 @@ export default function CollectionCard({ userCollection, userSneakers }: { userC
             <View className="flex flex-row items-center gap-1 w-full h-24">
                 {userSneakers?.slice(0, 2).map((sneaker, index) => (
                     sneaker ? (
-                        <Image key={index} source={{ uri: sneaker.images?.[0]?.url }} className="w-1/2 h-full rounded-md" />
+                        <Image key={index} source={{ uri: sneaker.images?.[0]?.url }} className="w-1/2 h-full rounded-md" cachePolicy={'memory-disk'} />
                     ) : (
                         <View key={index} className="w-1/2 h-full bg-slate-200 rounded-md flex flex-row items-center justify-center">
                             <MaterialCommunityIcons name="shoe-sneaker" size={24} color="white" />
@@ -32,7 +32,7 @@ export default function CollectionCard({ userCollection, userSneakers }: { userC
             <View className="flex flex-row items-center gap-1 w-full h-24">
                 {userSneakers?.slice(2, 4).map((sneaker, index) => (
                     sneaker ? (
-                        <Image key={index} source={{ uri: sneaker.images?.[0]?.url }} className="w-1/2 h-full rounded-md" />
+                        <Image key={index} source={{ uri: sneaker.images?.[0]?.url }} className="w-1/2 h-full rounded-md" cachePolicy={'memory-disk'} />
                     ) : (
                         <View key={index} className="w-1/2 h-full bg-slate-200 rounded-md flex flex-row items-center justify-center">
                             <MaterialCommunityIcons name="shoe-sneaker" size={24} color="white" />
