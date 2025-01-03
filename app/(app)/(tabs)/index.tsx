@@ -8,6 +8,7 @@ import { useSession } from '@/context/authContext';
 import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect } from 'react';
 import { renderModalContent } from '@/components/modals/AddSneakersForm';
+import { Sneaker } from '@/types/Models';
 
 export default function Index() {
     const params = useLocalSearchParams();
@@ -15,6 +16,7 @@ export default function Index() {
     const { userCollection, userSneakers, userFriends } = useSession();
     const [modalVisible, setModalVisible] = useState(false);
     const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox' | 'sneakerInfo'>('index');
+    const [currentSneaker, setCurrentSneaker] = useState<Sneaker | null>(null);
 
     useEffect(() => {
         if (isNewUser || (userSneakers && userSneakers.length === 0 || !userSneakers)) {
@@ -74,7 +76,8 @@ export default function Index() {
                         >
                             {renderModalContent({ 
                                 modalStep,
-                                sneaker: null,
+                                sneaker: currentSneaker,
+                                setSneaker: setCurrentSneaker,
                                 setModalStep,
                                 closeModal: () => {
                                     setModalVisible(false);

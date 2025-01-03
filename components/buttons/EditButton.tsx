@@ -3,7 +3,7 @@ import Feather from '@expo/vector-icons/Feather';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { useDownScaleAnimation } from '@/hooks';
 
-export default function ShareButton() {
+export default function EditButton({ onPressAction }: { onPressAction: () => void }) {
     const { scale, triggerAnimation } = useDownScaleAnimation();
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -14,6 +14,7 @@ export default function ShareButton() {
 
     const handlePress = () => {
         triggerAnimation();
+        onPressAction();
     };
 
     return (

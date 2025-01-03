@@ -16,7 +16,7 @@ export default function SneakerCard({ sneaker, setModalStep, setModalVisible, se
                 setModalVisible(true);
             }}
         >
-            <Image source={{ uri: sneaker.images?.[0]?.url }} className="w-full h-40 rounded-md" />
+            <Image source={{ uri: sneaker.images?.[0]?.url }} className="w-full h-40 rounded-md" resizeMode="center" />
             <View className="flex flex-row justify-between items-center px-1">
                 <Text className="font-spacemono-bold text-lg flex-1 mr-2 flex-shrink" numberOfLines={1} ellipsizeMode="tail">
                     {sneaker.model}

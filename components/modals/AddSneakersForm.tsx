@@ -15,12 +15,14 @@ import ErrorMsg from '@/components/text/ErrorMsg';
 import { Sneaker } from '@/types/Models';
 import ShareButton from '../buttons/ShareButton';
 import { ConditionBar } from '../ConditionBar';
+import EditButton from '../buttons/EditButton';
 
 type AddSneakersModalProps = {
     modalStep: 'index' | 'box' | 'noBox' | 'sneakerInfo';
     setModalStep: (step: 'index' | 'box' | 'noBox' | 'sneakerInfo') => void;
     closeModal: () => void;
     sneaker: Sneaker | null | undefined;
+    setSneaker: (sneaker: Sneaker | null) => void;
 }
 
 type InputTypeProps = 'name' | 'size' | 'condition' | 'status' | 'pricePaid' | 'brand';
@@ -28,7 +30,7 @@ type InputTypeProps = 'name' | 'size' | 'condition' | 'status' | 'pricePaid' | '
 const BRANDS = ['NIKE', 'ADIDAS', 'JORDAN', 'NEW BALANCE', 'ASICS', 'PUMA', 'REEBOK', 'CONVERSE', 'VANS', ];
 const STATUS = ['STOCKING', 'SELLING', 'ROCKING'];
 
-export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneaker }: AddSneakersModalProps) => {
+export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneaker, setSneaker }: AddSneakersModalProps) => {
     const [sneakerName, setSneakerName] = useState('');
     const [isSneakerNameError, setIsSneakerNameError] = useState(false);
     const [isSneakerNameFocused, setIsSneakerNameFocused] = useState(false);
@@ -52,6 +54,8 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneake
 
     const { user, userSneakers, sessionToken, getUserSneakers } = useSession();
     const userId = user?.id;
+
+    const currentSneakerId = userSneakers ? userSneakers.findIndex(s => s.id === sneaker?.id) : -1;
 
     const scrollViewRef = useRef<ScrollView>(null);
 
@@ -276,7 +280,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneake
                                     <Image
                                         source={{ uri: sneakerImage }} 
                                         className="h-56 w-full rounded-md"
-                                        resizeMode="cover"
+                                        resizeMode="center"
                                     />
                                 ) : (
                                     <MaterialIcons name="add-a-photo" size={30} color="white" />
@@ -382,13 +386,12 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneake
                             </View>
 
                             <View className="flex-1 justify-end pb-4">
-                                <View className="flex-row justify-between w-full mt-10">
+                                <View className="flex-row justify-between w-full">
                                     <BackButton 
                                         onPressAction={() => setModalStep('index')} 
                                     />
                                     <NextButton
-                                        content="Add" 
-                                        backgroundColor="bg-primary"
+                                        content="Add"
                                         onPressAction={async () => {
                                             const isValid = validateAllFields(
                                                 sneakerName, 
@@ -437,7 +440,7 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneake
             );
         case 'sneakerInfo':
             return (
-                <View className="flex-1 gap-6">
+                <View className="flex-1 gap-4">
                     <Image 
                         source={{ uri: sneaker?.images?.[0]?.url }} 
                         className="w-full h-56 rounded-xl" 
@@ -452,30 +455,70 @@ export const renderModalContent = ({ modalStep, setModalStep, closeModal, sneake
                         <ShareButton />
                     </View>
 
-                    <View className="flex-row items-center w-full border-t-2 border-gray-300">
-                        <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
-                            <Text className='font-spacemono text-center text-sm'>Size</Text>
-                            <View className="w-4/5">
-                                <Text className="font-spacemono-bold text-xl text-center">{sneaker?.size}US</Text>
+                    <View className='flex gap-8'>
+                        <View className="flex-row items-center w-full border-t-2 border-gray-300">
+                            <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
+                                <Text className='font-spacemono text-center text-sm'>Size</Text>
+                                <View className="w-4/5">
+                                    <Text className="font-spacemono-bold text-xl text-center">{sneaker?.size}US</Text>
+                                </View>
+                            </View>
+
+                            <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
+                                <Text className='font-spacemono text-center text-sm'>Status</Text>
+                                <View className="w-4/5">
+                                    <Text className="font-spacemono-bold text-xl text-center">{sneaker?.status.toUpperCase()}</Text>
+                                </View>
+                            </View>
+
+                            <View className='flex-col items-center p-2 gap-1 w-1/3'>
+                                <Text className='font-spacemono text-center text-sm'>Price Paid</Text>
+                                <View className="w-4/5">
+                                    <Text className="font-spacemono-bold text-xl text-center">{sneaker?.price_paid ? sneaker?.price_paid + '$' : 'N/A'}</Text>
+                                </View>
                             </View>
                         </View>
 
-                        <View className='flex-col items-center p-2 gap-1 w-1/3 border-r-2 border-gray-300'>
-                            <Text className='font-spacemono text-center text-sm'>Status</Text>
-                            <View className="w-4/5">
-                                <Text className="font-spacemono-bold text-xl text-center">{sneaker?.status.toUpperCase()}</Text>
-                            </View>
-                        </View>
+                        <ConditionBar condition={sneaker?.condition || 0} />
 
-                        <View className='flex-col items-center p-2 gap-1 w-1/3'>
-                            <Text className='font-spacemono text-center text-sm'>Price Paid</Text>
-                            <View className="w-4/5">
-                                <Text className="font-spacemono-bold text-xl text-center">{sneaker?.price_paid ? sneaker?.price_paid + '$' : 'N/A'}</Text>
-                            </View>
+                        <View className="flex justify-center w-full px-2 gap-2">
+                            <Text className='font-spacemono-bold'>Description :</Text>
+                            <Text className='font-spacemono text-sm'>{sneaker?.description || 'No description yet'}</Text>
                         </View>
                     </View>
 
-                    <ConditionBar condition={sneaker?.condition || 0} />
+                    <View className="flex-1 justify-end pb-5 px-2">
+                        <View className="flex-row justify-between w-full">
+                            <View className="flex flex-row gap-3">
+                                <BackButton 
+                                    onPressAction={() => {
+                                        setModalStep('index');
+                                        closeModal();
+                                    }}
+                                />
+                                <EditButton 
+                                    onPressAction={() => alert('Feature coming soon')}
+                                />
+                            </View>
+
+                            <NextButton 
+                                content="Next" 
+                                onPressAction={() => {
+                                    if (!userSneakers || currentSneakerId === -1) return;
+                                    
+                                    if (currentSneakerId < userSneakers.length - 1) {
+                                        const nextSneaker = userSneakers[currentSneakerId + 1];
+                                        setSneaker(nextSneaker);
+                                        setModalStep('sneakerInfo');
+                                    } else {
+                                        const firstSneaker = userSneakers[0];
+                                        setSneaker(firstSneaker);
+                                        setModalStep('sneakerInfo');
+                                    }
+                                }}
+                            />
+                        </View>
+                    </View>
                 </View>
             );
     }

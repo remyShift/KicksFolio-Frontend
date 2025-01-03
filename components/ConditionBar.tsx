@@ -24,7 +24,7 @@ export const ConditionBar = ({ condition }: { condition: number }) => {
                     }
                 </View>
                 
-                { segments.length < 10 &&
+                { segments.length < 9 &&
                     <Text className='font-spacemono-bold text-sm text-gray-300'>USURE</Text>
                 }
             </View>

@@ -28,6 +28,11 @@ export default function User() {
   const [modalVisible, setModalVisible] = useState(false);
   const [modalStep, setModalStep] = useState<'index' | 'box' | 'noBox' | 'sneakerInfo'>('index');
   const [sneaker, setSneaker] = useState<Sneaker | null>(null);
+  const [currentSneaker, setCurrentSneaker] = useState<Sneaker | null>(null);
+
+  useEffect(() => {
+    setCurrentSneaker(sneaker);
+  }, [sneaker]);
 
   const sneakersByBrand = useMemo(() => {
     if (!userSneakers) return {};
@@ -145,7 +150,8 @@ export default function User() {
                   >
                       {renderModalContent({ 
                           modalStep,
-                          sneaker,
+                          sneaker: currentSneaker,
+                          setSneaker: setCurrentSneaker,
                           setModalStep,
                           closeModal: () => setModalVisible(false) 
                       })}
