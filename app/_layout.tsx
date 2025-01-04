@@ -16,30 +16,15 @@ const FONTS = {
 } as const;
 
 export default function RootLayout() {
-  const { sessionToken, logout, getUser } = useSession();
+  const { sessionToken, verifyToken } = useSession();
   const [fontsLoaded] = useFonts(FONTS);
 
   const [isSplashScreenVisible, setIsSplashScreenVisible] = useState(true);
   
   useEffect(() => {
-    const checkSession = () => {
-        if (sessionToken) {
-            fetch(`${process.env.EXPO_PUBLIC_BASE_API_URL}/verify_token`, {
-                headers: {
-                    'Authorization': `Bearer ${sessionToken}`,
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return logout();
-                }
-                return getUser();
-            })
-            .catch(() => logout());
-        }
-    };
-    
-    checkSession();
+    if (sessionToken) {
+      verifyToken();
+    }
   }, []);
 
   if (!fontsLoaded) {
